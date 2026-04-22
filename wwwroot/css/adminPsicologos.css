@@ -1,0 +1,142 @@
+﻿/* ==========================================
+   ADMIN PSICÓLOGOS PREMIUM
+========================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI',sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    padding: 30px;
+    background: radial-gradient(circle at top left,#2563eb,#1d4ed8,#0f172a);
+}
+
+.page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    width: 100%;
+    max-width: 700px;
+    background: white;
+    border-radius: 30px;
+    padding: 40px;
+    box-shadow: 0 25px 55px rgba(0,0,0,.18);
+}
+
+/* ICONO */
+
+.hero {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: auto;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 42px;
+    color: white;
+    background: linear-gradient(135deg,#2563eb,#1d4ed8);
+}
+
+/* TITULOS */
+
+h1 {
+    text-align: center;
+    font-size: 42px;
+    color: #0f172a;
+    margin-bottom: 10px;
+}
+
+.sub {
+    text-align: center;
+    color: #64748b;
+    margin-bottom: 28px;
+    font-size: 17px;
+}
+
+/* INPUTS */
+
+input {
+    width: 100%;
+    padding: 18px;
+    margin-bottom: 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 18px;
+    font-size: 17px;
+    outline: none;
+}
+
+    input:focus {
+        border-color: #2563eb;
+    }
+
+/* BOTONES */
+
+button {
+    width: 100%;
+    border: none;
+    padding: 18px;
+    border-radius: 18px;
+    font-size: 18px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: .25s;
+}
+
+    button i {
+        margin-right: 8px;
+    }
+
+.guardar {
+    color: white;
+    background: linear-gradient(135deg,#10b981,#059669);
+    margin-top: 10px;
+}
+
+    .guardar:hover {
+        transform: translateY(-3px);
+    }
+
+.volver {
+    margin-top: 16px;
+    color: white;
+    background: linear-gradient(135deg,#ef4444,#dc2626);
+}
+
+    .volver:hover {
+        transform: translateY(-3px);
+    }
+
+/* MENSAJE */
+
+#msg {
+    text-align: center;
+    font-weight: 700;
+    margin-top: 18px;
+    min-height: 25px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:760px) {
+
+    body {
+        padding: 14px;
+    }
+
+    .card {
+        padding: 24px;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+}

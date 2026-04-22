@@ -1,0 +1,6 @@
+@AppTesisAPI_HostAddress = https://localhost:2171
+
+GET {{AppTesisAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

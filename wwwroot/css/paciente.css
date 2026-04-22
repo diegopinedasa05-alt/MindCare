@@ -1,0 +1,41 @@
+﻿body {
+    background: #eef2ff;
+    font-family: Segoe UI;
+    padding: 30px;
+}
+
+.card {
+    max-width: 900px;
+    margin: auto;
+    background: white;
+    padding: 40px;
+    border-radius: 25px;
+    box-shadow: 0 15px 35px rgba(0,0,0,.08);
+}
+
+h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #334155;
+}
+
+h3 {
+    margin-top: 25px;
+    color: #3b82f6;
+}
+
+ul {
+    padding-left: 20px;
+    line-height: 1.8;
+}
+
+button {
+    margin-top: 25px;
+    padding: 14px 22px;
+    border: none;
+    border-radius: 14px;
+    background: #3b82f6;
+    color: white;
+    font-weight: 800;
+    cursor: pointer;
+}

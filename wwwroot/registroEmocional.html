@@ -1,0 +1,173 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>MindCare | Registro Emocional</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet"
+          href="css/registroEmocional.css?v=2">
+
+</head>
+
+<body>
+
+    <!-- CONTENEDOR GENERAL COMO LOGIN -->
+    <div class="page">
+
+        <div class="outer-card">
+
+            <!-- ===================================== -->
+            <!-- HEADER INTERNO -->
+            <!-- ===================================== -->
+
+            <header class="topbar">
+
+                <div class="top-left">
+
+                    <div class="logo-circle">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+
+                    <div>
+                        <h1>MindCare</h1>
+                        <p>Registro emocional diario</p>
+                    </div>
+
+                </div>
+
+                <button class="btn-home"
+                        onclick="window.location.href='dashboard.html'">
+
+                    <i class="fa-solid fa-house"></i>
+                    Inicio
+
+                </button>
+
+            </header>
+
+            <!-- ===================================== -->
+            <!-- GRID INTERNO -->
+            <!-- ===================================== -->
+
+            <div class="grid">
+
+                <!-- FORMULARIO -->
+                <section class="card">
+
+                    <div class="icon-box">
+                        <i class="fa-solid fa-heart-pulse"></i>
+                    </div>
+
+                    <h2>Registro emocional</h2>
+
+                    <p class="subtitle">
+                        Monitorea cómo te sientes y lleva seguimiento.
+                    </p>
+
+                    <!-- ÁNIMO -->
+                    <div class="field">
+
+                        <label>Nivel de ánimo</label>
+
+                        <select id="animo">
+                            <option value="">Selecciona</option>
+                            <option value="10">Excelente</option>
+                            <option value="8">Bien</option>
+                            <option value="5">Neutral</option>
+                            <option value="3">Triste</option>
+                            <option value="1">Ansioso</option>
+                        </select>
+
+                    </div>
+
+                    <!-- ESTRÉS -->
+                    <div class="field">
+
+                        <label>Nivel de estrés</label>
+
+                        <input type="range"
+                               id="estres"
+                               min="0"
+                               max="10"
+                               value="5"
+                               oninput="valor.innerText=this.value">
+
+                        <div class="range-value">
+                            <span id="valor">5</span>/10
+                        </div>
+
+                    </div>
+
+                    <!-- CATEGORÍA -->
+                    <div class="field">
+
+                        <label>Categoría</label>
+
+                        <select id="categoria">
+                            <option value="">Selecciona</option>
+                            <option value="Trabajo">Trabajo</option>
+                            <option value="Familia">Familia</option>
+                            <option value="Escuela">Escuela</option>
+                            <option value="Relación">Relación</option>
+                            <option value="Salud">Salud</option>
+                            <option value="General">General</option>
+                        </select>
+
+                    </div>
+
+                    <!-- NOTA -->
+                    <div class="field">
+
+                        <label>Nota personal</label>
+
+<textarea id="nota"
+          placeholder="Escribe cómo te sentiste hoy..."></textarea>
+
+                    </div>
+
+                    <p id="mensaje"></p>
+
+                    <button class="btn-save"
+                            onclick="guardarRegistro()">
+
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        Guardar registro
+
+                    </button>
+
+                </section>
+
+                <!-- HISTORIAL -->
+                <section class="card">
+
+                    <h3>
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                        Historial reciente
+                    </h3>
+
+                    <div id="listaHistorial">
+
+                        <div class="history-item">
+                            Sin registros todavía.
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="js/registroEmocional.js"></script>
+    <div id="toast"></div>
+</body>
+</html>

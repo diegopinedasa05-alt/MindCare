@@ -1,0 +1,307 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MindCare | Historial del Usuario</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI',sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 30px;
+            background: linear-gradient(135deg,#edf1f7,#e7edf7,#eef2fa);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .title {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            color: #fff;
+            background: linear-gradient(135deg,#67a4f5,#3f7ef0);
+        }
+
+        h1 {
+            font-size: 42px;
+            font-weight: 900;
+            color: #334155;
+        }
+
+        .sub {
+            color: #64748b;
+            margin-top: 5px;
+        }
+
+        .btn {
+            border: none;
+            padding: 14px 22px;
+            border-radius: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            color: #fff;
+            background: linear-gradient(135deg,#67a4f5,#3f7ef0);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+        }
+
+        .card {
+            background: #fff;
+            padding: 28px;
+            border-radius: 26px;
+            box-shadow: 0 12px 35px rgba(0,0,0,.05);
+        }
+
+            .card h2 {
+                font-size: 28px;
+                font-weight: 900;
+                color: #334155;
+                margin-bottom: 18px;
+            }
+
+        .lista {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+            .lista li {
+                padding: 16px;
+                border-radius: 16px;
+                background: #f3f6fb;
+                line-height: 1.6;
+                color: #475569;
+            }
+
+        .empty {
+            text-align: center;
+            color: #94a3b8;
+        }
+
+        @media(max-width:900px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header class="topbar">
+
+            <div class="title">
+
+                <div class="icon">
+                    <i class="fa-solid fa-user-doctor"></i>
+                </div>
+
+                <div>
+                    <h1>Historial del Usuario</h1>
+                    <p class="sub">
+                        Panel de seguimiento emocional
+                    </p>
+                </div>
+
+            </div>
+
+            <button class="btn" onclick="volver()">
+                <i class="fa-solid fa-arrow-left"></i>
+                Volver
+            </button>
+
+        </header>
+
+        <div class="grid">
+
+            <section class="card">
+
+                <h2>
+                    <i class="fa-solid fa-heart-pulse"></i>
+                    Registros emocionales
+                </h2>
+
+                <ul id="registros" class="lista">
+                    <li class="empty">Cargando...</li>
+                </ul>
+
+            </section>
+
+            <section class="card">
+
+                <h2>
+                    <i class="fa-solid fa-clipboard-check"></i>
+                    Evaluaciones PHQ9
+                </h2>
+
+                <ul id="tests" class="lista">
+                    <li class="empty">Cargando...</li>
+                </ul>
+
+            </section>
+
+        </div>
+
+    </div>
+
+    <script>
+        const API = "https://localhost/api";
+
+        /* toma ?id=10 de la URL */
+        const params = new URLSearchParams(window.location.search);
+        const usuarioId = params.get("id");
+
+        /* validar */
+        if (!usuarioId) {
+            alert("No se recibió ID del usuario");
+            location.href = "dashboardPsicologo.html";
+        }
+
+        /* cargar al iniciar */
+        window.onload = function () {
+            cargarRegistros();
+            cargarPHQ9();
+        };
+
+        /* REGISTROS */
+        async function cargarRegistros() {
+
+            try {
+
+                const res = await fetch(
+                    `${API}/RegistrosEmocionales/${usuarioId}`
+                );
+
+                const data = await res.json();
+
+                const box = document.getElementById("registros");
+
+                box.innerHTML = "";
+
+                if (!data.length) {
+                    box.innerHTML = "<li class='empty'>Sin registros</li>";
+                    return;
+                }
+
+                data.forEach(x => {
+
+                    box.innerHTML += `
+<li>
+<strong>Fecha:</strong> ${new Date(x.fecha).toLocaleString()}<br>
+<strong>Ánimo:</strong> ${x.nivelAnimo}/10<br>
+<strong>Estrés:</strong> ${x.nivelEstres}/10<br>
+<strong>Categoría:</strong> ${x.categoria}<br>
+<strong>Nota:</strong> ${x.nota || "-"}
+</li>
+`;
+
+                });
+
+            } catch (error) {
+
+                document.getElementById("registros").innerHTML =
+                    "<li class='empty'>Error cargando registros</li>";
+
+                console.log(error);
+
+            }
+
+        }
+
+        /* TEST PHQ9 */
+        async function cargarPHQ9() {
+
+            try {
+
+                const res = await fetch(
+                    `${API}/TestPHQ9/${usuarioId}`
+                );
+
+                const data = await res.json();
+
+                const box = document.getElementById("tests");
+
+                box.innerHTML = "";
+
+                if (!data.length) {
+                    box.innerHTML = "<li class='empty'>Sin evaluaciones</li>";
+                    return;
+                }
+
+                data.forEach(x => {
+
+                    box.innerHTML += `
+<li>
+<strong>Fecha:</strong> ${new Date(x.fecha).toLocaleString()}<br>
+<strong>Puntaje:</strong> ${x.puntaje}<br>
+<strong>Nivel:</strong> ${x.nivel}
+</li>
+`;
+
+                });
+
+            } catch (error) {
+
+                document.getElementById("tests").innerHTML =
+                    "<li class='empty'>Error cargando PHQ9</li>";
+
+                console.log(error);
+
+            }
+
+        }
+
+        /* volver */
+        function volver() {
+            location.href = "dashboardPsicologo.html";
+        }
+    </script>
+
+</body>
+</html>

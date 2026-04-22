@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Citas</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Agendar Cita</h1>
+    </header>
+
+    <div class="container">
+
+        <div class="card">
+
+            <label>ID Psicólogo</label>
+            <input id="psicologoId">
+
+            <label>Fecha</label>
+            <input id="fecha" type="date">
+
+            <button onclick="crearCita()">Agendar</button>
+
+        </div>
+
+        <div class="card">
+
+            <h3>Resultado</h3>
+            <div id="resultado"></div>
+
+        </div>
+
+    </div>
+
+    <script src="app.js"></script>
+    <div id="toast"></div>
+
+</body>
+</html>

@@ -1,0 +1,231 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>MindCare | Dashboard</title>
+
+    <!-- ICONOS -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet"
+          href="css/dashboard.css">
+</head>
+
+<!-- AGREGA ANTES DE </body> EN dashboard.html -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<body>
+
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+
+            <div class="brand">
+
+                <div class="brain-icon">
+                    <i class="fa-solid fa-brain"></i>
+                </div>
+
+                <h2>MindCare</h2>
+                <p>Plataforma Digital Para Apoyo Psicológico</p>
+
+            </div>
+
+            <nav class="menu">
+
+                <button onclick="inicio()">
+                    <i class="fa-solid fa-house"></i>
+                    Inicio
+                </button>
+
+                <button onclick="irTest()">
+                    <i class="fa-solid fa-heart-pulse"></i>
+                    Evaluación emocional
+                </button>
+
+                <button onclick="irRegistro()">
+                    <i class="fa-solid fa-face-smile"></i>
+                    Registro emocional
+                </button>
+
+                <button onclick="irPsicologos()">
+                    <i class="fa-solid fa-user-doctor"></i>
+                    Psicólogos
+                </button>
+
+            </nav>
+
+            <button onclick="logout()"
+                    class="logout">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Cerrar sesión
+
+            </button>
+
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main">
+
+            <!-- HEADER -->
+            <header class="top">
+
+                <h1 id="bienvenida">
+                    Bienvenido
+                </h1>
+
+                <p>
+                    
+                </p>
+
+                <button class="pdf-btn"
+                        onclick="generarPDF()">
+
+                    <i class="fa-solid fa-file-pdf"></i>
+                    Descargar reporte
+
+                </button>
+            </header>
+
+
+            <!-- CARDS -->
+
+            <section class="cards">
+
+                <!-- IA -->
+                <div class="card primary">
+                    <h3>
+                        <i class="fa-solid fa-robot"></i>
+                        Evaluación IA
+                    </h3>
+
+                    <p id="iaResultado">
+                        Analizando...
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        Alerta Inteligente
+                    </h3>
+
+                    <p id="alertaBox">
+                        Analizando historial...
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>
+                        <i class="fa-solid fa-notes-medical"></i>
+                        Último PHQ9
+                    </h3>
+
+                    <p id="phq9Box">
+                        Cargando...
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>
+                        <i class="fa-solid fa-arrow-trend-up"></i>
+                        Evolución PHQ9
+                    </h3>
+
+                    <p id="phq9Trend">
+                        Analizando...
+                    </p>
+                </div>
+                <div class="card">
+                    <h3>
+                        <i class="fa-solid fa-calendar-check"></i>
+                        Próxima cita
+                    </h3>
+
+                    <p id="citaBox">
+                        Consultando...
+                    </p>
+                </div>
+
+                <!-- PROMEDIO -->
+                <div class="card">
+                    <h3>
+                        <i class="fa-solid fa-face-smile"></i>
+                        Promedio emocional
+                    </h3>
+
+                    <p id="promedioResultado">
+                        Cargando...
+                    </p>
+                </div>
+
+                <!-- ÚLTIMO REGISTRO -->
+                <div class="card">
+                    <h3>
+                        <i class="fa-solid fa-book-open"></i>
+                        Último registro
+                    </h3>
+
+                    <p id="ultimoRegistro">
+                        Cargando...
+                    </p>
+                </div>
+
+                <!-- HISTORIAL -->
+                <div class="card">
+                    <h3>
+                        <i class="fa-solid fa-chart-line"></i>
+                        Historial predictivo
+                    </h3>
+
+                    <p id="historialPredictivo">
+                        Cargando...
+                    </p>
+                </div>
+
+                <!-- CONSEJO -->
+                <div class="card">
+                    <h3>
+                        <i class="fa-solid fa-lightbulb"></i>
+                        Consejo inteligente
+                    </h3>
+
+                    <p id="consejoBox">
+                        Analizando hábitos...
+                    </p>
+                </div>
+
+
+            </section>
+
+            <section class="charts">
+
+                <div class="chart-card">
+                    <h3>Ánimo y Estrés</h3>
+                    <canvas id="graficaLineas"></canvas>
+                </div>
+
+                <div class="chart-card">
+                    <h3>Categorías frecuentes</h3>
+                    <canvas id="graficaCategorias"></canvas>
+                </div>
+
+            </section>
+
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+            <!-- JS -->
+            <script src="js/dashboard.js"></script>
+            <div id="toast"></div>
+
+</body>
+</html>

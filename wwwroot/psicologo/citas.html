@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Citas</title>
+    <link rel="stylesheet" href="../estilos.css">
+</head>
+
+<body>
+
+    <div class="card">
+
+        <h2>Agendar cita</h2>
+
+        <label>Seleccionar paciente</label>
+        <select id="pacienteId"></select>
+
+        <br><br>
+
+        <input type="datetime-local" id="fecha">
+
+        <br><br>
+
+        <button onclick="crearCita()">Crear cita</button>
+
+        <h3>Mis citas</h3>
+        <ul id="listaCitas"></ul>
+
+        <br>
+
+        <button onclick="volver()">Volver</button>
+
+    </div>
+
+    <script src="../js/citas.js"></script>
+    <div id="toast"></div>
+
+</body>
+</html>

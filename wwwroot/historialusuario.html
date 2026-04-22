@@ -1,0 +1,298 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>MindCare | Historial Usuario</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI',sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 30px;
+            background: linear-gradient(135deg,#f8fafc,#eef6ff,#ede9fe);
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 38px;
+            font-weight: 900;
+            color: #1e293b;
+        }
+
+        .sub {
+            color: #64748b;
+            margin-top: 8px;
+            font-size: 15px;
+        }
+
+        .volver-btn {
+            border: none;
+            padding: 14px 22px;
+            border-radius: 14px;
+            background: linear-gradient(135deg,#6366f1,#4f46e5);
+            color: white;
+            font-weight: 800;
+            cursor: pointer;
+            transition: .25s;
+            box-shadow: 0 10px 20px rgba(79,70,229,.20);
+        }
+
+            .volver-btn:hover {
+                transform: translateY(-2px);
+            }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 22px;
+            padding: 22px;
+            box-shadow: 0 15px 35px rgba(0,0,0,.05);
+        }
+
+            .card h3 {
+                font-size: 15px;
+                color: #64748b;
+                margin-bottom: 10px;
+            }
+
+            .card p {
+                font-size: 28px;
+                font-weight: 900;
+                color: #0f172a;
+            }
+
+        .box {
+            background: white;
+            padding: 28px;
+            border-radius: 26px;
+            margin-bottom: 22px;
+            box-shadow: 0 15px 35px rgba(0,0,0,.05);
+        }
+
+            .box h2 {
+                font-size: 26px;
+                font-weight: 900;
+                color: #334155;
+                margin-bottom: 18px;
+            }
+
+        .item {
+            padding: 18px;
+            border-radius: 18px;
+            background: #f8fafc;
+            margin-bottom: 14px;
+            line-height: 1.8;
+            color: #475569;
+            border-left: 6px solid #6366f1;
+        }
+
+        small {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        #toast {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            background: #10b981;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 14px;
+            font-weight: 700;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: .3s;
+            z-index: 999;
+        }
+
+            #toast.show {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            #toast.error {
+                background: #ef4444;
+            }
+
+        @media(max-width:700px) {
+
+            body {
+                padding: 16px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .box {
+                padding: 20px;
+            }
+
+                .box h2 {
+                    font-size: 22px;
+                }
+
+            .card p {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="top">
+
+        <div>
+            <h1>
+                <i class="fa-solid fa-file-waveform"></i>
+                Historial del Usuario
+            </h1>
+
+            <div class="sub">
+                Seguimiento clínico y emocional MindCare
+            </div>
+        </div>
+
+        <button onclick="volver()"
+                class="volver-btn">
+
+            <i class="fa-solid fa-arrow-left"></i>
+            Volver
+
+        </button>
+
+    </div>
+
+    <div class="stats">
+
+        <div class="card">
+            <h3>Total registros</h3>
+            <p id="totalRegistros">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Tests PHQ9</h3>
+            <p id="totalTests">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Último estado</h3>
+            <p id="estadoActual">--</p>
+        </div>
+
+    </div>
+
+    <div class="box">
+
+        <h2>
+            <i class="fa-solid fa-heart-pulse"></i>
+            Registros emocionales
+        </h2>
+
+        <div id="emocional">
+            Cargando...
+        </div>
+
+    </div>
+
+    <div class="box">
+
+        <h2>
+            <i class="fa-solid fa-notes-medical"></i>
+            Evaluaciones PHQ9
+        </h2>
+
+        <div id="phq9">
+            Cargando...
+        </div>
+
+    </div>
+
+    <div id="toast"></div>
+
+    <script src="js/historialUsuario.js"></script>
+
+    <script>
+
+        /* ========= ACTUALIZADO ========= */
+        function volver() {
+
+            const rol =
+                localStorage.getItem("rol");
+
+            if (rol === "Admin") {
+
+                location.href =
+                    "/admin.html";
+
+            } else {
+
+                location.href =
+                    "/psicologo/dashboardPsicologo.html";
+            }
+        }
+        /* =============================== */
+
+        window.addEventListener("load", () => {
+
+            setTimeout(() => {
+
+                const emocional =
+                    document.getElementById("emocional");
+
+                const phq9 =
+                    document.getElementById("phq9");
+
+                if (emocional &&
+                    emocional.children.length > 0) {
+
+                    document.getElementById("totalRegistros")
+                        .innerText =
+                        emocional.children.length;
+                }
+
+                if (phq9 &&
+                    phq9.children.length > 0) {
+
+                    document.getElementById("totalTests")
+                        .innerText =
+                        phq9.children.length;
+                }
+
+            }, 1200);
+
+        });
+
+    </script>
+
+</body>
+</html>

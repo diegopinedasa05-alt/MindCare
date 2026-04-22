@@ -1,0 +1,189 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MindCare | Admin</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+
+    <div class="bg-circle c1"></div>
+    <div class="bg-circle c2"></div>
+
+    <div class="panel">
+
+        <header class="top">
+
+            <div>
+                <h1>
+                    <i class="fa-solid fa-shield-heart"></i>
+                    Panel Ejecutivo
+                </h1>
+
+                <p>Control total del ecosistema MindCare</p>
+            </div>
+
+            <button onclick="logout()" class="logout-btn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Cerrar sesión
+            </button>
+
+        </header>
+
+        <!-- BOTONES -->
+        <div class="acciones-admin">
+
+            <button onclick="abrirModalPsicologo()" class="nuevo-btn">
+                <i class="fa-solid fa-user-doctor"></i>
+                Nuevo Psicólogo
+            </button>
+
+        </div>
+
+        <!-- CARDS -->
+        <section class="cards">
+
+            <div class="card blue">
+                <h3>Usuarios</h3>
+                <p id="usuarios">0</p>
+            </div>
+
+            <div class="card purple">
+                <h3>Psicólogos</h3>
+                <p id="psicologos">0</p>
+            </div>
+
+            <div class="card green">
+                <h3>Citas</h3>
+                <p id="citas">0</p>
+            </div>
+
+            <div class="card red">
+                <h3>Riesgo Alto</h3>
+                <p id="riesgo">0</p>
+            </div>
+
+            <div class="card orange">
+                <h3>Tests PHQ9</h3>
+                <p id="tests">0</p>
+            </div>
+
+            <div class="card dark">
+                <h3>Registros</h3>
+                <p id="registros">0</p>
+            </div>
+
+        </section>
+
+        <!-- TABLA USUARIOS -->
+        <section class="tabla-box">
+
+            <h2>
+                <i class="fa-solid fa-users"></i>
+                Usuarios recientes
+            </h2>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Fecha</th>
+                        <th>Zona</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaUsuarios">
+                    <tr>
+                        <td colspan="3">Cargando...</td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </section>
+
+        <!-- TABLA PSICOLOGOS -->
+        <section class="tabla-box">
+
+            <h2>
+                <i class="fa-solid fa-user-doctor"></i>
+                Psicólogos registrados
+            </h2>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Zona</th>
+                        <th>Especialidad</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaPsicologos">
+                    <tr>
+                        <td colspan="4">Cargando...</td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </section>
+
+        <!-- GRAFICA -->
+        <section class="chart-box">
+
+            <h2>
+                <i class="fa-solid fa-chart-line"></i>
+                Actividad general
+            </h2>
+
+            <canvas id="graficaAdmin"></canvas>
+
+        </section>
+
+    </div>
+
+    <!-- MODAL -->
+    <div id="modalPsicologo" class="modal">
+
+        <div class="modal-box">
+
+            <h2>Registrar Psicólogo</h2>
+
+            <input id="nombrePsico" placeholder="Nombre">
+            <input id="correoPsico" placeholder="Correo">
+            <input id="passPsico" placeholder="Contraseña">
+            <input id="telPsico" placeholder="Teléfono">
+            <input id="zonaPsico" placeholder="Zona">
+            <input id="espPsico" placeholder="Especialidad">
+
+            <button onclick="guardarPsicologo()">
+                Guardar
+            </button>
+
+            <button onclick="cerrarModalPsicologo()" class="cancelar">
+                Cancelar
+            </button>
+
+        </div>
+
+    </div>
+
+    <div id="toast"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/admin.js"></script>
+
+</body>
+</html>

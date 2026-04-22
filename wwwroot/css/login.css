@@ -1,0 +1,283 @@
+﻿/* ==================================
+LOGIN PREMIUM FINAL - MINDCARE
+================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI',sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 25px;
+    overflow: hidden;
+    background: linear-gradient(135deg,#eef2ff,#f8fafc,#ede9fe);
+    position: relative;
+}
+
+/* BLURS */
+
+.blur {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: .55;
+    z-index: 0;
+}
+
+.blur1 {
+    width: 260px;
+    height: 260px;
+    background: #60a5fa;
+    top: -60px;
+    left: -60px;
+}
+
+.blur2 {
+    width: 260px;
+    height: 260px;
+    background: #8b5cf6;
+    bottom: -60px;
+    right: -60px;
+}
+
+/* CONTENEDOR */
+
+.login-container {
+    width: 100%;
+    max-width: 1080px;
+    position: relative;
+    z-index: 2;
+}
+
+/* CARD */
+
+.login-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(14px);
+    border-radius: 34px;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0,0,0,.08);
+    animation: fade .7s ease;
+}
+
+@keyframes fade {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* LADO BRAND */
+
+.brand-side {
+    padding: 55px;
+    background: linear-gradient(135deg,#6366f1,#3b82f6);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.logo-circle {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 34px;
+    background: rgba(255,255,255,.18);
+    margin-bottom: 24px;
+}
+
+.brand-side h1 {
+    font-size: 48px;
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 17px;
+    line-height: 1.7;
+    opacity: .95;
+    margin-bottom: 28px;
+}
+
+.features {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+    .features div {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+/* FORM */
+
+.form-side {
+    padding: 55px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+    .form-side h2 {
+        font-size: 34px;
+        font-weight: 900;
+        color: #334155;
+        margin-bottom: 28px;
+    }
+
+.form-group {
+    position: relative;
+    margin-bottom: 18px;
+}
+
+    .form-group i {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 16px 16px 16px 46px;
+        border-radius: 18px;
+        border: 1px solid #dbeafe;
+        background: #f8fafc;
+        font-size: 16px;
+        outline: none;
+        transition: .25s;
+    }
+
+        .form-group input:focus {
+            background: white;
+            border-color: #60a5fa;
+        }
+
+button {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 18px;
+    background: linear-gradient(135deg,#6366f1,#3b82f6);
+    color: white;
+    font-size: 17px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: .25s;
+    margin-top: 8px;
+}
+
+    button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(99,102,241,.25);
+    }
+
+.error {
+    text-align: center;
+    min-height: 22px;
+    margin-top: 15px;
+    font-weight: 700;
+    color: #ef4444;
+}
+
+.links {
+    margin-top: 22px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+    .links a {
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 700;
+        color: #3b82f6;
+    }
+
+        .links a:hover {
+            color: #1d4ed8;
+        }
+
+/* TOAST */
+
+#toast {
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    background: #10b981;
+    color: white;
+    padding: 16px 22px;
+    border-radius: 16px;
+    font-weight: 800;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: .35s;
+    z-index: 9999;
+}
+
+    #toast.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    #toast.error {
+        background: #ef4444;
+    }
+
+    #toast.info {
+        background: #6366f1;
+    }
+
+/* RESPONSIVE */
+
+@media(max-width:900px) {
+
+    .login-card {
+        grid-template-columns: 1fr;
+    }
+
+    .brand-side {
+        padding: 40px;
+    }
+
+    .form-side {
+        padding: 35px;
+    }
+}
+
+@media(max-width:500px) {
+
+    .brand-side h1 {
+        font-size: 38px;
+    }
+
+    .form-side h2 {
+        font-size: 28px;
+    }
+
+    .links {
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,179 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>MindCare | Panel Psicólogo</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css">
+
+    <link rel="stylesheet"
+          href="../css/dashboardPsicologo.css">
+
+</head>
+
+<body>
+
+    <div class="bg-circle c1"></div>
+    <div class="bg-circle c2"></div>
+
+    <div class="panel">
+
+        <header class="top">
+
+            <div>
+                <h1>
+                    <i class="fa-solid fa-user-doctor"></i>
+                    Panel Psicólogo
+                </h1>
+
+                <p>
+                    Seguimiento clínico inteligente
+                </p>
+            </div>
+
+            <button onclick="logout()"
+                    class="logout-btn">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Cerrar sesión
+
+            </button>
+
+        </header>
+
+        <!-- METRICAS -->
+        <section class="cards">
+
+            <div class="card purple">
+                <h3>Pacientes</h3>
+                <p id="totalPacientes">0</p>
+            </div>
+
+            <div class="card blue">
+                <h3>Citas Hoy</h3>
+                <p id="citasHoy">0</p>
+            </div>
+
+            <div class="card red">
+                <h3>Riesgo Alto</h3>
+                <p id="riesgoAlto">0</p>
+            </div>
+
+            <div class="card green">
+                <h3>Pendientes</h3>
+                <p id="pendientes">0</p>
+            </div>
+
+        </section>
+
+        <!-- BUSQUEDA -->
+        <section class="busqueda-box">
+
+            <h2>
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Buscar paciente
+            </h2>
+
+            <div class="busqueda">
+
+                <input type="text"
+                       id="buscar"
+                       placeholder="Buscar por correo..."
+                       onkeyup="if(event.key==='Enter') buscarUsuario()">
+
+                <button onclick="buscarUsuario()">
+                    Buscar
+                </button>
+
+            </div>
+
+        </section>
+
+        <!-- TABLA -->
+        <section class="tabla-box">
+
+            <h2>
+                <i class="fa-solid fa-users"></i>
+                Pacientes encontrados
+            </h2>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Paciente</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaUsuarios">
+
+                    <tr>
+                        <td colspan="2">
+                            Escribe correo y presiona buscar
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+        <!-- CALENDARIO -->
+        <section class="calendar-box">
+
+            <h2>
+                <i class="fa-solid fa-calendar-days"></i>
+                Agenda profesional
+            </h2>
+
+            <div id="calendar"></div>
+
+        </section>
+
+    </div>
+
+    <!-- MODAL -->
+    <div id="modalCita"
+         class="modal">
+
+        <div class="modal-box">
+
+            <h2>Agendar cita</h2>
+
+            <input type="datetime-local"
+                   id="fechaCita">
+
+<textarea id="notaCita"
+          placeholder="Observaciones clínicas"></textarea>
+
+            <button onclick="guardarCita()">
+                Guardar cita
+            </button>
+
+            <button onclick="cerrarModal()"
+                    class="cancelar">
+                Cancelar
+            </button>
+
+        </div>
+
+    </div>
+
+    <div id="toast"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+
+    <script src="../js/dashboardPsicologo.js"></script>
+
+</body>
+</html>

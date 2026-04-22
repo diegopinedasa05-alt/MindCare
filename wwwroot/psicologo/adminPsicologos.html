@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>MindCare | Alta Psicólogos</title>
+
+    <!-- ICONOS -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet"
+          href="../css/adminPsicologos.css">
+
+</head>
+
+<body>
+
+    <div class="page">
+
+        <div class="card">
+
+            <!-- ICONO -->
+            <div class="hero">
+
+                <i class="fa-solid fa-user-doctor"></i>
+
+            </div>
+
+            <!-- TITULO -->
+            <h1>Alta de Psicólogos</h1>
+
+            <p class="sub">
+
+                Registrar especialistas autorizados del sistema.
+
+            </p>
+
+            <!-- FORM -->
+
+            <input id="nombre"
+                   placeholder="Nombre completo">
+
+            <input id="email"
+                   placeholder="Correo electrónico">
+
+            <input id="password"
+                   placeholder="Contraseña temporal">
+
+            <input id="telefono"
+                   placeholder="Teléfono">
+
+            <input id="zona"
+                   placeholder="Zona">
+
+            <input id="especialidad"
+                   placeholder="Especialidad">
+
+            <!-- BOTÓN -->
+
+            <button class="guardar"
+                    onclick="registrarPsicologo()">
+
+                <i class="fa-solid fa-user-plus"></i>
+                Registrar Psicólogo
+
+            </button>
+
+            <p id="msg"></p>
+
+            <!-- VOLVER -->
+
+            <button class="volver"
+                    onclick="window.location.href='dashboardPsicologo.html'">
+
+                <i class="fa-solid fa-house"></i>
+                Volver al Panel
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- JS -->
+    <script src="../js/adminPsicologos.js"></script>
+    <div id="toast"></div>
+
+</body>
+</html>

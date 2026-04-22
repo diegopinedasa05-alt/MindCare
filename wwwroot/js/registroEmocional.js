@@ -8,7 +8,7 @@ Corrige:
 ✅ Compatibilidad con Dashboard
 ========================================== */
 
-const API = "https://localhost/api";
+const API = "https://mindcare-production-d670.up.railway.app/api";
 
 /* ==========================================
 LOAD

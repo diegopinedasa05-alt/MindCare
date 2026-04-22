@@ -6,7 +6,7 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "https://localhost:",
+      "applicationUrl": "https://mindcare-production-d670.up.railway.app/api",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -16,7 +16,7 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "https://localhost:7121;http://localhost:5247",
+      "applicationUrl": "https://mindcare-production-d670.up.railway.app/api",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

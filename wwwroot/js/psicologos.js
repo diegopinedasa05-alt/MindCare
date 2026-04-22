@@ -3,7 +3,7 @@ wwwroot/js/psicologos.js
 CÓDIGO COMPLETO
 ========================================== */
 
-const API = "https://localhost/api";
+const API = "https://mindcare-production-d670.up.railway.app/api";
 
 /* ==========================================
 CARGAR PSICÓLOGOS

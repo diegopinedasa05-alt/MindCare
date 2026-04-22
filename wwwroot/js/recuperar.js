@@ -4,7 +4,7 @@ REEMPLAZA COMPLETO
 ===================================== */
 
 const API =
-    "https://localhost/api/Auth";
+    "https://mindcare-production-d670.up.railway.app/api";
 
 /* =====================================
 ENVIAR CODIGO

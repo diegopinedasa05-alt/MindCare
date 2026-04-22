@@ -8,7 +8,7 @@ MINDCARE DASHBOARD MASTER FINAL 🔥
 ✅ Dashboard completo
 ========================================== */
 
-const API = "https://localhost/api";
+const API = "https://mindcare-production-d670.up.railway.app/api";
 const usuarioId = localStorage.getItem("usuarioId");
 
 let chartLinea = null;

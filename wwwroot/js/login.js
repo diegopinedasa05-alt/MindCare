@@ -1,5 +1,5 @@
 ﻿const API =
-    "https://localhost/api";
+    "https://mindcare-production-d670.up.railway.app/api";
 
 async function login() {
 

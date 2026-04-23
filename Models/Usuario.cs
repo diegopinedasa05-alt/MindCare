@@ -35,6 +35,6 @@ namespace AppTesisAPI.Models
         /// <summary>
         /// Fecha de registro.
         /// </summary>
-        public DateTime FechaRegistro { get; set; } = DateTime.Now;
+        public DateTime FechaRegistro { get; set; } = DateTime.UtcNow;
     }
 }

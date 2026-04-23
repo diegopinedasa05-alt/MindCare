@@ -54,7 +54,7 @@ namespace AppTesisAPI.Controllers
             }
 
             // 🔹 Asignar fecha automática
-            registro.Fecha = DateTime.Now;
+            registro.Fecha = DateTime.UtcNow;
 
             _context.RegistrosEmocionales.Add(registro);
             await _context.SaveChangesAsync();

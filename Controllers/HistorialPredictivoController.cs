@@ -85,7 +85,7 @@ namespace AppTesisAPI.Controllers
                 return NotFound("Usuario no encontrado");
 
             // 🔹 Asignar fecha automáticamente
-            prediccion.Fecha = DateTime.Now;
+            prediccion.Fecha = DateTime.UtcNow;
 
             _context.HistorialPredictivo.Add(prediccion);
             await _context.SaveChangesAsync();

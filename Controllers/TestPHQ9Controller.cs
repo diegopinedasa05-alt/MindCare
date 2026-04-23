@@ -68,7 +68,7 @@ namespace AppTesisAPI.Controllers
                         P9 = request.Respuestas[8],
 
                         PuntajeTotal = total,
-                        Fecha = DateTime.Now
+                        Fecha = DateTime.UtcNow
                     };
 
                 _context.TestPHQ9.Add(test);
@@ -83,7 +83,7 @@ namespace AppTesisAPI.Controllers
                             nivel,
 
                         Fecha =
-                            DateTime.Now,
+                            DateTime.UtcNow,
 
                         Origen =
                             "PHQ9"

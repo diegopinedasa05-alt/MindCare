@@ -156,7 +156,7 @@ namespace AppTesisAPI.Controllers
                             model.Especialidad,
 
                         FechaRegistro =
-                            DateTime.Now
+                            DateTime.UtcNow
                     };
 
                 _context.Usuarios.Add(usuario);

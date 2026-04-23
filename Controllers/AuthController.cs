@@ -53,7 +53,7 @@ namespace AppTesisAPI.Controllers
                     Telefono = request.Telefono,
                     Zona = request.Zona,
                     Especialidad = "",
-                    FechaRegistro = DateTime.Now
+                    FechaRegistro = DateTime.UtcNow
                 };
 
                 _context.Usuarios.Add(usuario);

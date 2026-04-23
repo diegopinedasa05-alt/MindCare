@@ -1,42 +1,22 @@
-/* ============================================================
-🔥 PACK FINAL MINDCARE
-POSTGRESQL + RAILWAY + .NET + SIN ERRORES UTC
-REEMPLAZA TODO TU PROGRAM.CS
-============================================================ */
-
 using Microsoft.EntityFrameworkCore;
 using AppTesisAPI.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-/* =====================================
-FIX GLOBAL POSTGRESQL FECHAS
-===================================== */
 AppContext.SetSwitch(
     "Npgsql.EnableLegacyTimestampBehavior",
     true);
 
-/* =====================================
-BUILDER
-===================================== */
-var builder =
-    WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
-/* =====================================
-CONEXIÓN RAILWAY
-===================================== */
+/* DB */
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(
-        builder.Configuration
-        .GetConnectionString(
-            "DefaultConnection")));
+        builder.Configuration.GetConnectionString("DefaultConnection")));
 
-/* =====================================
-JWT
-===================================== */
-var key =
-    "CLAVE_SUPER_SECRETA_APP_TESIS_2026";
+/* JWT */
+var key = "CLAVE_SUPER_SECRETA_APP_TESIS_2026";
 
 builder.Services
 .AddAuthentication(options =>
@@ -66,38 +46,25 @@ builder.Services
         };
 });
 
-/* =====================================
-CORS
-===================================== */
+/* CORS */
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(
-        "AllowAll",
-        policy =>
-        {
-            policy.AllowAnyOrigin()
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-        });
+    options.AddPolicy("AllowAll", p =>
+    {
+        p.AllowAnyOrigin()
+         .AllowAnyHeader()
+         .AllowAnyMethod();
+    });
 });
 
-/* =====================================
-SERVICIOS
-===================================== */
 builder.Services.AddControllers();
-
 builder.Services.AddEndpointsApiExplorer();
-
 builder.Services.AddSwaggerGen();
 
-/* =====================================
-APP
-===================================== */
 var app = builder.Build();
 
-/* =====================================
-MIDDLEWARE
-===================================== */
+/* PIPELINE */
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
@@ -105,6 +72,8 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowAll");
 
+/* 👇 IMPORTANTE */
+app.UseDefaultFiles();
 app.UseStaticFiles();
 
 app.UseAuthentication();

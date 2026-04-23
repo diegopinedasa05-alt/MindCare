@@ -637,3 +637,181 @@ function logout() {
     location.href =
         "login.html";
 }
+/* =====================================================
+   DASHBOARD PDF PRO - MindCare
+   REEMPLAZA TU FUNCIÓN generarPDF()
+===================================================== */
+
+async function generarPDF() {
+
+    if (!window.jspdf) {
+        alert("No se cargó jsPDF");
+        return;
+    }
+
+    const { jsPDF } = window.jspdf;
+
+    const doc = new jsPDF("p", "mm", "a4");
+
+    const nombre =
+        document.getElementById("bienvenida")?.innerText ||
+        "Usuario";
+
+    const promedio =
+        document.getElementById("promedioResultado")?.innerText ||
+        "Sin datos";
+
+    const ia =
+        document.getElementById("iaResultado")?.innerText ||
+        "Sin datos";
+
+    const phq9 =
+        document.getElementById("phq9Box")?.innerText ||
+        "Sin datos";
+
+    const tendencia =
+        document.getElementById("phq9Trend")?.innerText ||
+        "Sin datos";
+
+    const riesgo =
+        document.getElementById("historialPredictivo")?.innerText ||
+        "Sin datos";
+
+    const cita =
+        document.getElementById("citaBox")?.innerText ||
+        "Sin citas";
+
+    const alerta =
+        document.getElementById("alertaBox")?.innerText ||
+        "Sin alertas";
+
+    const consejo =
+        document.getElementById("consejoBox")?.innerText ||
+        "Sin consejo";
+
+    const analisis =
+        document.getElementById("analisisGrafica")?.innerText ||
+        "Sin análisis";
+
+    /* =====================================
+       ENCABEZADO
+    ===================================== */
+
+    doc.setFillColor(37, 99, 235);
+    doc.rect(0, 0, 210, 28, "F");
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(22);
+    doc.text("MindCare", 14, 18);
+
+    doc.setFontSize(10);
+    doc.text("Reporte emocional inteligente", 145, 18);
+
+    /* =====================================
+       DATOS GENERALES
+    ===================================== */
+
+    doc.setTextColor(30, 41, 59);
+
+    doc.setFontSize(16);
+    doc.text("Resumen general", 14, 40);
+
+    doc.setFontSize(11);
+
+    doc.text("Usuario:", 14, 50);
+    doc.text(nombre, 45, 50);
+
+    doc.text("Fecha:", 14, 58);
+    doc.text(new Date().toLocaleString(), 45, 58);
+
+    doc.text("Promedio:", 14, 66);
+    doc.text(promedio, 45, 66);
+
+    /* =====================================
+       TARJETAS
+    ===================================== */
+
+    dibujarCaja(doc, 14, 78, 88, 28, "IA Principal", ia);
+    dibujarCaja(doc, 108, 78, 88, 28, "PHQ9", phq9);
+
+    dibujarCaja(doc, 14, 112, 88, 28, "Tendencia", tendencia);
+    dibujarCaja(doc, 108, 112, 88, 28, "Riesgo", riesgo);
+
+    dibujarCaja(doc, 14, 146, 88, 28, "Próxima cita", cita);
+    dibujarCaja(doc, 108, 146, 88, 28, "Alerta", alerta);
+
+    /* =====================================
+       TEXTO IA
+    ===================================== */
+
+    doc.setFontSize(15);
+    doc.text("Recomendación IA", 14, 188);
+
+    doc.setFontSize(11);
+
+    const consejoLines =
+        doc.splitTextToSize(consejo, 180);
+
+    doc.text(consejoLines, 14, 198);
+
+    doc.setFontSize(15);
+    doc.text("Interpretación gráfica", 14, 222);
+
+    doc.setFontSize(11);
+
+    const anaLines =
+        doc.splitTextToSize(analisis, 180);
+
+    doc.text(anaLines, 14, 232);
+
+    /* =====================================
+       FOOTER
+    ===================================== */
+
+    doc.setDrawColor(220);
+    doc.line(14, 278, 196, 278);
+
+    doc.setFontSize(9);
+    doc.setTextColor(100);
+
+    doc.text(
+        "MindCare © Reporte generado automáticamente",
+        14,
+        285
+    );
+
+    /* =====================================
+       DESCARGA
+    ===================================== */
+
+    doc.save("MindCare_Reporte_Pro.pdf");
+}
+
+/* =====================================================
+   UTILIDAD CAJAS
+===================================================== */
+
+function dibujarCaja(
+    doc,
+    x,
+    y,
+    w,
+    h,
+    titulo,
+    valor
+) {
+    doc.setDrawColor(220);
+    doc.roundedRect(x, y, w, h, 4, 4);
+
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text(titulo, x + 4, y + 8);
+
+    doc.setFontSize(11);
+    doc.setTextColor(20);
+
+    const texto =
+        doc.splitTextToSize(valor, w - 8);
+
+    doc.text(texto, x + 4, y + 17);
+}

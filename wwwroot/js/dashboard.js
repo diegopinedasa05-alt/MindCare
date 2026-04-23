@@ -1,43 +1,57 @@
-﻿/* ==========================================
-MINDCARE DASHBOARD MASTER FINAL 🔥
-✅ Gráfica de barras
-✅ Interpretación automática
+﻿/* =====================================================
+MINDCARE DASHBOARD FINAL
+✅ Citas reflejadas correctamente
 ✅ PHQ9
 ✅ Historial predictivo
-✅ Citas
-✅ Dashboard completo
-========================================== */
+✅ Registros emocionales
+✅ Gráficas
+===================================================== */
 
-const API = "https://mindcare-production-d670.up.railway.app/api";
-const usuarioId = localStorage.getItem("usuarioId");
+const API =
+    "https://mindcare-production-d670.up.railway.app/api";
+
+const usuarioId =
+    localStorage.getItem("usuarioId");
 
 let chartLinea = null;
 let chartDona = null;
 
-/* ========================================== */
-window.addEventListener("load", iniciarDashboard);
-window.addEventListener("pageshow", iniciarDashboard);
+/* ===================================================== */
+window.addEventListener(
+    "load",
+    iniciarDashboard
+);
 
-/* ========================================== */
+window.addEventListener(
+    "pageshow",
+    iniciarDashboard
+);
+
+/* ===================================================== */
 async function iniciarDashboard() {
 
     if (!usuarioId) {
-        location.href = "login.html";
+
+        location.href =
+            "login.html";
+
         return;
     }
 
     const nombre =
-        localStorage.getItem("nombre") || "Usuario";
+        localStorage.getItem("nombre")
+        || "Usuario";
 
     texto(
         "bienvenida",
-        "Hola, " + nombre.split(" ")[0]
+        "Hola, " +
+        nombre.split(" ")[0]
     );
 
     await cargarTodo();
 }
 
-/* ========================================== */
+/* ===================================================== */
 async function cargarTodo() {
 
     await Promise.all([
@@ -48,30 +62,60 @@ async function cargarTodo() {
     ]);
 }
 
-/* ========================================== */
+/* =====================================================
+REGISTROS EMOCIONALES
+===================================================== */
 async function cargarRegistros() {
 
     try {
 
-        const res = await fetch(
-            `${API}/RegistrosEmocionales/${usuarioId}?t=${Date.now()}`
-        );
+        const res =
+            await fetch(
+                `${API}/RegistrosEmocionales/${usuarioId}?t=${Date.now()}`
+            );
 
-        const datos = await res.json();
+        const datos =
+            await res.json();
 
-        if (!datos || datos.length === 0) {
+        if (!datos ||
+            datos.length === 0) {
 
-            texto("promedioResultado", "Sin datos");
-            texto("ultimoRegistro", "Sin registros");
-            texto("iaResultado", "Sin análisis");
-            texto("consejoBox", "Registra emociones.");
-            texto("analisisGrafica", "Aún no hay datos.");
-            texto("alertaBox", "Sin alertas");
+            texto(
+                "promedioResultado",
+                "Sin datos"
+            );
+
+            texto(
+                "ultimoRegistro",
+                "Sin registros"
+            );
+
+            texto(
+                "iaResultado",
+                "Sin análisis"
+            );
+
+            texto(
+                "consejoBox",
+                "Registra emociones."
+            );
+
+            texto(
+                "analisisGrafica",
+                "Aún no hay datos."
+            );
+
+            texto(
+                "alertaBox",
+                "Sin alertas"
+            );
+
             return;
         }
 
         datos.sort((a, b) =>
-            new Date(a.fecha) - new Date(b.fecha)
+            new Date(a.fecha) -
+            new Date(b.fecha)
         );
 
         const ultimo =
@@ -83,10 +127,16 @@ async function cargarRegistros() {
         );
 
         const promAnimo =
-            calcularPromedio(datos, "nivelAnimo");
+            promedio(
+                datos,
+                "nivelAnimo"
+            );
 
         const promEstres =
-            calcularPromedio(datos, "nivelEstres");
+            promedio(
+                datos,
+                "nivelEstres"
+            );
 
         texto(
             "promedioResultado",
@@ -94,6 +144,7 @@ async function cargarRegistros() {
         );
 
         /* IA */
+
         if (promAnimo <= 4) {
 
             texto(
@@ -101,14 +152,18 @@ async function cargarRegistros() {
                 "Ánimo bajo detectado."
             );
 
-        } else if (promEstres >= 7) {
+        } else if (
+            promEstres >= 7
+        ) {
 
             texto(
                 "iaResultado",
                 "Estrés elevado frecuente."
             );
 
-        } else if (promAnimo >= 8) {
+        } else if (
+            promAnimo >= 8
+        ) {
 
             texto(
                 "iaResultado",
@@ -124,14 +179,21 @@ async function cargarRegistros() {
         }
 
         /* ALERTA */
-        if (promAnimo <= 3 || promEstres >= 8) {
+
+        if (
+            promAnimo <= 3 ||
+            promEstres >= 8
+        ) {
 
             texto(
                 "alertaBox",
                 "🚨 Riesgo emocional alto"
             );
 
-        } else if (promAnimo <= 5 || promEstres >= 6) {
+        } else if (
+            promAnimo <= 5 ||
+            promEstres >= 6
+        ) {
 
             texto(
                 "alertaBox",
@@ -167,36 +229,48 @@ async function cargarRegistros() {
     }
 }
 
-/* ========================================== */
+/* =====================================================
+PHQ9
+===================================================== */
 async function cargarPHQ9() {
 
     try {
 
-        const res = await fetch(
-            `${API}/TestPHQ9/${usuarioId}?t=${Date.now()}`
-        );
+        const res =
+            await fetch(
+                `${API}/TestPHQ9/${usuarioId}?t=${Date.now()}`
+            );
 
-        if (!res.ok) {
-            texto("phq9Box", "Sin test");
-            texto("phq9Trend", "Sin historial");
+        const lista =
+            await res.json();
+
+        if (!lista ||
+            !lista.length) {
+
+            texto(
+                "phq9Box",
+                "Sin test"
+            );
+
+            texto(
+                "phq9Trend",
+                "Sin historial"
+            );
+
             return;
         }
 
-        const lista = await res.json();
-
-        if (!lista.length) {
-            texto("phq9Box", "Sin test");
-            return;
-        }
-
-        const actual = lista[0];
+        const actual =
+            lista[0];
 
         texto(
             "phq9Box",
             `${actual.puntaje} pts | ${actual.nivel}`
         );
 
-        if (lista.length >= 2) {
+        if (
+            lista.length >= 2
+        ) {
 
             const dif =
                 lista[0].puntaje -
@@ -234,26 +308,36 @@ async function cargarPHQ9() {
 
     } catch {
 
-        texto("phq9Box", "Sin test");
+        texto(
+            "phq9Box",
+            "Sin test"
+        );
     }
 }
 
-/* ========================================== */
+/* =====================================================
+HISTORIAL IA
+===================================================== */
 async function cargarHistorial() {
 
     try {
 
-        const res = await fetch(
-            `${API}/HistorialPredictivo/usuario/${usuarioId}`
-        );
+        const res =
+            await fetch(
+                `${API}/HistorialPredictivo/usuario/${usuarioId}`
+            );
 
-        const lista = await res.json();
+        const lista =
+            await res.json();
 
-        if (!lista.length) {
+        if (!lista ||
+            !lista.length) {
+
             texto(
                 "historialPredictivo",
                 "Sin datos"
             );
+
             return;
         }
 
@@ -271,146 +355,158 @@ async function cargarHistorial() {
     }
 }
 
-/* ========================================== */
+/* =====================================================
+🔥 CITAS CORREGIDO
+===================================================== */
 async function cargarCita() {
 
     try {
 
-        const res = await fetch(
-            `${API}/Citas/usuario/${usuarioId}`
-        );
+        const res =
+            await fetch(
+                `${API}/Citas/usuario/${usuarioId}?t=${Date.now()}`
+            );
 
-        const lista = await res.json();
+        const lista =
+            await res.json();
 
-        if (!lista.length) {
-            texto("citaBox", "Sin citas");
+        if (!lista ||
+            lista.length === 0) {
+
+            texto(
+                "citaBox",
+                "Sin citas"
+            );
+
             return;
         }
 
+        const cita =
+            lista[0];
+
         texto(
             "citaBox",
-            new Date(lista[0].fecha)
-                .toLocaleString()
+            new Date(
+                cita.fecha
+            ).toLocaleString()
+            + " | "
+            + cita.estado
         );
 
     } catch {
 
-        texto("citaBox", "Sin citas");
+        texto(
+            "citaBox",
+            "Sin citas"
+        );
     }
 }
 
-/* ==========================================
+/* =====================================================
 GRÁFICAS
-========================================== */
+===================================================== */
 function crearGraficas(datos) {
 
-    if (typeof Chart === "undefined")
-        return;
+    if (
+        typeof Chart ===
+        "undefined"
+    ) return;
 
     const c1 =
-        document.getElementById("graficaLineas");
+        document.getElementById(
+            "graficaLineas"
+        );
 
     const c2 =
-        document.getElementById("graficaCategorias");
+        document.getElementById(
+            "graficaCategorias"
+        );
 
-    if (!c1 || !c2) return;
+    if (!c1 || !c2)
+        return;
 
-    if (chartLinea) chartLinea.destroy();
-    if (chartDona) chartDona.destroy();
+    if (chartLinea)
+        chartLinea.destroy();
+
+    if (chartDona)
+        chartDona.destroy();
 
     const ultimos =
         datos.slice(-7);
 
     const labels =
-        ultimos.map((x, i) =>
-            "Registro " + (i + 1)
+        ultimos.map(
+            (_, i) =>
+                "Registro " +
+                (i + 1)
         );
 
-    const animo =
-        ultimos.map(x =>
-            Number(x.nivelAnimo)
-        );
-
-    const estres =
-        ultimos.map(x =>
-            Number(x.nivelEstres)
-        );
-
-    /* BARRAS */
-    chartLinea = new Chart(c1, {
-        type: "bar",
-        data: {
-            labels,
-            datasets: [
-                {
-                    label: "Ánimo",
-                    data: animo,
-                    backgroundColor:
-                        "rgba(37,99,235,.8)",
-                    borderRadius: 8
-                },
-                {
-                    label: "Estrés",
-                    data: estres,
-                    backgroundColor:
-                        "rgba(239,68,68,.8)",
-                    borderRadius: 8
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 10
+    chartLinea =
+        new Chart(c1, {
+            type: "bar",
+            data: {
+                labels,
+                datasets: [
+                    {
+                        label: "Ánimo",
+                        data:
+                            ultimos.map(x =>
+                                x.nivelAnimo),
+                        backgroundColor:
+                            "rgba(37,99,235,.8)"
+                    },
+                    {
+                        label: "Estrés",
+                        data:
+                            ultimos.map(x =>
+                                x.nivelEstres),
+                        backgroundColor:
+                            "rgba(239,68,68,.8)"
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 10
+                    }
                 }
             }
-        }
-    });
+        });
 
-    /* DONA */
     const mapa = {};
 
     datos.forEach(x => {
+
         mapa[x.categoria] =
             (mapa[x.categoria] || 0) + 1;
+
     });
 
-    chartDona = new Chart(c2, {
-        type: "doughnut",
-        data: {
-            labels:
-                Object.keys(mapa),
+    chartDona =
+        new Chart(c2, {
+            type: "doughnut",
+            data: {
+                labels:
+                    Object.keys(mapa),
 
-            datasets: [{
-                data:
-                    Object.values(mapa),
-
-                backgroundColor: [
-                    "#2563eb",
-                    "#ef4444",
-                    "#10b981",
-                    "#f59e0b",
-                    "#8b5cf6",
-                    "#06b6d4"
-                ]
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false
-        }
-    });
+                datasets: [{
+                    data:
+                        Object.values(mapa)
+                }]
+            }
+        });
 }
 
-/* ==========================================
-ANÁLISIS AUTOMÁTICO
-========================================== */
+/* ===================================================== */
 function analizarGrafica(datos) {
 
-    if (!datos || datos.length < 2) {
+    if (
+        !datos ||
+        datos.length < 2
+    ) {
 
         texto(
             "analisisGrafica",
@@ -424,63 +520,51 @@ function analizarGrafica(datos) {
         datos.slice(-5);
 
     const promAnimo =
-        ultimos.reduce(
-            (a, b) =>
-                a + Number(b.nivelAnimo), 0
-        ) / ultimos.length;
+        promedio(
+            ultimos,
+            "nivelAnimo"
+        );
 
     const promEstres =
-        ultimos.reduce(
-            (a, b) =>
-                a + Number(b.nivelEstres), 0
-        ) / ultimos.length;
+        promedio(
+            ultimos,
+            "nivelEstres"
+        );
 
-    let mensaje = "";
+    let msg =
+        "🙂 Estado estable.";
 
     if (
-        promAnimo >= 8 &&
-        promEstres <= 4
-    ) {
-
-        mensaje =
-            "✅ Excelente equilibrio emocional.";
-
-    } else if (
         promAnimo <= 4 &&
         promEstres >= 7
-    ) {
-
-        mensaje =
+    )
+        msg =
             "🚨 Riesgo emocional detectado.";
 
-    } else if (
+    else if (
         promEstres >= 7
-    ) {
-
-        mensaje =
+    )
+        msg =
             "⚠ Estrés alto reciente.";
 
-    } else if (
+    else if (
         promAnimo <= 5
-    ) {
-
-        mensaje =
+    )
+        msg =
             "⚠ Ánimo bajo reciente.";
-
-    } else {
-
-        mensaje =
-            "🙂 Estado emocional estable.";
-    }
 
     texto(
         "analisisGrafica",
-        mensaje
+        msg
     );
 }
 
-/* ========================================== */
-function consejoIA(animo, estres, cat) {
+/* ===================================================== */
+function consejoIA(
+    animo,
+    estres,
+    cat
+) {
 
     if (animo <= 4)
         return "Busca apoyo emocional.";
@@ -489,7 +573,7 @@ function consejoIA(animo, estres, cat) {
         return "Reduce carga mental.";
 
     if (cat === "Trabajo")
-        return "Organiza tiempos laborales.";
+        return "Organiza tiempos.";
 
     if (cat === "Familia")
         return "Comunica emociones.";
@@ -497,98 +581,37 @@ function consejoIA(animo, estres, cat) {
     return "Mantén hábitos saludables.";
 }
 
-/* ========================================== */
-function calcularPromedio(lista, campo) {
+/* ===================================================== */
+function promedio(
+    lista,
+    campo
+) {
 
     let total = 0;
 
-    lista.forEach(x => {
-        total += Number(x[campo]);
-    });
+    lista.forEach(x =>
+        total += Number(
+            x[campo]
+        )
+    );
 
     return (
-        total / lista.length
+        total /
+        lista.length
     ).toFixed(1);
 }
 
-function texto(id, valor) {
+/* ===================================================== */
+function texto(id, val) {
 
     const el =
         document.getElementById(id);
 
     if (el)
-        el.innerText = valor;
+        el.innerText = val;
 }
 
-/* ==========================================
-PDF REPORTE
-========================================== */
-function generarPDF() {
-
-    const { jsPDF } = window.jspdf;
-
-    const doc = new jsPDF();
-
-    doc.setFontSize(20);
-    doc.text(
-        "Reporte MindCare",
-        20,
-        20
-    );
-
-    doc.setFontSize(12);
-
-    doc.text(
-        "Usuario: " +
-        document.getElementById(
-            "bienvenida"
-        ).innerText,
-        20,
-        40
-    );
-
-    doc.text(
-        "Promedio: " +
-        document.getElementById(
-            "promedioResultado"
-        ).innerText,
-        20,
-        55
-    );
-
-    doc.text(
-        "IA: " +
-        document.getElementById(
-            "iaResultado"
-        ).innerText,
-        20,
-        70
-    );
-
-    doc.text(
-        "PHQ9: " +
-        document.getElementById(
-            "phq9Box"
-        ).innerText,
-        20,
-        85
-    );
-
-    doc.text(
-        "Alerta: " +
-        document.getElementById(
-            "alertaBox"
-        ).innerText,
-        20,
-        100
-    );
-
-    doc.save(
-        "reporte_mindcare.pdf"
-    );
-}
-
-/* ========================================== */
+/* ===================================================== */
 function inicio() {
     location.href =
         "dashboard.html";

@@ -78,28 +78,30 @@ namespace AppTesisAPI.Controllers
         /* =====================================
            CITAS DEL PSICÓLOGO
         ===================================== */
-        [HttpGet("psicologo/{id}")]
-        public async Task<IActionResult> GetPsicologo(int id)
+        [HttpGet("usuario/{usuarioId}")]
+        public async Task<IActionResult> GetCitasPorUsuario(int usuarioId)
         {
-            var citas = await _context.Citas
-                .Where(x => x.PsicologoId == id)
-                .OrderByDescending(x => x.Fecha)
-                .Select(x => new
-                {
-                    x.Id,
-                    x.UsuarioId,
-                    x.Fecha,
-                    x.Estado,
-                    x.Observacion,
-                    NombrePaciente =
-                        _context.Usuarios
-                        .Where(u => u.Id == x.UsuarioId)
-                        .Select(u => u.Nombre)
-                        .FirstOrDefault()
-                })
-                .ToListAsync();
+            try
+            {
+                var citas = await _context.Citas
+                    .Where(x => x.UsuarioId == usuarioId)
+                    .OrderByDescending(x => x.Fecha)
+                    .Select(x => new
+                    {
+                        x.Id,
+                        x.Fecha,
+                        x.Estado,
+                        x.Observacion,
+                        x.PsicologoId
+                    })
+                    .ToListAsync();
 
-            return Ok(citas);
+                return Ok(citas);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         /* =====================================

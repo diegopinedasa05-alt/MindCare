@@ -21,20 +21,28 @@ namespace AppTesisAPI.Controllers
         ========================================== */
         [HttpPost]
         public async Task<IActionResult> Guardar(
-            [FromBody] dynamic body)
+            [FromBody] TestPHQ9Request body)
         {
             try
             {
+                if (body == null)
+                    return BadRequest("Datos inválidos.");
+
                 int usuarioId =
-                    (int)body.usuarioId;
+                    body.UsuarioId;
 
                 var respuestas =
-                    ((Newtonsoft.Json.Linq.JArray)
-                    body.respuestas)
-                    .Select(x => (int)x)
-                    .ToList();
+                    body.Respuestas;
 
-                if (respuestas.Count != 12)
+                if (usuarioId <= 0)
+                    return BadRequest(
+                        "Usuario inválido."
+                    );
+
+                if (
+                    respuestas == null ||
+                    respuestas.Count != 12
+                )
                     return BadRequest(
                         "Se requieren 12 respuestas."
                     );
@@ -67,7 +75,7 @@ namespace AppTesisAPI.Controllers
                         Fecha = DateTime.UtcNow
                     };
 
-                _context.Add(test);
+                _context.TestEstresLaboral.Add(test);
 
                 _context.HistorialPredictivo.Add(
                     new HistorialPredictivo
@@ -89,7 +97,9 @@ namespace AppTesisAPI.Controllers
             catch (Exception ex)
             {
                 return BadRequest(
-                    ex.Message
+                    ex.InnerException != null
+                    ? ex.InnerException.Message
+                    : ex.Message
                 );
             }
         }
@@ -102,7 +112,7 @@ namespace AppTesisAPI.Controllers
             int usuarioId)
         {
             var lista =
-                await _context.Set<TestEstresLaboral>()
+                await _context.TestEstresLaboral
                 .Where(x =>
                     x.UsuarioId == usuarioId)
                 .OrderByDescending(x =>
@@ -117,7 +127,8 @@ namespace AppTesisAPI.Controllers
 
                     nivel =
                         ObtenerNivel(
-                            x.PuntajeTotal),
+                            x.PuntajeTotal
+                        ),
 
                     fecha =
                         x.Fecha

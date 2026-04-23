@@ -78,11 +78,11 @@ function mostrarSelector() {
     ).innerHTML = `
 
         <button onclick="iniciarTest('phq')">
-            🧠 PHQ-9 Depresión
+             TEST PHQ-9 
         </button>
 
         <button onclick="iniciarTest('estres')">
-            💼 Estrés Laboral
+             TEST DE ESTRÉS 
         </button>
     `;
 }

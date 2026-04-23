@@ -75,7 +75,6 @@ async function cargarRegistros() {
             texto("ultimoRegistro", "Sin registros");
             texto("iaResultado", "Sin análisis");
             texto("consejoBox", "Registra emociones.");
-            texto("analisisGrafica", "Sin datos.");
             texto("alertaBox", "Sin alertas");
             return;
         }
@@ -130,7 +129,6 @@ async function cargarRegistros() {
         );
 
         crearGraficas(datos);
-        analizarGrafica(datos);
 
     } catch {
 
@@ -141,7 +139,7 @@ async function cargarRegistros() {
 }
 
 /* =====================================================
-TEST PHQ9 + ESTRÉS LABORAL
+TESTS
 ===================================================== */
 async function cargarPHQ9() {
 
@@ -206,10 +204,8 @@ async function cargarPHQ9() {
 
             if (dif > 0)
                 texto("phq9Trend", `⚠ Subió ${dif}`);
-
             else if (dif < 0)
                 texto("phq9Trend", `✅ Mejoró ${Math.abs(dif)}`);
-
             else
                 texto("phq9Trend", "Sin cambios");
 
@@ -352,6 +348,9 @@ function crearGraficas(datos) {
                             "#ef4444"
                     }
                 ]
+            },
+            options: {
+                responsive: true
             }
         });
 
@@ -372,39 +371,12 @@ function crearGraficas(datos) {
                     data:
                         Object.values(mapa)
                 }]
+            },
+            options: {
+                responsive: true
             }
         });
 
-}
-
-/* ===================================================== */
-function analizarGrafica(datos) {
-
-    if (!datos || datos.length < 2) {
-        texto("analisisGrafica", "Sin suficientes datos.");
-        return;
-    }
-
-    const ultimos =
-        datos.slice(-5);
-
-    const a =
-        promedio(ultimos, "nivelAnimo");
-
-    const e =
-        promedio(ultimos, "nivelEstres");
-
-    let msg =
-        "🙂 Estado estable.";
-
-    if (a <= 4 && e >= 7)
-        msg = "🚨 Riesgo detectado.";
-    else if (e >= 7)
-        msg = "⚠ Estrés alto.";
-    else if (a <= 5)
-        msg = "⚠ Ánimo bajo.";
-
-    texto("analisisGrafica", msg);
 }
 
 /* ===================================================== */
@@ -459,4 +431,60 @@ function irPsicologos() { location.href = "psicologos.html"; }
 function logout() {
     localStorage.clear();
     location.href = "login.html";
+}
+
+/* =====================================================
+PDF PREMIUM
+===================================================== */
+function generarPDF() {
+
+    if (!window.jspdf) {
+        alert("No cargó jsPDF");
+        return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc =
+        new jsPDF();
+
+    doc.setFontSize(22);
+    doc.text("MindCare Reporte", 20, 20);
+
+    doc.setFontSize(12);
+
+    doc.text(
+        document.getElementById("bienvenida").innerText,
+        20,
+        40
+    );
+
+    doc.text(
+        "IA: " +
+        document.getElementById("iaResultado").innerText,
+        20,
+        55
+    );
+
+    doc.text(
+        "Último Test: " +
+        document.getElementById("phq9Box").innerText,
+        20,
+        70
+    );
+
+    doc.text(
+        "Promedio: " +
+        document.getElementById("promedioResultado").innerText,
+        20,
+        85
+    );
+
+    doc.text(
+        "Consejo: " +
+        document.getElementById("consejoBox").innerText,
+        20,
+        100
+    );
+
+    doc.save("MindCare_Reporte.pdf");
 }

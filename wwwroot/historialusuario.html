@@ -2,110 +2,16 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historial Usuario</title>
-
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-    <style>
-        body {
-            font-family: Segoe UI;
-            background: #f4f7fb;
-            padding: 30px;
-            margin: 0;
-        }
-
-        .card {
-            background: white;
-            max-width: 1100px;
-            margin: auto;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,.08);
-        }
-
-        h1 {
-            margin: 0 0 25px;
-            color: #1e293b;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .box {
-            background: #f8fafc;
-            padding: 20px;
-            border-radius: 15px;
-        }
-
-        ul {
-            padding: 0;
-            list-style: none;
-        }
-
-        li {
-            padding: 12px;
-            margin-bottom: 10px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 3px 10px rgba(0,0,0,.05);
-        }
-
-        button {
-            margin-top: 25px;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 12px;
-            background: #2563eb;
-            color: white;
-            cursor: pointer;
-            font-weight: 700;
-        }
-
-        @media(max-width:900px) {
-            .grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
 </head>
 
 <body>
 
-    <div class="card">
+    <h1>Historial del Usuario</h1>
 
-        <h1>
-            <i class="fa-solid fa-user"></i>
-            Historial del Usuario
-        </h1>
-
-        <div class="grid">
-
-            <div class="box">
-                <h2>Registros emocionales</h2>
-                <ul id="registros">
-                    <li>Cargando...</li>
-                </ul>
-            </div>
-
-            <div class="box">
-                <h2>PHQ9</h2>
-                <ul id="tests">
-                    <li>Cargando...</li>
-                </ul>
-            </div>
-
-        </div>
-
-        <button onclick="volver()">
-            Volver
-        </button>
-
-    </div>
+    <div id="registros">Cargando registros...</div>
+    <div id="tests">Cargando PHQ9...</div>
 
     <script src="js/historialUsuario.js"></script>
 

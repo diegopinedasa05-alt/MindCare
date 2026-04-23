@@ -16,138 +16,76 @@ namespace AppTesisAPI.Controllers
             _context = context;
         }
 
-        /* =====================================
-           CREAR CITA
-        ===================================== */
+        // CREAR CITA
         [HttpPost]
-        public async Task<IActionResult> CrearCita([FromBody] Cita cita)
+        public async Task<IActionResult> Crear([FromBody] Cita cita)
         {
-            try
+            if (cita == null)
+                return BadRequest("Datos vacíos");
+
+            cita.Estado = "Pendiente";
+            cita.FechaCreacion = DateTime.Now;
+
+            _context.Citas.Add(cita);
+            await _context.SaveChangesAsync();
+
+            return Ok(new
             {
-                if (cita == null ||
-                    cita.UsuarioId <= 0 ||
-                    cita.PsicologoId <= 0 ||
-                    cita.Fecha == default)
-                {
-                    return BadRequest("Datos inválidos.");
-                }
-
-                bool existeUsuario =
-                    await _context.Usuarios
-                    .AnyAsync(x => x.Id == cita.UsuarioId);
-
-                if (!existeUsuario)
-                    return BadRequest("Usuario no existe.");
-
-                bool existePsico =
-                    await _context.Psicologos
-                    .AnyAsync(x => x.Id == cita.PsicologoId);
-
-                if (!existePsico)
-                    return BadRequest("Psicólogo no existe.");
-
-                bool ocupada =
-                    await _context.Citas.AnyAsync(x =>
-                        x.PsicologoId == cita.PsicologoId &&
-                        x.Fecha == cita.Fecha &&
-                        x.Estado != "Cancelada");
-
-                if (ocupada)
-                    return BadRequest("Horario ocupado.");
-
-                cita.Estado = "Pendiente";
-                cita.FechaCreacion = DateTime.UtcNow;
-
-                _context.Citas.Add(cita);
-                await _context.SaveChangesAsync();
-
-                return Ok(new
-                {
-                    mensaje = "Cita creada correctamente"
-                });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(
-                    ex.InnerException?.Message ??
-                    ex.Message
-                );
-            }
+                mensaje = "Cita creada"
+            });
         }
 
-        /* =====================================
-           CITAS DEL PSICÓLOGO
-        ===================================== */
-        [HttpGet("usuario/{usuarioId}")]
-        public async Task<IActionResult> GetCitasPorUsuario(int usuarioId)
+        // CITAS DEL USUARIO
+        [HttpGet("usuario/{id}")]
+        public async Task<IActionResult> Usuario(int id)
         {
-            try
-            {
-                var citas = await _context.Citas
-                    .Where(x => x.UsuarioId == usuarioId)
-                    .OrderByDescending(x => x.Fecha)
-                    .Select(x => new
-                    {
-                        x.Id,
-                        x.Fecha,
-                        x.Estado,
-                        x.Observacion,
-                        x.PsicologoId
-                    })
-                    .ToListAsync();
+            var lista = await _context.Citas
+                .Where(x => x.UsuarioId == id)
+                .OrderBy(x => x.Fecha)
+                .ToListAsync();
 
-                return Ok(citas);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Ok(lista);
         }
 
-        /* =====================================
-           CITAS DEL USUARIO
-        ===================================== */
-        [HttpGet("usuario/{usuarioId}")]
-        public async Task<IActionResult> GetUsuario(int usuarioId)
+        // CITAS DEL PSICÓLOGO
+        [HttpGet("psicologo/{id}")]
+        public async Task<IActionResult> Psicologo(int id)
         {
-            var citas = await _context.Citas
-                .Where(x =>
-                    x.UsuarioId == usuarioId &&
-                    x.Estado != "Cancelada")
-                .OrderByDescending(x => x.Fecha)
+            var lista = await _context.Citas
+                .Where(x => x.PsicologoId == id)
+                .OrderBy(x => x.Fecha)
                 .Select(x => new
                 {
                     x.Id,
+                    x.UsuarioId,
+                    x.PsicologoId,
                     x.Fecha,
                     x.Estado,
                     x.Observacion,
-                    x.PsicologoId
+                    nombrePaciente = _context.Usuarios
+                        .Where(u => u.Id == x.UsuarioId)
+                        .Select(u => u.Nombre)
+                        .FirstOrDefault()
                 })
                 .ToListAsync();
 
-            return Ok(citas);
+            return Ok(lista);
         }
 
-        /* =====================================
-           CANCELAR
-        ===================================== */
+        // CANCELAR
         [HttpPut("cancelar/{id}")]
         public async Task<IActionResult> Cancelar(int id)
         {
-            var cita =
-                await _context.Citas.FindAsync(id);
+            var cita = await _context.Citas.FindAsync(id);
 
             if (cita == null)
-                return NotFound("No existe.");
+                return NotFound();
 
             cita.Estado = "Cancelada";
 
             await _context.SaveChangesAsync();
 
-            return Ok(new
-            {
-                mensaje = "Cita cancelada"
-            });
+            return Ok();
         }
     }
 }

@@ -516,12 +516,12 @@ async function generarPDF() {
     doc.setFontSize(9);
     doc.setTextColor(120);
     doc.text(
-        "MindCare © Reporte generado automáticamente",
+        "MindCare © Reporte generado",
         14,
         287
     );
 
-    doc.save("MindCare_Reporte_Premium.pdf");
+    doc.save("MindCare Reporte");
 }
 
 /* ===================================================== */

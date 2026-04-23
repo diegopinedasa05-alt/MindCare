@@ -20,5 +20,6 @@ namespace AppTesisAPI.Data
         public DbSet<HistorialPredictivo> HistorialPredictivo { get; set; }
         public DbSet<RecuperacionPassword> RecuperacionPasswords { get; set; }
         public DbSet<AuditoriaAcceso> AuditoriaAccesos { get; set; }
+        public DbSet<TestEstresLaboral> TestEstresLaboral { get; set; }
     }
 }

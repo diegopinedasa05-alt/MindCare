@@ -17,10 +17,6 @@
           href="css/dashboard.css">
 </head>
 
-<!-- AGREGA ANTES DE </body> EN dashboard.html -->
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <body>
 
     <div class="layout">
@@ -83,9 +79,7 @@
                     Bienvenido
                 </h1>
 
-                <p>
-                    
-                </p>
+                <p></p>
 
                 <button class="pdf-btn"
                         onclick="generarPDF()">
@@ -94,11 +88,10 @@
                     Descargar reporte
 
                 </button>
+
             </header>
 
-
             <!-- CARDS -->
-
             <section class="cards">
 
                 <!-- IA -->
@@ -113,6 +106,7 @@
                     </p>
                 </div>
 
+                <!-- ALERTA -->
                 <div class="card">
                     <h3>
                         <i class="fa-solid fa-triangle-exclamation"></i>
@@ -124,10 +118,11 @@
                     </p>
                 </div>
 
+                <!-- ÚLTIMO TEST -->
                 <div class="card">
                     <h3>
                         <i class="fa-solid fa-notes-medical"></i>
-                        Último PHQ9
+                        Último Test
                     </h3>
 
                     <p id="phq9Box">
@@ -135,16 +130,19 @@
                     </p>
                 </div>
 
+                <!-- EVOLUCIÓN -->
                 <div class="card">
                     <h3>
                         <i class="fa-solid fa-arrow-trend-up"></i>
-                        Evolución PHQ9
+                        Evolución Test
                     </h3>
 
                     <p id="phq9Trend">
                         Analizando...
                     </p>
                 </div>
+
+                <!-- CITA -->
                 <div class="card">
                     <h3>
                         <i class="fa-solid fa-calendar-check"></i>
@@ -204,9 +202,9 @@
                     </p>
                 </div>
 
-
             </section>
 
+            <!-- GRÁFICAS -->
             <section class="charts">
 
                 <div class="chart-card">
@@ -221,11 +219,19 @@
 
             </section>
 
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        </main>
 
-            <!-- JS -->
-            <script src="js/dashboard.js"></script>
-            <div id="toast"></div>
+    </div>
+
+    <!-- LIBRERÍAS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- JS -->
+    <script src="js/dashboard.js"></script>
+
+    <div id="toast"></div>
 
 </body>
 </html>

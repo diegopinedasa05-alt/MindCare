@@ -2,11 +2,11 @@
    MINDCARE DASHBOARD MASTER FINAL PRO
    ✅ Dashboard limpio
    ✅ Citas
-   ✅ PHQ9
+   ✅ PHQ9 + Estrés Laboral
    ✅ Historial IA
    ✅ Registros emocionales
    ✅ Gráficas
-   ✅ PDF PREMIUM con logo cerebro
+   ✅ PDF PREMIUM
 ===================================================== */
 
 const API =
@@ -141,60 +141,89 @@ async function cargarRegistros() {
 }
 
 /* =====================================================
-PHQ9
+TEST PHQ9 + ESTRÉS LABORAL
 ===================================================== */
 async function cargarPHQ9() {
 
     try {
 
-        const res =
+        const resPHQ =
             await fetch(
                 `${API}/TestPHQ9/${usuarioId}?t=${Date.now()}`
             );
 
-        const lista =
-            await res.json();
+        const listaPHQ =
+            await resPHQ.json();
 
-        if (!lista || !lista.length) {
+        const resEstres =
+            await fetch(
+                `${API}/TestEstresLaboral/${usuarioId}?t=${Date.now()}`
+            );
+
+        const listaEstres =
+            await resEstres.json();
+
+        const tienePHQ =
+            listaPHQ && listaPHQ.length;
+
+        const tieneEstres =
+            listaEstres && listaEstres.length;
+
+        if (!tienePHQ && !tieneEstres) {
 
             texto("phq9Box", "Sin test");
             texto("phq9Trend", "Sin historial");
             return;
         }
 
-        const actual =
-            lista[0];
+        let actual;
+        let anterior;
+        let tipo = "";
+
+        if (tieneEstres) {
+
+            actual = listaEstres[0];
+            anterior = listaEstres[1];
+            tipo = "Estrés";
+
+        } else {
+
+            actual = listaPHQ[0];
+            anterior = listaPHQ[1];
+            tipo = "PHQ9";
+        }
 
         texto(
             "phq9Box",
-            `${actual.puntaje} pts | ${actual.nivel}`
+            `${tipo}: ${actual.puntaje} pts | ${actual.nivel}`
         );
 
-        if (lista.length >= 2) {
+        if (anterior) {
 
             const dif =
-                lista[0].puntaje -
-                lista[1].puntaje;
+                actual.puntaje -
+                anterior.puntaje;
 
             if (dif > 0)
                 texto("phq9Trend", `⚠ Subió ${dif}`);
+
             else if (dif < 0)
                 texto("phq9Trend", `✅ Mejoró ${Math.abs(dif)}`);
+
             else
                 texto("phq9Trend", "Sin cambios");
 
         } else {
 
             texto("phq9Trend", "Primer test");
-
         }
 
     } catch {
 
         texto("phq9Box", "Sin test");
+        texto("phq9Trend", "Sin historial");
 
     }
-
 }
 
 /* =====================================================
@@ -430,115 +459,4 @@ function irPsicologos() { location.href = "psicologos.html"; }
 function logout() {
     localStorage.clear();
     location.href = "login.html";
-}
-
-/* =====================================================
-PDF PREMIUM CON LOGO CEREBRO
-===================================================== */
-async function generarPDF() {
-
-    if (!window.jspdf) {
-        alert("No cargó jsPDF");
-        return;
-    }
-
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF("p", "mm", "a4");
-
-    const nombre =
-        document.getElementById("bienvenida")?.innerText || "Usuario";
-
-    const promedioTxt =
-        document.getElementById("promedioResultado")?.innerText || "-";
-
-    const ia =
-        document.getElementById("iaResultado")?.innerText || "-";
-
-    const phq9 =
-        document.getElementById("phq9Box")?.innerText || "-";
-
-    const cita =
-        document.getElementById("citaBox")?.innerText || "-";
-
-    const alerta =
-        document.getElementById("alertaBox")?.innerText || "-";
-
-    const consejo =
-        document.getElementById("consejoBox")?.innerText || "-";
-
-    /* HEADER */
-    doc.setFillColor(37, 99, 235);
-    doc.rect(0, 0, 210, 35, "F");
-
-    /* LOGO CEREBRO */
-    doc.setFillColor(255, 255, 255);
-    doc.circle(20, 18, 8, "F");
-
-    doc.setFontSize(20);
-    doc.setTextColor(255, 255, 255);
-    doc.text("MindCare", 35, 18);
-
-    doc.setFontSize(10);
-    doc.text("Reporte emocional premium", 35, 25);
-
-    /* TITULO */
-    doc.setTextColor(30, 41, 59);
-    doc.setFontSize(16);
-    doc.text("Resumen Personal", 14, 48);
-
-    doc.setFontSize(11);
-    doc.text("Usuario: " + nombre, 14, 58);
-    doc.text("Fecha: " + new Date().toLocaleString(), 14, 66);
-
-    /* TARJETAS */
-    tarjeta(doc, 14, 78, 86, 28, "Promedio", promedioTxt);
-    tarjeta(doc, 110, 78, 86, 28, "IA", ia);
-
-    tarjeta(doc, 14, 112, 86, 28, "PHQ9", phq9);
-    tarjeta(doc, 110, 112, 86, 28, "Cita", cita);
-
-    tarjeta(doc, 14, 146, 182, 28, "Alerta", alerta);
-
-    /* CONSEJO */
-    doc.setFontSize(15);
-    doc.text("Consejo Inteligente", 14, 190);
-
-    doc.setFontSize(11);
-    const lineas =
-        doc.splitTextToSize(consejo, 180);
-
-    doc.text(lineas, 14, 200);
-
-    /* FOOTER */
-    doc.setDrawColor(220);
-    doc.line(14, 280, 196, 280);
-
-    doc.setFontSize(9);
-    doc.setTextColor(120);
-    doc.text(
-        "MindCare © Reporte generado",
-        14,
-        287
-    );
-
-    doc.save("MindCare Reporte");
-}
-
-/* ===================================================== */
-function tarjeta(doc, x, y, w, h, titulo, valor) {
-
-    doc.setDrawColor(230);
-    doc.roundedRect(x, y, w, h, 4, 4);
-
-    doc.setFontSize(10);
-    doc.setTextColor(100);
-    doc.text(titulo, x + 4, y + 8);
-
-    doc.setFontSize(11);
-    doc.setTextColor(20);
-
-    const texto =
-        doc.splitTextToSize(valor, w - 8);
-
-    doc.text(texto, x + 4, y + 18);
 }

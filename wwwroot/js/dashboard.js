@@ -470,9 +470,9 @@ function pintarPHQ(p) {
 
     el.innerHTML = `
     <b>Puntaje actual:</b> ${p}<br><br>
-    ≤4 Sin depresión<br>
-    5-14 Revisión clínica<br>
-    ≥15 Tratamiento recomendado
+    Mayor o menor a 4 puntos Sin depresión<br>
+    De 5 a 14 puntos se recomienda revisión clínica<br>
+    Mayor a 15 puntos se recomienda tomar un tratamiento 
     `;
 }
 
@@ -486,12 +486,12 @@ function pintarEstres(p) {
 
     el.innerHTML = `
     <b>Puntaje actual:</b> ${p}<br><br>
-    ≤12 Sin estrés<br>
-    13-24 Alarma<br>
-    25-36 Leve<br>
-    37-48 Medio<br>
-    49-60 Alto<br>
-    61+ Grave
+    Menor o igual a 12 puntos sin estrés<br>
+    De 13 a 24 se comienza a detectar un estrés ligero<br>
+    De 25 a 36 puntos estrés medio<br>
+    De 37 a 48 puntos estrés medio alto<br>
+    De 49 a 60 puntos estrés alto <br>
+    Mayor a 61 puntos estres grave se recomienda atención
     `;
 }
 

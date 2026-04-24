@@ -565,7 +565,8 @@ function logout() {
     location.href = "login.html";
 }
 /* =====================================================
-PDF PREMIUM RESTAURADO
+PDF PREMIUM LIMPIO SIN SÍMBOLOS RAROS
+REEMPLAZA TODA TU FUNCIÓN generarPDF()
 ===================================================== */
 function generarPDF() {
 
@@ -577,76 +578,145 @@ function generarPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF("p", "mm", "a4");
 
+    /* =========================
+       DATOS
+    ========================= */
     const nombre =
         (localStorage.getItem("nombre") || "Usuario")
+            .replace("Hola,", "")
+            .trim()
             .split(" ")[0];
 
     const ia =
         document.getElementById("iaResultado")?.innerText || "-";
 
     const alerta =
-        document.getElementById("alertaBox")?.innerText || "-";
+        limpiarTexto(
+            document.getElementById("alertaBox")?.innerText || "-"
+        );
 
     const test =
-        document.getElementById("phq9Box")?.innerText || "-";
+        limpiarTexto(
+            document.getElementById("phq9Box")?.innerText || "-"
+        );
 
     const nivel =
-        document.getElementById("phq9Trend")?.innerText || "-";
+        limpiarTexto(
+            document.getElementById("phq9Trend")?.innerText || "-"
+        );
 
     const promedio =
-        document.getElementById("promedioResultado")?.innerText || "-";
+        limpiarTexto(
+            document.getElementById("promedioResultado")?.innerText || "-"
+        );
 
     const consejo =
-        document.getElementById("consejoBox")?.innerText || "-";
+        limpiarTexto(
+            document.getElementById("consejoBox")?.innerText || "-"
+        );
 
-    /* HEADER */
-    doc.setFillColor(37, 99, 235);
-    doc.rect(0, 0, 210, 35, "F");
+    const fecha =
+        new Date().toLocaleString("es-MX");
+
+    /* =========================
+       COLORES
+    ========================= */
+    const azul = [37, 99, 235];
+    const gris = [248, 250, 252];
+    const borde = [226, 232, 240];
+    const oscuro = [15, 23, 42];
+    const grisText = [100, 116, 139];
+
+    /* =========================
+       HEADER
+    ========================= */
+    doc.setFillColor(...azul);
+    doc.rect(0, 0, 210, 38, "F");
 
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(24);
-    doc.text("MindCare", 14, 18);
+    doc.text("MindCare", 14, 16);
 
-    doc.setFontSize(10);
-    doc.text("Reporte emocional inteligente", 14, 27);
-
-    /* CONTENIDO */
-    doc.setTextColor(20, 20, 20);
-    doc.setFontSize(12);
-
-    let y = 50;
-
-    function bloque(titulo, valor) {
-
-        doc.setDrawColor(230);
-        doc.roundedRect(14, y, 182, 18, 4, 4);
-
-        doc.setFontSize(10);
-        doc.setTextColor(120);
-        doc.text(titulo, 18, y + 6);
-
-        doc.setFontSize(12);
-        doc.setTextColor(20);
-        doc.text(valor, 18, y + 13);
-
-        y += 24;
-    }
-
-    bloque("Usuario", nombre);
-    bloque("IA General", ia);
-    bloque("Alerta", alerta);
-    bloque("Evaluación", test);
-    bloque("Interpretación", nivel);
-    bloque("Promedio", promedio);
-    bloque("Consejo", consejo);
+    doc.setFontSize(11);
+    doc.text("Reporte emocional inteligente", 14, 25);
 
     doc.setFontSize(9);
-    doc.setTextColor(120);
+    doc.text(fecha, 14, 32);
+
+    /* =========================
+       TITULO
+    ========================= */
+    doc.setTextColor(...oscuro);
+    doc.setFontSize(18);
+    doc.text("Resumen personal", 14, 50);
+
+    let y = 58;
+
+    /* =========================
+       FUNCIÓN TARJETA
+    ========================= */
+    function tarjeta(titulo, valor, colorBarra = [59, 130, 246]) {
+
+        const alto = 22;
+
+        doc.setFillColor(...gris);
+        doc.setDrawColor(...borde);
+        doc.roundedRect(14, y, 182, alto, 5, 5, "FD");
+
+        /* barra lateral */
+        doc.setFillColor(...colorBarra);
+        doc.roundedRect(14, y, 4, alto, 5, 5, "F");
+
+        doc.setTextColor(...grisText);
+        doc.setFontSize(9);
+        doc.text(titulo.toUpperCase(), 22, y + 7);
+
+        doc.setTextColor(...oscuro);
+        doc.setFontSize(13);
+
+        const lineas =
+            doc.splitTextToSize(valor, 168);
+
+        doc.text(lineas, 22, y + 16);
+
+        y += alto + 8;
+    }
+
+    /* =========================
+       TARJETAS
+    ========================= */
+    tarjeta("Usuario", nombre, [59, 130, 246]);
+    tarjeta("IA General", ia, [14, 165, 233]);
+    tarjeta("Alerta", alerta, [239, 68, 68]);
+    tarjeta("Evaluación", test, [139, 92, 246]);
+    tarjeta("Interpretación", nivel, [16, 185, 129]);
+    tarjeta("Promedio", promedio, [245, 158, 11]);
+    tarjeta("Consejo", consejo, [37, 99, 235]);
+
+    /* =========================
+       FOOTER
+    ========================= */
+    doc.setDrawColor(...borde);
+    doc.line(14, 285, 196, 285);
+
+    doc.setTextColor(...grisText);
+    doc.setFontSize(9);
     doc.text(
         "MindCare © Reporte generado automáticamente",
         14,
-        287
+        291
     );
 
     doc.save("MindCare_Reporte.pdf");
+}
+
+/* =====================================================
+LIMPIAR SÍMBOLOS EXTRAÑOS
+===================================================== */
+function limpiarTexto(txt) {
+
+    return txt
+        .replace(/🚨|⚠|✅|❌|🧠|💼|📈|📊|📄|•/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
 }

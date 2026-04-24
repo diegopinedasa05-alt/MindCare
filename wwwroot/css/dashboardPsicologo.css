@@ -1,14 +1,13 @@
-﻿/* =====================================
-PANEL PSICOLOGO PREMIUM
-===================================== */
+﻿/* Panel Psicólogo Premium */
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI',sans-serif;
+    font-family: 'Segoe UI', sans-serif;
 }
 
+/* Configuración general de la página */
 body {
     min-height: 100vh;
     padding: 28px;
@@ -17,8 +16,7 @@ body {
     overflow-x: hidden;
 }
 
-/* FONDO */
-
+/* Elementos decorativos de fondo */
 .bg-circle {
     position: fixed;
     border-radius: 50%;
@@ -43,8 +41,7 @@ body {
     right: -70px;
 }
 
-/* PANEL */
-
+/* Contenedor principal del panel */
 .panel {
     max-width: 1350px;
     margin: auto;
@@ -57,8 +54,7 @@ body {
     z-index: 2;
 }
 
-/* HEADER */
-
+/* Encabezado superior */
 .top {
     display: flex;
     justify-content: space-between;
@@ -80,6 +76,7 @@ body {
         font-size: 17px;
     }
 
+/* Botón de cierre de sesión */
 .logout-btn {
     border: none;
     padding: 15px 22px;
@@ -91,8 +88,7 @@ body {
     background: linear-gradient(135deg,#ef4444,#dc2626);
 }
 
-/* CARDS */
-
+/* Tarjetas de indicadores */
 .cards {
     display: grid;
     grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
@@ -123,6 +119,7 @@ body {
         font-weight: 900;
     }
 
+/* Variantes de color */
 .purple {
     background: linear-gradient(135deg,#8b5cf6,#7c3aed);
 }
@@ -139,8 +136,7 @@ body {
     background: linear-gradient(135deg,#10b981,#059669);
 }
 
-/* BOXES */
-
+/* Secciones principales */
 .busqueda-box,
 .tabla-box,
 .calendar-box {
@@ -160,8 +156,7 @@ body {
         margin-bottom: 18px;
     }
 
-/* BUSQUEDA */
-
+/* Barra de búsqueda */
 .busqueda {
     display: grid;
     grid-template-columns: 1fr 150px;
@@ -186,8 +181,7 @@ body {
         background: linear-gradient(135deg,#6366f1,#3b82f6);
     }
 
-/* TABLA */
-
+/* Tabla de pacientes o citas */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -206,6 +200,7 @@ td {
     color: #475569;
 }
 
+    /* Botones dentro de la tabla */
     td button {
         border: none;
         padding: 10px 14px;
@@ -217,8 +212,7 @@ td {
         background: linear-gradient(135deg,#6366f1,#3b82f6);
     }
 
-/* CALENDARIO */
-
+/* Calendario */
 #calendar {
     background: white;
     padding: 10px;
@@ -238,8 +232,7 @@ td {
     font-weight: 700 !important;
 }
 
-/* MODAL */
-
+/* Ventana modal */
 .modal {
     display: none;
     position: fixed;
@@ -293,12 +286,12 @@ td {
         background: linear-gradient(135deg,#6366f1,#3b82f6);
     }
 
+/* Botón cancelar */
 .cancelar {
     background: linear-gradient(135deg,#ef4444,#dc2626) !important;
 }
 
-/* TOAST */
-
+/* Notificaciones flotantes */
 #toast {
     position: fixed;
     top: 25px;
@@ -323,8 +316,7 @@ td {
         background: #ef4444;
     }
 
-/* RESPONSIVE */
-
+/* Ajustes responsivos */
 @media(max-width:900px) {
 
     .busqueda {

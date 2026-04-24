@@ -1,10 +1,10 @@
-﻿const API = "https://mindcare-production-d670.up.railway.app/api";
+﻿/* URL base de la API */
+const API = "https://mindcare-production-d670.up.railway.app/api";
 
-// ==========================================
-// REGISTRAR PSICÓLOGO
-// ==========================================
+/* Registra un nuevo psicólogo en el sistema */
 function registrarPsicologo() {
 
+    /* Captura y limpieza de campos */
     const nombre =
         document.getElementById("nombre").value.trim();
 
@@ -23,12 +23,13 @@ function registrarPsicologo() {
     const especialidad =
         document.getElementById("especialidad").value.trim();
 
+    /* Área de mensajes */
     const msg =
         document.getElementById("msg");
 
     msg.innerText = "";
 
-    // VALIDACIÓN
+    /* Validación de campos obligatorios */
     if (!nombre || !email || !password || !especialidad) {
 
         msg.style.color = "red";
@@ -38,6 +39,7 @@ function registrarPsicologo() {
         return;
     }
 
+    /* Objeto enviado al servidor */
     const data = {
         nombre,
         email,
@@ -47,55 +49,48 @@ function registrarPsicologo() {
         especialidad
     };
 
+    /* Solicitud de registro */
     fetch(`${API}/Admin/crear-psicologo`, {
 
         method: "POST",
 
         headers: {
-            "Content-Type":
-                "application/json"
+            "Content-Type": "application/json"
         },
 
-        body:
-            JSON.stringify(data)
+        body: JSON.stringify(data)
 
     })
         .then(async res => {
 
-            const texto =
-                await res.text();
+            const texto = await res.text();
 
             if (!res.ok)
                 throw new Error(texto);
 
             return texto;
         })
+
         .then(() => {
 
             msg.style.color = "green";
-
             msg.innerText =
                 "Psicólogo registrado correctamente.";
 
             limpiarCampos();
-
         })
+
         .catch(error => {
 
             console.log(error);
 
             msg.style.color = "red";
-
             msg.innerText =
                 "No se pudo registrar.";
-
         });
-
 }
 
-// ==========================================
-// LIMPIAR
-// ==========================================
+/* Limpia los campos del formulario */
 function limpiarCampos() {
 
     document.getElementById("nombre").value = "";
@@ -104,32 +99,4 @@ function limpiarCampos() {
     document.getElementById("telefono").value = "";
     document.getElementById("zona").value = "";
     document.getElementById("especialidad").value = "";
-}
-
-#toast{
-    position: fixed;
-    top: 25px;
-    right: 25px;
-    background:#10b981;
-    color: white;
-    padding: 16px 22px;
-    border - radius: 16px;
-    font - weight: 800;
-    opacity: 0;
-    transform: translateY(-20px);
-    transition: .35s;
-    z - index: 9999;
-}
-
-#toast.show{
-    opacity: 1;
-    transform: translateY(0);
-}
-
-#toast.error{
-    background: #ef4444;
-}
-
-#toast.info{
-    background:#6366f1;
 }

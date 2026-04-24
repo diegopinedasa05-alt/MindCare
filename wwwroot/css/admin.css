@@ -1,18 +1,36 @@
-﻿* {
+﻿/* =====================================================
+   RESET GENERAL DEL SISTEMA
+   Elimina márgenes y rellenos por defecto del navegador.
+   Aplica box-sizing para mejor control de tamaños.
+   Define tipografía principal del panel administrativo.
+===================================================== */
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI',sans-serif;
+    font-family: 'Segoe UI', sans-serif;
 }
 
+/* =====================================================
+   ESTILOS GENERALES DEL BODY
+   Fondo degradado moderno.
+   Altura mínima completa de pantalla.
+   Espaciado general del contenido.
+   Color principal del texto.
+   Oculta desbordamiento horizontal.
+===================================================== */
 body {
-    background: linear-gradient(135deg,#eef2ff,#f8fafc);
+    background: linear-gradient(135deg, #eef2ff, #f8fafc);
     min-height: 100vh;
     padding: 30px;
     color: #1e293b;
     overflow-x: hidden;
 }
 
+/* =====================================================
+   CONTENEDOR PRINCIPAL DEL PANEL
+   Centra el contenido y limita ancho máximo.
+===================================================== */
 .panel {
     max-width: 1400px;
     margin: auto;
@@ -20,6 +38,10 @@ body {
     z-index: 2;
 }
 
+/* =====================================================
+   ENCABEZADO SUPERIOR
+   Distribuye título y botones.
+===================================================== */
 .top {
     display: flex;
     justify-content: space-between;
@@ -29,16 +51,22 @@ body {
     margin-bottom: 25px;
 }
 
+    /* Título principal */
     .top h1 {
         font-size: 34px;
         font-weight: 900;
     }
 
+    /* Subtexto del encabezado */
     .top p {
         opacity: .7;
         margin-top: 8px;
     }
 
+/* =====================================================
+   BOTONES GENERALES
+   Estilo compartido para cerrar sesión y nuevo usuario.
+===================================================== */
 .logout-btn,
 .nuevo-btn {
     border: none;
@@ -50,30 +78,39 @@ body {
     transition: .3s;
 }
 
+/* Botón cerrar sesión */
 .logout-btn {
     background: #ef4444;
 }
 
+/* Botón nuevo registro */
 .nuevo-btn {
-    background: linear-gradient(135deg,#2563eb,#4f46e5);
+    background: linear-gradient(135deg, #2563eb, #4f46e5);
 }
 
+    /* Animación hover */
     .logout-btn:hover,
     .nuevo-btn:hover {
         transform: translateY(-3px);
     }
 
+/* Área de acciones administrativas */
 .acciones-admin {
     margin-bottom: 20px;
 }
 
+/* =====================================================
+   TARJETAS RESUMEN (KPIs)
+   Muestra estadísticas rápidas del sistema.
+===================================================== */
 .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 18px;
     margin-bottom: 25px;
 }
 
+/* Diseño individual de tarjeta */
 .card {
     padding: 24px;
     border-radius: 22px;
@@ -81,16 +118,21 @@ body {
     box-shadow: 0 12px 30px rgba(0,0,0,.08);
 }
 
+    /* Título pequeño */
     .card h3 {
         font-size: 16px;
         margin-bottom: 10px;
     }
 
+    /* Número principal */
     .card p {
         font-size: 38px;
         font-weight: 900;
     }
 
+/* =====================================================
+   COLORES DE TARJETAS
+===================================================== */
 .blue {
     background: linear-gradient(135deg,#3b82f6,#2563eb);
 }
@@ -115,6 +157,9 @@ body {
     background: linear-gradient(135deg,#334155,#1e293b);
 }
 
+/* =====================================================
+   CAJAS DE TABLA Y GRÁFICAS
+===================================================== */
 .tabla-box,
 .chart-box {
     background: white;
@@ -124,37 +169,50 @@ body {
     margin-bottom: 25px;
 }
 
+    /* Títulos internos */
     .tabla-box h2,
     .chart-box h2 {
         margin-bottom: 20px;
         font-size: 24px;
     }
 
+/* =====================================================
+   TABLAS DEL SISTEMA
+===================================================== */
 table {
     width: 100%;
     border-collapse: collapse;
 }
 
+/* Celdas generales */
 th, td {
     padding: 14px;
     text-align: left;
     border-bottom: 1px solid #e5e7eb;
 }
 
+/* Encabezados */
 th {
     background: #f8fafc;
     font-weight: 800;
 }
 
+/* Hover sobre filas */
 tr:hover {
     background: #f9fafb;
 }
 
+/* =====================================================
+   GRÁFICA ADMINISTRATIVA
+===================================================== */
 #graficaAdmin {
     width: 100%;
     height: 320px !important;
 }
 
+/* =====================================================
+   BOTÓN DE ELIMINAR / ALERTA
+===================================================== */
 .btn-danger {
     background: #ef4444;
     color: white;
@@ -165,10 +223,15 @@ tr:hover {
     font-weight: 700;
 }
 
+    /* Hover del botón rojo */
     .btn-danger:hover {
         background: #dc2626;
     }
 
+/* =====================================================
+   MODAL GENERAL
+   Ventana emergente para formularios o confirmaciones.
+===================================================== */
 .modal {
     position: fixed;
     inset: 0;
@@ -179,6 +242,7 @@ tr:hover {
     z-index: 999;
 }
 
+/* Caja interna del modal */
 .modal-box {
     background: white;
     padding: 30px;
@@ -190,10 +254,12 @@ tr:hover {
     gap: 12px;
 }
 
+    /* Título del modal */
     .modal-box h2 {
         margin-bottom: 8px;
     }
 
+    /* Inputs del modal */
     .modal-box input {
         padding: 14px;
         border: 1px solid #d1d5db;
@@ -201,6 +267,7 @@ tr:hover {
         outline: none;
     }
 
+    /* Botones del modal */
     .modal-box button {
         padding: 14px;
         border: none;
@@ -211,10 +278,15 @@ tr:hover {
         color: white;
     }
 
+    /* Botón cancelar */
     .modal-box .cancelar {
         background: #ef4444;
     }
 
+/* =====================================================
+   TOAST NOTIFICATION
+   Mensajes flotantes del sistema.
+===================================================== */
 #toast {
     position: fixed;
     top: 25px;
@@ -230,15 +302,20 @@ tr:hover {
     z-index: 9999;
 }
 
+    /* Mostrar toast */
     #toast.show {
         opacity: 1;
         transform: translateY(0);
     }
 
+    /* Toast de error */
     #toast.error {
         background: #ef4444;
     }
 
+/* =====================================================
+   CÍRCULOS DECORATIVOS DE FONDO
+===================================================== */
 .bg-circle {
     position: fixed;
     border-radius: 50%;
@@ -247,6 +324,7 @@ tr:hover {
     opacity: .25;
 }
 
+/* Círculo superior izquierdo */
 .c1 {
     width: 280px;
     height: 280px;
@@ -255,6 +333,7 @@ tr:hover {
     left: -80px;
 }
 
+/* Círculo inferior derecho */
 .c2 {
     width: 300px;
     height: 300px;
@@ -263,17 +342,24 @@ tr:hover {
     right: -100px;
 }
 
+/* =====================================================
+   RESPONSIVE DESIGN
+   Ajustes para móviles y tablets.
+===================================================== */
 @media(max-width:768px) {
 
+    /* Encabezado vertical */
     .top {
         flex-direction: column;
         align-items: flex-start;
     }
 
+    /* Reduce números de tarjetas */
     .card p {
         font-size: 30px;
     }
 
+    /* Tabla más compacta */
     th, td {
         font-size: 14px;
         padding: 10px;

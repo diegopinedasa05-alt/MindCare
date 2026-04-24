@@ -1,14 +1,13 @@
-﻿/* ==========================================
-MINDCARE - TEST PHQ9 PRO MAX
-========================================== */
+﻿/* Estilos globales */
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI',sans-serif;
+    font-family: 'Segoe UI', sans-serif;
 }
 
+/* Configuración principal */
 body {
     min-height: 100vh;
     display: flex;
@@ -18,14 +17,14 @@ body {
     background: linear-gradient(135deg,#f8fafc,#eef4ff,#eef2ff);
 }
 
-/* CONTENEDOR */
-
+/* Contenedor general del test */
 .test-container {
     width: 100%;
     display: flex;
     justify-content: center;
 }
 
+/* Tarjeta principal */
 .test-card {
     width: 100%;
     max-width: 820px;
@@ -36,8 +35,7 @@ body {
     box-shadow: 0 25px 60px rgba(0,0,0,.07);
 }
 
-/* LOGO */
-
+/* Logo superior */
 .logo-circle {
     width: 92px;
     height: 92px;
@@ -53,8 +51,7 @@ body {
     box-shadow: 0 18px 28px rgba(37,99,235,.25);
 }
 
-/* TITULO */
-
+/* Título principal */
 h1 {
     text-align: center;
     font-size: 54px;
@@ -64,6 +61,7 @@ h1 {
     margin-bottom: 10px;
 }
 
+/* Texto descriptivo */
 .subtitle {
     text-align: center;
     color: #64748b;
@@ -71,8 +69,7 @@ h1 {
     margin-bottom: 28px;
 }
 
-/* PROGRESO */
-
+/* Barra de progreso */
 .progress-box {
     width: 100%;
     height: 16px;
@@ -82,6 +79,7 @@ h1 {
     margin-bottom: 14px;
 }
 
+/* Progreso dinámico */
 .progress-fill {
     width: 0%;
     height: 100%;
@@ -90,6 +88,7 @@ h1 {
     transition: .35s;
 }
 
+/* Contador de preguntas */
 .contador {
     text-align: center;
     color: #2563eb;
@@ -98,8 +97,7 @@ h1 {
     margin-bottom: 26px;
 }
 
-/* TARJETA PREGUNTA */
-
+/* Caja de pregunta actual */
 .question-box {
     background: #ffffff;
     border-radius: 28px;
@@ -107,6 +105,7 @@ h1 {
     box-shadow: 0 15px 30px rgba(0,0,0,.05);
 }
 
+    /* Texto de la pregunta */
     .question-box h2 {
         text-align: center;
         font-size: 34px;
@@ -116,14 +115,14 @@ h1 {
         margin-bottom: 28px;
     }
 
-/* RESPUESTAS */
-
+/* Contenedor de respuestas */
 .answers {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 18px;
 }
 
+    /* Botones de respuesta */
     .answers button {
         border: none;
         padding: 18px;
@@ -136,6 +135,7 @@ h1 {
         transition: .25s;
     }
 
+        /* Hover de respuesta */
         .answers button:hover {
             transform: translateY(-3px);
             background: linear-gradient(135deg,#60a5fa,#2563eb);
@@ -143,8 +143,7 @@ h1 {
             box-shadow: 0 15px 25px rgba(37,99,235,.18);
         }
 
-/* MENSAJE */
-
+/* Mensajes informativos */
 .mensaje {
     min-height: 28px;
     margin-top: 24px;
@@ -154,8 +153,7 @@ h1 {
     color: #16a34a;
 }
 
-/* BOTON VOLVER */
-
+/* Botón volver */
 .volver {
     display: block;
     margin: 28px auto 0 auto;
@@ -170,13 +168,13 @@ h1 {
     transition: .25s;
 }
 
+    /* Hover botón volver */
     .volver:hover {
         transform: translateY(-2px);
         box-shadow: 0 18px 28px rgba(37,99,235,.20);
     }
 
-/* TOAST */
-
+/* Notificación flotante */
 #toast {
     position: fixed;
     top: 25px;
@@ -192,11 +190,13 @@ h1 {
     background: #16a34a;
 }
 
+    /* Mostrar notificación */
     #toast.show {
         opacity: 1;
         transform: translateY(0);
     }
 
+    /* Variantes de notificación */
     #toast.error {
         background: #ef4444;
     }
@@ -205,8 +205,7 @@ h1 {
         background: #2563eb;
     }
 
-/* RESPONSIVE */
-
+/* Adaptación móvil */
 @media(max-width:760px) {
 
     .test-card {

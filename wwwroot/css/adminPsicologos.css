@@ -1,26 +1,48 @@
-﻿/* ==========================================
-   ADMIN PSICÓLOGOS PREMIUM
-========================================== */
+﻿/* =====================================================
+   PANEL ADMINISTRATIVO - PSICÓLOGOS PREMIUM
+   Hoja de estilos utilizada para la gestión de psicólogos
+   dentro del sistema :contentReference[oaicite:0]{index=0}
+===================================================== */
 
+/* =====================================================
+   RESET GENERAL
+   Elimina márgenes automáticos del navegador.
+   Mejora control de tamaños con box-sizing.
+   Define tipografía principal del sistema.
+===================================================== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI',sans-serif;
+    font-family: 'Segoe UI', sans-serif;
 }
 
+/* =====================================================
+   BODY GENERAL
+   Fondo degradado moderno tipo premium.
+   Altura mínima de pantalla completa.
+   Espaciado externo general.
+===================================================== */
 body {
     min-height: 100vh;
     padding: 30px;
-    background: radial-gradient(circle at top left,#2563eb,#1d4ed8,#0f172a);
+    background: radial-gradient(circle at top left, #2563eb, #1d4ed8, #0f172a);
 }
 
+/* =====================================================
+   CONTENEDOR PRINCIPAL
+   Centra vertical y horizontalmente la tarjeta principal.
+===================================================== */
 .page {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
+/* =====================================================
+   TARJETA PRINCIPAL
+   Caja blanca donde se encuentra el formulario.
+===================================================== */
 .card {
     width: 100%;
     max-width: 700px;
@@ -30,8 +52,10 @@ body {
     box-shadow: 0 25px 55px rgba(0,0,0,.18);
 }
 
-/* ICONO */
-
+/* =====================================================
+   ICONO PRINCIPAL SUPERIOR
+   Representa visualmente el módulo de psicólogos.
+===================================================== */
 .hero {
     width: 100px;
     height: 100px;
@@ -43,11 +67,12 @@ body {
     align-items: center;
     font-size: 42px;
     color: white;
-    background: linear-gradient(135deg,#2563eb,#1d4ed8);
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
 }
 
-/* TITULOS */
-
+/* =====================================================
+   TÍTULO PRINCIPAL
+===================================================== */
 h1 {
     text-align: center;
     font-size: 42px;
@@ -55,6 +80,9 @@ h1 {
     margin-bottom: 10px;
 }
 
+/* =====================================================
+   SUBTÍTULO DESCRIPTIVO
+===================================================== */
 .sub {
     text-align: center;
     color: #64748b;
@@ -62,8 +90,10 @@ h1 {
     font-size: 17px;
 }
 
-/* INPUTS */
-
+/* =====================================================
+   CAMPOS INPUT
+   Estilo para nombre, correo, teléfono, etc.
+===================================================== */
 input {
     width: 100%;
     padding: 18px;
@@ -74,12 +104,17 @@ input {
     outline: none;
 }
 
+    /* =====================================================
+   EFECTO AL SELECCIONAR INPUT
+   Cambia borde al color institucional.
+===================================================== */
     input:focus {
         border-color: #2563eb;
     }
 
-/* BOTONES */
-
+/* =====================================================
+   BOTONES GENERALES
+===================================================== */
 button {
     width: 100%;
     border: none;
@@ -91,32 +126,45 @@ button {
     transition: .25s;
 }
 
+    /* Espacio entre icono y texto del botón */
     button i {
         margin-right: 8px;
     }
 
+/* =====================================================
+   BOTÓN GUARDAR
+   Acción principal del formulario.
+===================================================== */
 .guardar {
     color: white;
-    background: linear-gradient(135deg,#10b981,#059669);
+    background: linear-gradient(135deg, #10b981, #059669);
     margin-top: 10px;
 }
 
+    /* Animación hover */
     .guardar:hover {
         transform: translateY(-3px);
     }
 
+/* =====================================================
+   BOTÓN VOLVER
+   Regresa al panel anterior.
+===================================================== */
 .volver {
     margin-top: 16px;
     color: white;
-    background: linear-gradient(135deg,#ef4444,#dc2626);
+    background: linear-gradient(135deg, #ef4444, #dc2626);
 }
 
+    /* Animación hover */
     .volver:hover {
         transform: translateY(-3px);
     }
 
-/* MENSAJE */
-
+/* =====================================================
+   MENSAJE DEL SISTEMA
+   Muestra éxito, error o advertencias.
+===================================================== */
 #msg {
     text-align: center;
     font-weight: 700;
@@ -124,18 +172,23 @@ button {
     min-height: 25px;
 }
 
-/* RESPONSIVE */
-
+/* =====================================================
+   DISEÑO RESPONSIVO
+   Ajustes para celulares y tablets.
+===================================================== */
 @media(max-width:760px) {
 
+    /* Reduce padding externo */
     body {
         padding: 14px;
     }
 
+    /* Reduce relleno interno de tarjeta */
     .card {
         padding: 24px;
     }
 
+    /* Reduce tamaño del título */
     h1 {
         font-size: 30px;
     }

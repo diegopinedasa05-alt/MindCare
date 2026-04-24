@@ -1,24 +1,25 @@
-﻿/* ===================================
-   MINDCARE GLOBAL THEME
-=================================== */
+﻿/* Estilos globales */
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI',sans-serif;
+    font-family: 'Segoe UI', sans-serif;
 }
 
+/* Configuración principal del sitio */
 body {
     min-height: 100vh;
     background: linear-gradient(135deg,#020617,#0f172a,#1d4ed8);
     color: white;
 }
 
+/* Área general de contenido */
 .page {
     padding: 30px;
 }
 
+/* Tarjetas reutilizables */
 .card {
     background: rgba(15,23,42,.72);
     backdrop-filter: blur(12px);
@@ -28,6 +29,7 @@ body {
     box-shadow: 0 18px 45px rgba(0,0,0,.25);
 }
 
+/* Campos de formulario */
 input,
 select,
 textarea {
@@ -42,11 +44,13 @@ textarea {
     font-size: 16px;
 }
 
+    /* Texto placeholder */
     input::placeholder,
     textarea::placeholder {
         color: #cbd5e1;
     }
 
+/* Botones generales */
 button {
     width: 100%;
     border: none;
@@ -58,36 +62,43 @@ button {
     transition: .25s;
 }
 
+    /* Hover de botones */
     button:hover {
         transform: translateY(-3px);
     }
 
+/* Botón principal */
 .btn-primary {
     background: linear-gradient(135deg,#3b82f6,#2563eb);
     color: white;
 }
 
+/* Botón éxito */
 .btn-success {
     background: linear-gradient(135deg,#22c55e,#16a34a);
     color: white;
 }
 
+/* Botón peligro */
 .btn-danger {
     background: linear-gradient(135deg,#ef4444,#dc2626);
     color: white;
 }
 
+/* Título principal */
 .title {
     font-size: 42px;
     font-weight: 900;
     margin-bottom: 10px;
 }
 
+/* Texto secundario */
 .subtitle {
     color: #cbd5e1;
     margin-bottom: 25px;
 }
 
+/* Icono circular decorativo */
 .icon-circle {
     width: 95px;
     height: 95px;
@@ -100,11 +111,13 @@ button {
     font-size: 38px;
 }
 
+/* Distribución en cuadrícula */
 .grid {
     display: grid;
     gap: 20px;
 }
 
+/* Adaptación móvil */
 @media(max-width:760px) {
 
     .page {
@@ -115,6 +128,8 @@ button {
         font-size: 32px;
     }
 }
+
+/* Notificación flotante */
 #toast {
     position: fixed;
     top: 25px;
@@ -130,15 +145,18 @@ button {
     z-index: 9999;
 }
 
+    /* Mostrar notificación */
     #toast.show {
         opacity: 1;
         transform: translateY(0);
     }
 
+    /* Toast de error */
     #toast.error {
         background: #ef4444;
     }
 
+    /* Toast informativo */
     #toast.info {
         background: #6366f1;
     }

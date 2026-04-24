@@ -1,9 +1,11 @@
-﻿body {
+﻿/* Configuración general de la página */
+body {
     background: #eef2ff;
-    font-family: Segoe UI;
+    font-family: 'Segoe UI', sans-serif;
     padding: 30px;
 }
 
+/* Tarjeta principal de contenido */
 .card {
     max-width: 900px;
     margin: auto;
@@ -13,22 +15,26 @@
     box-shadow: 0 15px 35px rgba(0,0,0,.08);
 }
 
+/* Título principal */
 h2 {
     font-size: 36px;
     margin-bottom: 20px;
     color: #334155;
 }
 
+/* Subtítulos de sección */
 h3 {
     margin-top: 25px;
     color: #3b82f6;
 }
 
+/* Listas informativas */
 ul {
     padding-left: 20px;
     line-height: 1.8;
 }
 
+/* Botón principal */
 button {
     margin-top: 25px;
     padding: 14px 22px;

@@ -1,48 +1,34 @@
-﻿/* ==========================================
-MINDCARE ADMIN.JS COMPLETO CORREGIDO
-FUNCIONES + DASHBOARD + MODAL + ELIMINAR
-========================================== */
-
+﻿/* Configuración base de la API */
 const API =
     "https://mindcare-production-d670.up.railway.app/api";
 
+/* Variable global para almacenar la gráfica activa */
 let grafica = null;
 
-/* =====================================
-LOAD
-===================================== */
+/* Inicializa el panel al cargar la página */
 window.onload = async function () {
-
     await iniciar();
-
 };
 
-/* =====================================
-INICIAR
-===================================== */
+/* Carga toda la información principal del dashboard */
 async function iniciar() {
 
     await cargarResumen();
     await cargarUsuarios();
     await cargarPsicologos();
     crearGrafica();
-
 }
 
-/* =====================================
-RESUMEN
-===================================== */
+/* Obtiene estadísticas generales del sistema */
 async function cargarResumen() {
 
     try {
 
-        const res =
-            await fetch(
-                `${API}/Admin/resumen?t=${Date.now()}`
-            );
+        const res = await fetch(
+            `${API}/Admin/resumen?t=${Date.now()}`
+        );
 
-        const data =
-            await res.json();
+        const data = await res.json();
 
         texto("usuarios", data.usuarios);
         texto("psicologos", data.psicologos);
@@ -53,27 +39,20 @@ async function cargarResumen() {
 
     } catch {
 
-        toast(
-            "Error cargando resumen",
-            "error"
-        );
+        toast("Error cargando resumen", "error");
     }
 }
 
-/* =====================================
-USUARIOS
-===================================== */
+/* Carga usuarios recientes en la tabla */
 async function cargarUsuarios() {
 
     try {
 
-        const res =
-            await fetch(
-                `${API}/Admin/usuarios-recientes?t=${Date.now()}`
-            );
+        const res = await fetch(
+            `${API}/Admin/usuarios-recientes?t=${Date.now()}`
+        );
 
-        const lista =
-            await res.json();
+        const lista = await res.json();
 
         let html = "";
 
@@ -84,14 +63,10 @@ async function cargarUsuarios() {
 <td>${x.nombre}</td>
 <td>${new Date(x.fecha).toLocaleDateString()}</td>
 <td>${x.zona || "-"}</td>
-</tr>
-`;
+</tr>`;
         });
 
-        textoHTML(
-            "tablaUsuarios",
-            html
-        );
+        textoHTML("tablaUsuarios", html);
 
     } catch {
 
@@ -102,20 +77,16 @@ async function cargarUsuarios() {
     }
 }
 
-/* =====================================
-PSICOLOGOS
-===================================== */
+/* Carga psicólogos registrados */
 async function cargarPsicologos() {
 
     try {
 
-        const res =
-            await fetch(
-                `${API}/Admin/psicologos?t=${Date.now()}`
-            );
+        const res = await fetch(
+            `${API}/Admin/psicologos?t=${Date.now()}`
+        );
 
-        const lista =
-            await res.json();
+        const lista = await res.json();
 
         let html = "";
 
@@ -126,23 +97,16 @@ async function cargarPsicologos() {
 <td>${x.nombre}</td>
 <td>${x.zona || "-"}</td>
 <td>${x.especialidad || "-"}</td>
-
 <td>
-<button
-class="btn-danger"
+<button class="btn-danger"
 onclick="eliminarPsicologo(${x.id})">
 Eliminar
 </button>
 </td>
-
-</tr>
-`;
+</tr>`;
         });
 
-        textoHTML(
-            "tablaPsicologos",
-            html
-        );
+        textoHTML("tablaPsicologos", html);
 
     } catch {
 
@@ -153,192 +117,143 @@ Eliminar
     }
 }
 
-/* =====================================
-ABRIR MODAL
-===================================== */
+/* Muestra el modal para registrar psicólogo */
 function abrirModalPsicologo() {
 
     const modal =
-        document.getElementById(
-            "modalPsicologo"
-        );
+        document.getElementById("modalPsicologo");
 
-    modal.style.display =
-        "flex";
+    modal.style.display = "flex";
 }
 
-/* =====================================
-CERRAR MODAL
-===================================== */
+/* Oculta el modal */
 function cerrarModalPsicologo() {
 
     const modal =
-        document.getElementById(
-            "modalPsicologo"
-        );
+        document.getElementById("modalPsicologo");
 
-    modal.style.display =
-        "none";
+    modal.style.display = "none";
 }
 
-/* =====================================
-GUARDAR PSICOLOGO
-===================================== */
+/* Registra un nuevo psicólogo */
 async function guardarPsicologo() {
 
     const body = {
 
-        nombre:
-            valor("nombrePsico"),
-
-        email:
-            valor("correoPsico"),
-
-        password:
-            valor("passPsico"),
-
-        telefono:
-            valor("telPsico"),
-
-        zona:
-            valor("zonaPsico"),
-
-        especialidad:
-            valor("espPsico")
+        nombre: valor("nombrePsico"),
+        email: valor("correoPsico"),
+        password: valor("passPsico"),
+        telefono: valor("telPsico"),
+        zona: valor("zonaPsico"),
+        especialidad: valor("espPsico")
     };
 
-    const res =
-        await fetch(
-            `${API}/Admin/registrar-psicologo`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type":
-                        "application/json"
-                },
-                body:
-                    JSON.stringify(body)
-            }
-        );
+    const res = await fetch(
+        `${API}/Admin/registrar-psicologo`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(body)
+        }
+    );
 
-    const txt =
-        await res.text();
+    const txt = await res.text();
 
     if (!res.ok) {
 
-        toast(
-            txt,
-            "error"
-        );
-
+        toast(txt, "error");
         return;
     }
 
-    toast(
-        "Psicólogo creado"
-    );
+    toast("Psicólogo creado");
 
     cerrarModalPsicologo();
 
     await iniciar();
 }
 
-/* =====================================
-ELIMINAR
-===================================== */
+/* Elimina un psicólogo por ID */
 async function eliminarPsicologo(id) {
 
-    if (!confirm(
-        "¿Eliminar psicólogo?"
-    )) return;
+    if (!confirm("¿Eliminar psicólogo?"))
+        return;
 
-    const res =
-        await fetch(
-            `${API}/Admin/eliminar-psicologo/${id}`,
-            {
-                method: "DELETE"
-            }
-        );
+    const res = await fetch(
+        `${API}/Admin/eliminar-psicologo/${id}`,
+        {
+            method: "DELETE"
+        }
+    );
 
-    const txt =
-        await res.text();
+    const txt = await res.text();
 
     toast(txt);
 
     await iniciar();
 }
 
-/* =====================================
-GRAFICA
-===================================== */
+/* Genera gráfica estadística del dashboard */
 function crearGrafica() {
 
     const canvas =
-        document.getElementById(
-            "graficaAdmin"
-        );
+        document.getElementById("graficaAdmin");
 
     if (!canvas) return;
 
     if (grafica)
         grafica.destroy();
 
-    grafica =
-        new Chart(canvas, {
-            type: "bar",
-            data: {
-                labels: [
-                    "Usuarios",
-                    "Psicólogos",
-                    "Citas",
-                    "Tests",
-                    "Registros"
+    grafica = new Chart(canvas, {
+
+        type: "bar",
+
+        data: {
+            labels: [
+                "Usuarios",
+                "Psicólogos",
+                "Citas",
+                "Tests",
+                "Registros"
+            ],
+
+            datasets: [{
+                data: [
+                    numero("usuarios"),
+                    numero("psicologos"),
+                    numero("citas"),
+                    numero("tests"),
+                    numero("registros")
                 ],
-                datasets: [{
-                    data: [
-                        numero("usuarios"),
-                        numero("psicologos"),
-                        numero("citas"),
-                        numero("tests"),
-                        numero("registros")
-                    ],
-                    borderRadius: 12
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
+                borderRadius: 12
+            }]
+        },
+
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
                 }
             }
-        });
+        }
+    });
 }
 
-/* =====================================
-LOGOUT
-===================================== */
+/* Cierra sesión del administrador */
 function logout() {
 
     localStorage.clear();
 
-    location.href =
-        "login.html";
+    location.href = "login.html";
 }
 
-/* =====================================
-TOAST
-===================================== */
-function toast(
-    msg,
-    tipo = "ok"
-) {
+/* Muestra notificaciones visuales */
+function toast(msg, tipo = "ok") {
 
     const t =
-        document.getElementById(
-            "toast"
-        );
+        document.getElementById("toast");
 
     if (!t) return;
 
@@ -346,24 +261,16 @@ function toast(
     t.innerText = msg;
 
     if (tipo === "error")
-        t.classList.add(
-            "error"
-        );
+        t.classList.add("error");
 
-    t.classList.add(
-        "show"
-    );
+    t.classList.add("show");
 
     setTimeout(() => {
-
         t.className = "";
-
     }, 3000);
 }
 
-/* =====================================
-UTILIDADES
-===================================== */
+/* Asigna texto a un elemento */
 function texto(id, valor) {
 
     const el =
@@ -373,6 +280,7 @@ function texto(id, valor) {
         el.innerText = valor;
 }
 
+/* Inserta HTML en un elemento */
 function textoHTML(id, valor) {
 
     const el =
@@ -382,15 +290,16 @@ function textoHTML(id, valor) {
         el.innerHTML = valor;
 }
 
+/* Obtiene valor de input */
 function valor(id) {
 
     const el =
         document.getElementById(id);
 
-    return el ?
-        el.value : "";
+    return el ? el.value : "";
 }
 
+/* Convierte texto a número */
 function numero(id) {
 
     const el =
@@ -398,7 +307,5 @@ function numero(id) {
 
     if (!el) return 0;
 
-    return parseInt(
-        el.innerText
-    ) || 0;
+    return parseInt(el.innerText) || 0;
 }

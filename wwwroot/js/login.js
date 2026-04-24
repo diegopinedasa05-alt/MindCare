@@ -1,22 +1,20 @@
-﻿const API =
+﻿
+const API =
     "https://mindcare-production-d670.up.railway.app/api";
 
+/* ===================================================== */
 async function login() {
 
     const email =
-        document.getElementById(
-            "email"
-        ).value.trim();
+        document.getElementById("email")
+            .value.trim();
 
     const password =
-        document.getElementById(
-            "password"
-        ).value.trim();
+        document.getElementById("password")
+            .value.trim();
 
     const mensaje =
-        document.getElementById(
-            "mensaje"
-        );
+        document.getElementById("mensaje");
 
     mensaje.innerText = "";
 
@@ -37,17 +35,16 @@ async function login() {
                 `${API}/Auth/login`,
                 {
                     method: "POST",
-
                     headers: {
                         "Content-Type":
                             "application/json"
                     },
-
                     body: JSON.stringify({
                         email,
                         password
                     })
-                });
+                }
+            );
 
         const texto =
             await response.text();
@@ -58,29 +55,29 @@ async function login() {
         const data =
             JSON.parse(texto);
 
+        /* GUARDAR */
         localStorage.setItem(
             "usuarioId",
-            data.usuarioId
-        );
-
-        localStorage.setItem(
-            "rol",
-            data.rol
+            data.usuarioId || ""
         );
 
         localStorage.setItem(
             "nombre",
-            data.nombre
+            data.nombre || "Usuario"
         );
 
-        mostrarToast(
-            "Bienvenido"
+        localStorage.setItem(
+            "rol",
+            data.rol || "Usuario"
         );
+
+        mostrarToast("Bienvenido");
 
         setTimeout(() => {
 
             const rol =
-                data.rol.toLowerCase();
+                (data.rol || "usuario")
+                    .toLowerCase();
 
             if (rol === "admin") {
 
@@ -104,7 +101,7 @@ async function login() {
 
             }
 
-        }, 800);
+        }, 700);
 
     }
     catch (error) {
@@ -116,43 +113,35 @@ async function login() {
         );
 
     }
-
 }
 
-/* TOAST */
+/* =====================================================
+TOAST
+===================================================== */
 function mostrarToast(
     mensaje,
     tipo = "ok"
 ) {
 
     const toast =
-        document.getElementById(
-            "toast"
-        );
+        document.getElementById("toast");
+
+    if (!toast) return;
 
     toast.className = "";
-
-    toast.innerText =
-        mensaje;
+    toast.innerText = mensaje;
 
     if (tipo === "error")
-        toast.classList.add(
-            "error"
-        );
+        toast.classList.add("error");
 
     if (tipo === "info")
-        toast.classList.add(
-            "info"
-        );
+        toast.classList.add("info");
 
-    toast.classList.add(
-        "show"
-    );
+    toast.classList.add("show");
 
     setTimeout(() => {
 
         toast.className = "";
 
     }, 3000);
-
 }

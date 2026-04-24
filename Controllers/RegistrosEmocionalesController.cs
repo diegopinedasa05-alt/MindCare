@@ -7,7 +7,7 @@ namespace AppTesisAPI.Controllers
 {
     /// <summary>
     /// Controlador encargado de la gestión de registros emocionales del usuario.
-    /// Permite almacenar y consultar estados emocionales a lo largo del tiempo.
+    /// Permite almacenar y consultar estados emocionales.
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
@@ -15,100 +15,183 @@ namespace AppTesisAPI.Controllers
     {
         private readonly AppDbContext _context;
 
-        /// <summary>
-        /// Constructor que inicializa el contexto de base de datos.
-        /// </summary>
         public RegistrosEmocionalesController(AppDbContext context)
         {
             _context = context;
         }
 
-        // ===============================
+        // ==========================================
         // CREAR REGISTRO
-        // ===============================
-
-        /// <summary>
-        /// Registra un nuevo estado emocional del usuario.
-        /// </summary>
-        /// <param name="registro">Datos emocionales</param>
-        /// <returns>Mensaje de confirmación</returns>
+        // ==========================================
         [HttpPost]
-        public async Task<IActionResult> Crear([FromBody] RegistrosEmocionales registro)
+        public async Task<IActionResult> Crear(
+            [FromBody] RegistrosEmocionales registro)
         {
-            // 🔹 Validación básica
-            if (registro == null || registro.UsuarioId <= 0)
-                return BadRequest("Datos inválidos");
-
-            // 🔹 Validar existencia de usuario
-            var existeUsuario = await _context.Usuarios
-                .AnyAsync(u => u.Id == registro.UsuarioId);
-
-            if (!existeUsuario)
-                return NotFound("Usuario no encontrado");
-
-            // 🔹 Validar rangos (opcional pero PRO)
-            if (registro.NivelAnimo < 0 || registro.NivelAnimo > 10 ||
-                registro.NivelEstres < 0 || registro.NivelEstres > 10)
+            try
             {
-                return BadRequest("Los niveles deben estar entre 0 y 10");
+                if (registro == null ||
+                    registro.UsuarioId <= 0)
+                {
+                    return BadRequest(
+                        "Datos inválidos"
+                    );
+                }
+
+                var existeUsuario =
+                    await _context.Usuarios
+                    .AnyAsync(x =>
+                        x.Id ==
+                        registro.UsuarioId);
+
+                if (!existeUsuario)
+                {
+                    return NotFound(
+                        "Usuario no encontrado"
+                    );
+                }
+
+                if (
+                    registro.NivelAnimo < 0 ||
+                    registro.NivelAnimo > 10 ||
+
+                    registro.NivelEstres < 0 ||
+                    registro.NivelEstres > 10
+                )
+                {
+                    return BadRequest(
+                        "Los niveles deben estar entre 0 y 10"
+                    );
+                }
+
+                /* =====================================
+                   FECHA MÉXICO 🇲🇽 CORREGIDA
+                ===================================== */
+
+                registro.Fecha =
+                    ObtenerHoraMexico();
+
+                _context
+                    .RegistrosEmocionales
+                    .Add(registro);
+
+                await _context
+                    .SaveChangesAsync();
+
+                return Ok(new
+                {
+                    mensaje =
+                    "Registro emocional guardado correctamente"
+                });
             }
-
-            // 🔹 Asignar fecha automática
-            registro.Fecha = DateTime.UtcNow;
-
-            _context.RegistrosEmocionales.Add(registro);
-            await _context.SaveChangesAsync();
-
-            return Ok(new { mensaje = "Registro emocional guardado correctamente" });
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    ex.Message
+                );
+            }
         }
 
-        // ===============================
-        // OBTENER POR USUARIO
-        // ===============================
-
-        /// <summary>
-        /// Obtiene todos los registros emocionales de un usuario.
-        /// </summary>
-        /// <param name="usuarioId">ID del usuario</param>
-        /// <returns>Lista de registros ordenados por fecha</returns>
+        // ==========================================
+        // OBTENER HISTORIAL
+        // ==========================================
         [HttpGet("{usuarioId}")]
-        public async Task<IActionResult> Get(int usuarioId)
+        public async Task<IActionResult> Get(
+            int usuarioId)
         {
-            var datos = await _context.RegistrosEmocionales
-                .Where(r => r.UsuarioId == usuarioId)
-                .OrderByDescending(r => r.Fecha)
+            var datos =
+                await _context
+                .RegistrosEmocionales
+                .Where(x =>
+                    x.UsuarioId ==
+                    usuarioId)
+                .OrderByDescending(x =>
+                    x.Fecha)
                 .ToListAsync();
 
             return Ok(datos);
         }
 
-        // ===============================
-        // PROMEDIO EMOCIONAL (EXTRA PRO 🔥)
-        // ===============================
-
-        /// <summary>
-        /// Calcula el promedio de ánimo y estrés del usuario.
-        /// </summary>
-        /// <param name="usuarioId">ID del usuario</param>
-        /// <returns>Promedios emocionales</returns>
+        // ==========================================
+        // PROMEDIOS
+        // ==========================================
         [HttpGet("promedio/{usuarioId}")]
-        public async Task<IActionResult> GetPromedio(int usuarioId)
+        public async Task<IActionResult>
+            GetPromedio(int usuarioId)
         {
-            var registros = await _context.RegistrosEmocionales
-                .Where(r => r.UsuarioId == usuarioId)
+            var registros =
+                await _context
+                .RegistrosEmocionales
+                .Where(x =>
+                    x.UsuarioId ==
+                    usuarioId)
                 .ToListAsync();
 
             if (!registros.Any())
-                return Ok(new { mensaje = "Sin datos" });
+            {
+                return Ok(new
+                {
+                    mensaje = "Sin datos"
+                });
+            }
 
-            var promedioAnimo = registros.Average(r => r.NivelAnimo);
-            var promedioEstres = registros.Average(r => r.NivelEstres);
+            var promedioAnimo =
+                registros.Average(x =>
+                    x.NivelAnimo);
+
+            var promedioEstres =
+                registros.Average(x =>
+                    x.NivelEstres);
 
             return Ok(new
             {
                 promedioAnimo,
                 promedioEstres
             });
+        }
+
+        // ==========================================
+        // MÉTODO HORA MÉXICO (Railway/Linux/Windows)
+        // ==========================================
+        private DateTime ObtenerHoraMexico()
+        {
+            try
+            {
+                // Linux Railway
+                var zona =
+                    TimeZoneInfo
+                    .FindSystemTimeZoneById(
+                        "America/Mexico_City"
+                    );
+
+                return TimeZoneInfo
+                    .ConvertTimeFromUtc(
+                        DateTime.UtcNow,
+                        zona
+                    );
+            }
+            catch
+            {
+                try
+                {
+                    // Windows local
+                    var zona =
+                        TimeZoneInfo
+                        .FindSystemTimeZoneById(
+                            "Central Standard Time (Mexico)"
+                        );
+
+                    return TimeZoneInfo
+                        .ConvertTimeFromUtc(
+                            DateTime.UtcNow,
+                            zona
+                        );
+                }
+                catch
+                {
+                    // Respaldo
+                    return DateTime.Now;
+                }
+            }
         }
     }
 }

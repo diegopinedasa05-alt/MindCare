@@ -1,7 +1,10 @@
-﻿/* =========================================================
-   MINDCARE PREMIUM IA + GRAFICAS ANIMADAS
-   Reemplaza TODO dashboard.js
-========================================================= */
+﻿/* ==========================================================
+   MINDCARE DASHBOARD ULTRA PRO 2026
+   ✔ PDF definitivo
+   ✔ Gráficas premium
+   ✔ PHQ9 + Estrés visual
+   ✔ Diseño moderno
+========================================================== */
 
 const API =
     "https://mindcare-production-d670.up.railway.app/api";
@@ -9,15 +12,13 @@ const API =
 const usuarioId =
     localStorage.getItem("usuarioId");
 
-let graficaEstados = null;
-let graficaCategorias = null;
-let graficaTests = null;
+let g1 = null, g2 = null, g3 = null, g4 = null;
 
-/* ========================================================= */
+/* ========================================================== */
 window.onload = iniciarDashboard;
 window.onpageshow = iniciarDashboard;
 
-/* ========================================================= */
+/* ========================================================== */
 async function iniciarDashboard() {
 
     if (!usuarioId) {
@@ -35,15 +36,15 @@ async function iniciarDashboard() {
 
     await Promise.all([
         cargarRegistros(),
-        cargarEvaluaciones(),
+        cargarTests(),
         cargarHistorial(),
         cargarCita()
     ]);
 }
 
-/* =========================================================
-REGISTRO EMOCIONAL
-========================================================= */
+/* ==========================================================
+REGISTROS
+========================================================== */
 async function cargarRegistros() {
 
     try {
@@ -56,18 +57,10 @@ async function cargarRegistros() {
         const datos =
             await res.json();
 
-        if (!datos || !datos.length) {
-
-            texto("promedioResultado", "Sin datos");
-            texto("ultimoRegistro", "Sin registros");
-            texto("iaResultado", "Sin análisis");
-            texto("consejoBox", "Registra emociones.");
-            return;
-        }
+        if (!datos || !datos.length) return;
 
         datos.sort((a, b) =>
-            new Date(a.fecha) -
-            new Date(b.fecha)
+            new Date(a.fecha) - new Date(b.fecha)
         );
 
         const ultimo =
@@ -89,103 +82,64 @@ async function cargarRegistros() {
             `Ánimo ${animo}/10 | Estrés ${estres}/10`
         );
 
-        /* IA EXPLICATIVA */
-        let ia = "Estado estable.";
-
-        if (animo <= 4 && estres >= 7)
-            ia = "Riesgo emocional alto detectado.";
-        else if (animo <= 5)
-            ia = "Ánimo bajo constante.";
-        else if (estres >= 7)
-            ia = "Estrés elevado recurrente.";
-        else if (animo >= 8)
-            ia = "Excelente estabilidad emocional.";
-
-        texto("iaResultado", ia);
+        texto(
+            "iaResultado",
+            analizarEstado(animo, estres)
+        );
 
         texto(
             "consejoBox",
-            generarConsejo(
-                animo,
-                estres,
-                ultimo.categoria
-            )
+            consejoIA(animo, estres)
         );
 
-        crearGraficaEstados(datos);
-        crearGraficaCategorias(datos);
+        crearGraficaLinea(datos);
+        crearGraficaDona(datos);
 
-    } catch {
-
-        texto("iaResultado", "Error");
-    }
+    } catch { }
 }
 
-/* =========================================================
-TESTS PHQ + ESTRÉS
-========================================================= */
-async function cargarEvaluaciones() {
+/* ==========================================================
+TESTS
+========================================================== */
+async function cargarTests() {
 
     try {
 
         const r1 =
-            await fetch(
-                `${API}/TestPHQ9/${usuarioId}?t=${Date.now()}`
-            );
+            await fetch(`${API}/TestPHQ9/${usuarioId}`);
 
         const phq =
             await r1.json();
 
         const r2 =
-            await fetch(
-                `${API}/TestEstresLaboral/${usuarioId}?t=${Date.now()}`
-            );
+            await fetch(`${API}/TestEstresLaboral/${usuarioId}`);
 
-        const estres =
+        const est =
             await r2.json();
 
-        let totalPHQ =
+        const p1 =
             phq?.length ? phq[0].puntaje : 0;
 
-        let totalEstres =
-            estres?.length ? estres[0].puntaje : 0;
-
-        if (totalPHQ === 0 && totalEstres === 0) {
-
-            texto("phq9Box", "Sin test");
-            texto("phq9Trend", "Sin historial");
-            return;
-        }
+        const p2 =
+            est?.length ? est[0].puntaje : 0;
 
         texto(
             "phq9Box",
-            `PHQ9 ${totalPHQ} | Estrés ${totalEstres}`
+            `PHQ9 ${p1} pts | Estrés ${p2} pts`
         );
 
-        let explicacion = "";
+        texto(
+            "phq9Trend",
+            explicarResultados(p1, p2)
+        );
 
-        if (totalPHQ >= 15)
-            explicacion += "Depresión moderada/alta. ";
+        crearGraficaComparativa(p1, p2);
+        crearGraficaNivel(p1, p2);
 
-        if (totalEstres >= 48)
-            explicacion += "Estrés laboral importante.";
-
-        if (!explicacion)
-            explicacion = "Indicadores estables.";
-
-        texto("phq9Trend", explicacion);
-
-        crearGraficaTests(totalPHQ, totalEstres);
-
-    } catch {
-
-        texto("phq9Box", "Sin test");
-    }
+    } catch { }
 }
 
-/* =========================================================
-HISTORIAL IA
-========================================================= */
+/* ========================================================== */
 async function cargarHistorial() {
 
     try {
@@ -195,202 +149,262 @@ async function cargarHistorial() {
                 `${API}/HistorialPredictivo/usuario/${usuarioId}`
             );
 
-        const lista =
+        const data =
             await res.json();
-
-        if (!lista || !lista.length) {
-            texto("historialPredictivo", "Sin datos");
-            return;
-        }
 
         texto(
             "historialPredictivo",
-            lista[0].nivelRiesgo
+            data?.length
+                ? data[0].nivelRiesgo
+                : "Sin datos"
         );
 
-    } catch {
-
-        texto("historialPredictivo", "Sin datos");
-    }
+    } catch { }
 }
 
-/* =========================================================
-CITAS
-========================================================= */
+/* ========================================================== */
 async function cargarCita() {
 
     try {
 
         const res =
             await fetch(
-                `${API}/Citas/usuario/${usuarioId}?t=${Date.now()}`
+                `${API}/Citas/usuario/${usuarioId}`
             );
 
-        const lista =
+        const data =
             await res.json();
-
-        if (!lista || !lista.length) {
-            texto("citaBox", "Sin citas");
-            return;
-        }
 
         texto(
             "citaBox",
-            new Date(lista[0].fecha)
-                .toLocaleString()
+            data?.length
+                ? new Date(data[0].fecha)
+                    .toLocaleString()
+                : "Sin citas"
         );
 
-    } catch {
-
-        texto("citaBox", "Sin citas");
-    }
+    } catch { }
 }
 
-/* =========================================================
-GRAFICA REGISTRO EMOCIONAL
-========================================================= */
-function crearGraficaEstados(datos) {
+/* ==========================================================
+GRAFICA LINEA PREMIUM
+========================================================== */
+function crearGraficaLinea(datos) {
 
-    const canvas =
+    const c =
         document.getElementById("graficaLineas");
 
-    if (!canvas || typeof Chart === "undefined")
-        return;
+    if (!c || typeof Chart === "undefined") return;
 
-    if (graficaEstados)
-        graficaEstados.destroy();
+    if (g1) g1.destroy();
 
-    const ultimos =
+    const ult =
         datos.slice(-7);
 
-    graficaEstados =
-        new Chart(canvas, {
+    g1 =
+        new Chart(c, {
             type: "line",
             data: {
                 labels:
-                    ultimos.map((x, i) => "R" + (i + 1)),
+                    ult.map((x, i) => "R" + (i + 1)),
                 datasets: [
                     {
                         label: "Ánimo",
-                        data:
-                            ultimos.map(x => x.nivelAnimo),
-                        tension: .4,
+                        data: ult.map(x => x.nivelAnimo),
+                        borderColor: "#3b82f6",
+                        backgroundColor: "rgba(59,130,246,.2)",
+                        tension: .45,
                         borderWidth: 4,
-                        fill: false
+                        fill: true
                     },
                     {
                         label: "Estrés",
-                        data:
-                            ultimos.map(x => x.nivelEstres),
-                        tension: .4,
+                        data: ult.map(x => x.nivelEstres),
+                        borderColor: "#ef4444",
+                        backgroundColor: "rgba(239,68,68,.2)",
+                        tension: .45,
                         borderWidth: 4,
-                        fill: false
+                        fill: true
                     }
                 ]
             },
             options: {
                 responsive: true,
-                animation: {
-                    duration: 1800
-                }
+                animation: { duration: 2000 }
             }
         });
 }
 
-/* =========================================================
-GRAFICA CATEGORIAS
-========================================================= */
-function crearGraficaCategorias(datos) {
+/* ==========================================================
+DONA PREMIUM
+========================================================== */
+function crearGraficaDona(datos) {
 
-    const canvas =
+    const c =
         document.getElementById("graficaCategorias");
 
-    if (!canvas || typeof Chart === "undefined")
-        return;
+    if (!c || typeof Chart === "undefined") return;
 
-    if (graficaCategorias)
-        graficaCategorias.destroy();
+    if (g2) g2.destroy();
 
     const mapa = {};
 
     datos.forEach(x => {
-        mapa[x.categoria] =
-            (mapa[x.categoria] || 0) + 1;
+        mapa[x.categoria] = (mapa[x.categoria] || 0) + 1;
     });
 
-    graficaCategorias =
-        new Chart(canvas, {
+    g2 =
+        new Chart(c, {
             type: "doughnut",
             data: {
                 labels: Object.keys(mapa),
                 datasets: [{
                     data: Object.values(mapa),
-                    borderWidth: 2
+                    backgroundColor: [
+                        "#3b82f6",
+                        "#8b5cf6",
+                        "#10b981",
+                        "#f59e0b",
+                        "#ef4444"
+                    ],
+                    borderWidth: 0
                 }]
             },
             options: {
-                cutout: "65%",
-                animation: {
-                    animateRotate: true,
-                    duration: 2000
-                }
+                cutout: "70%",
+                animation: { duration: 2200 }
             }
         });
 }
 
-/* =========================================================
-GRAFICA TESTS
-========================================================= */
-function crearGraficaTests(phq, estres) {
+/* ==========================================================
+COMPARATIVA TESTS
+========================================================== */
+function crearGraficaComparativa(phq, est) {
 
-    const canvas =
+    const c =
         document.getElementById("graficaTests");
 
-    if (!canvas || typeof Chart === "undefined")
-        return;
+    if (!c || typeof Chart === "undefined") return;
 
-    if (graficaTests)
-        graficaTests.destroy();
+    if (g3) g3.destroy();
 
-    graficaTests =
-        new Chart(canvas, {
+    g3 =
+        new Chart(c, {
             type: "bar",
             data: {
                 labels: ["PHQ9", "Estrés"],
                 datasets: [{
-                    label: "Resultado",
-                    data: [phq, estres],
-                    borderWidth: 1
+                    data: [phq, est],
+                    backgroundColor: [
+                        "#8b5cf6",
+                        "#ef4444"
+                    ],
+                    borderRadius: 12
                 }]
             },
             options: {
                 responsive: true,
-                animation: {
-                    duration: 1700
-                }
+                plugins: {
+                    legend: { display: false }
+                },
+                animation: { duration: 1800 }
             }
         });
 }
 
-/* ========================================================= */
-function generarConsejo(a, e, c) {
+/* ==========================================================
+NIVEL CLÍNICO
+========================================================== */
+function crearGraficaNivel(phq, est) {
 
-    if (a <= 4)
-        return "Busca apoyo emocional y descanso.";
+    const c =
+        document.getElementById("graficaNivel");
 
-    if (e >= 7)
-        return "Reduce carga mental y organiza tiempos.";
+    if (!c || typeof Chart === "undefined") return;
 
-    if (c === "Trabajo")
-        return "Separa trabajo y descanso.";
+    if (g4) g4.destroy();
 
-    if (c === "Escuela")
-        return "Administra tareas por bloques.";
-
-    return "Mantén hábitos saludables.";
+    g4 =
+        new Chart(c, {
+            type: "radar",
+            data: {
+                labels: [
+                    "PHQ9",
+                    "Estrés",
+                    "Ánimo",
+                    "Equilibrio",
+                    "Riesgo"
+                ],
+                datasets: [{
+                    label: "Perfil emocional",
+                    data: [
+                        phq,
+                        est / 3,
+                        10 - phq / 3,
+                        8,
+                        est / 8
+                    ],
+                    backgroundColor: "rgba(59,130,246,.3)",
+                    borderColor: "#3b82f6",
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    r: { beginAtZero: true }
+                },
+                animation: { duration: 2200 }
+            }
+        });
 }
 
-/* ========================================================= */
+/* ========================================================== */
+function analizarEstado(a, e) {
+
+    if (a >= 8 && e <= 3)
+        return "Excelente estabilidad.";
+
+    if (a <= 4 && e >= 7)
+        return "Riesgo emocional alto.";
+
+    if (e >= 7)
+        return "Estrés elevado.";
+
+    if (a <= 5)
+        return "Ánimo bajo.";
+
+    return "Estado estable.";
+}
+
+function consejoIA(a, e) {
+
+    if (e >= 7)
+        return "Descansa y reduce carga.";
+
+    if (a <= 5)
+        return "Busca apoyo emocional.";
+
+    return "Mantén hábitos positivos.";
+}
+
+function explicarResultados(phq, est) {
+
+    let t1 =
+        phq <= 4 ? "PHQ9 mínimo"
+            : phq <= 9 ? "PHQ9 leve"
+                : phq <= 14 ? "PHQ9 moderado"
+                    : "PHQ9 alto";
+
+    let t2 =
+        est <= 24 ? "Estrés bajo"
+            : est <= 48 ? "Estrés medio"
+                : "Estrés alto";
+
+    return t1 + " | " + t2;
+}
+
 function promedio(lista, campo) {
 
     let total = 0;
@@ -404,18 +418,63 @@ function promedio(lista, campo) {
     ).toFixed(1);
 }
 
-function texto(id, valor) {
+function texto(id, v) {
 
     const el =
         document.getElementById(id);
 
-    if (el)
-        el.innerText = valor;
+    if (el) el.innerText = v;
 }
 
-/* =========================================================
-NAVEGACIÓN
-========================================================= */
+/* ==========================================================
+PDF DEFINITIVO
+========================================================== */
+window.generarPDF = function () {
+
+    if (!window.jspdf) {
+        alert("No cargó jsPDF");
+        return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.setFontSize(22);
+    doc.text("MindCare Reporte Clínico", 20, 20);
+
+    doc.setFontSize(12);
+
+    doc.text(
+        document.getElementById("bienvenida").innerText,
+        20, 40
+    );
+
+    doc.text(
+        "IA: " +
+        document.getElementById("iaResultado").innerText,
+        20, 55
+    );
+
+    doc.text(
+        "Tests: " +
+        document.getElementById("phq9Box").innerText,
+        20, 70
+    );
+
+    doc.text(
+        "Interpretación:",
+        20, 90
+    );
+
+    doc.text(
+        document.getElementById("phq9Trend").innerText,
+        20, 102
+    );
+
+    doc.save("MindCare_Reporte.pdf");
+};
+
+/* ========================================================== */
 function inicio() { location.href = "dashboard.html"; }
 function irTest() { location.href = "test.html"; }
 function irRegistro() { location.href = "registroEmocional.html"; }

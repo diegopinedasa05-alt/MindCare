@@ -496,8 +496,10 @@ function texto(id, v) {
 }
 
 /* ==========================================================
-PDF PREMIUM
+PDF PREMIUM ULTRA ELEGANTE
+REEMPLAZA SOLO TU FUNCIÓN generarPDF()
 ========================================================== */
+
 window.generarPDF = function () {
 
     if (!window.jspdf) {
@@ -506,68 +508,173 @@ window.generarPDF = function () {
     }
 
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+    const doc = new jsPDF("p", "mm", "a4");
+
+    /* ======================================================
+       DATOS
+    ====================================================== */
+
+    let nombre =
+        document.getElementById("bienvenida")
+            ?.innerText || "Usuario";
+
+    nombre =
+        nombre
+            .replace("Hola,", "")
+            .replace("Hola", "")
+            .trim();
+
+    const ia =
+        document.getElementById("iaResultado")
+            ?.innerText || "-";
+
+    const alerta =
+        document.getElementById("alertaBox")
+            ?.innerText || "-";
+
+    const evaluacion =
+        document.getElementById("phq9Box")
+            ?.innerText || "-";
+
+    const interpretacion =
+        document.getElementById("phq9Trend")
+            ?.innerText || "-";
+
+    const promedio =
+        document.getElementById("promedioResultado")
+            ?.innerText || "-";
+
+    const consejo =
+        document.getElementById("consejoBox")
+            ?.innerText || "-";
+
+    const fecha =
+        new Date().toLocaleString();
+
+    /* ======================================================
+       FONDO
+    ====================================================== */
+
+    doc.setFillColor(245, 248, 255);
+    doc.rect(0, 0, 210, 297, "F");
+
+    /* ======================================================
+       HEADER MODERNO
+    ====================================================== */
 
     doc.setFillColor(37, 99, 235);
-    doc.rect(0, 0, 220, 32, "F");
+    doc.roundedRect(0, 0, 210, 42, 0, 0, "F");
+
+    /* CÍRCULO LOGO */
+    doc.setFillColor(255, 255, 255);
+    doc.circle(20, 21, 9, "F");
+
+    doc.setTextColor(37, 99, 235);
+    doc.setFontSize(16);
+    doc.text("🧠", 16.8, 25);
 
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(22);
-    doc.text("MindCare", 20, 20);
+    doc.setFontSize(26);
+    doc.text("MindCare", 34, 18);
 
     doc.setFontSize(11);
     doc.text(
         "Reporte emocional inteligente",
-        20, 27
+        34,
+        27
     );
 
-    doc.setTextColor(30, 30, 30);
-    doc.setFontSize(12);
+    doc.setFontSize(9);
+    doc.text(
+        fecha,
+        34,
+        34
+    );
 
-    let y = 50;
+    /* ======================================================
+       PERFIL USUARIO
+    ====================================================== */
 
-    const datos = [
+    doc.setFillColor(255, 255, 255);
+    doc.roundedRect(14, 52, 182, 22, 5, 5, "F");
 
-        "Usuario: " +
-        document.getElementById("bienvenida").innerText,
+    doc.setDrawColor(220);
+    doc.roundedRect(14, 52, 182, 22, 5, 5);
 
-        "IA: " +
-        document.getElementById("iaResultado").innerText,
+    doc.setTextColor(30, 41, 59);
+    doc.setFontSize(10);
+    doc.text("USUARIO", 20, 60);
 
-        "Alerta: " +
-        document.getElementById("alertaBox").innerText,
+    doc.setFontSize(16);
+    doc.text(nombre, 20, 68);
 
-        "Evaluación: " +
-        document.getElementById("phq9Box").innerText,
+    /* ======================================================
+       TARJETAS PREMIUM
+    ====================================================== */
 
-        "Interpretación: " +
-        document.getElementById("phq9Trend").innerText,
+    tarjetaPDF(doc, 14, 84, 88, 34,
+        "IA GENERAL",
+        ia,
+        59, 130, 246);
 
-        "Promedio: " +
-        document.getElementById("promedioResultado").innerText,
+    tarjetaPDF(doc, 108, 84, 88, 34,
+        "ALERTA",
+        alerta,
+        239, 68, 68);
 
-        "Consejo: " +
-        document.getElementById("consejoBox").innerText
-    ];
+    tarjetaPDF(doc, 14, 126, 88, 34,
+        "EVALUACIÓN",
+        evaluacion,
+        139, 92, 246);
 
-    datos.forEach(t => {
+    tarjetaPDF(doc, 108, 126, 88, 34,
+        "INTERPRETACIÓN",
+        interpretacion,
+        16, 185, 129);
 
-        doc.roundedRect(
-            14, y - 6, 182, 14, 3, 3
+    tarjetaPDF(doc, 14, 168, 182, 28,
+        "PROMEDIO EMOCIONAL",
+        promedio,
+        245, 158, 11);
+
+    /* ======================================================
+       CONSEJO DESTACADO
+    ====================================================== */
+
+    doc.setFillColor(37, 99, 235);
+    doc.roundedRect(14, 208, 182, 46, 6, 6, "F");
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(11);
+    doc.text("CONSEJO INTELIGENTE", 20, 220);
+
+    doc.setFontSize(14);
+
+    const lineas =
+        doc.splitTextToSize(
+            consejo,
+            170
         );
 
-        doc.text(t, 18, y + 2);
+    doc.text(lineas, 20, 233);
 
-        y += 20;
+    /* ======================================================
+       FOOTER
+    ====================================================== */
 
-    });
-
-    doc.setFontSize(10);
     doc.setTextColor(120);
+    doc.setFontSize(9);
 
     doc.text(
-        "MindCare © Reporte automático",
-        14, 285
+        "MindCare © Plataforma Digital de Bienestar",
+        14,
+        288
+    );
+
+    doc.text(
+        "www.mindcare.app",
+        150,
+        288
     );
 
     doc.save(
@@ -575,6 +682,51 @@ window.generarPDF = function () {
     );
 };
 
+/* ==========================================================
+TARJETAS BONITAS
+========================================================== */
+
+function tarjetaPDF(
+    doc,
+    x,
+    y,
+    w,
+    h,
+    titulo,
+    valor,
+    r,
+    g,
+    b
+) {
+
+    doc.setFillColor(255, 255, 255);
+    doc.roundedRect(x, y, w, h, 5, 5, "F");
+
+    doc.setDrawColor(225);
+    doc.roundedRect(x, y, w, h, 5, 5);
+
+    doc.setFillColor(r, g, b);
+    doc.roundedRect(x + 3, y + 3, 4, h - 6, 2, 2, "F");
+
+    doc.setTextColor(100);
+    doc.setFontSize(9);
+    doc.text(titulo, x + 12, y + 10);
+
+    doc.setTextColor(30, 41, 59);
+    doc.setFontSize(12);
+
+    const txt =
+        doc.splitTextToSize(
+            valor,
+            w - 16
+        );
+
+    doc.text(
+        txt,
+        x + 12,
+        y + 22
+    );
+}
 /* ==========================================================
 NAVEGACIÓN
 ========================================================== */

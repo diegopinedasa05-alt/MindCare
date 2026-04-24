@@ -1,9 +1,6 @@
 ﻿/* ==========================================================
-   MINDCARE DASHBOARD ULTRA PRO 2026
-   ✔ PDF definitivo
-   ✔ Gráficas premium
-   ✔ PHQ9 + Estrés visual
-   ✔ Diseño moderno
+   MINDCARE DASHBOARD PREMIUM FINAL
+   dashboard.js COMPLETO
 ========================================================== */
 
 const API =
@@ -43,7 +40,7 @@ async function iniciarDashboard() {
 }
 
 /* ==========================================================
-REGISTROS
+REGISTROS EMOCIONALES
 ========================================================== */
 async function cargarRegistros() {
 
@@ -57,7 +54,14 @@ async function cargarRegistros() {
         const datos =
             await res.json();
 
-        if (!datos || !datos.length) return;
+        if (!datos || !datos.length) {
+
+            texto("ultimoRegistro", "Sin registros");
+            texto("promedioResultado", "Sin datos");
+            texto("iaResultado", "Sin análisis");
+            texto("alertaBox", "Sin alertas");
+            return;
+        }
 
         datos.sort((a, b) =>
             new Date(a.fecha) - new Date(b.fecha)
@@ -95,24 +99,31 @@ async function cargarRegistros() {
         crearGraficaLinea(datos);
         crearGraficaDona(datos);
 
-    } catch { }
+    } catch {
+
+        texto("iaResultado", "Error");
+    }
 }
 
 /* ==========================================================
-TESTS
+TESTS PHQ9 + ESTRÉS
 ========================================================== */
 async function cargarTests() {
 
     try {
 
         const r1 =
-            await fetch(`${API}/TestPHQ9/${usuarioId}`);
+            await fetch(
+                `${API}/TestPHQ9/${usuarioId}?t=${Date.now()}`
+            );
 
         const phq =
             await r1.json();
 
         const r2 =
-            await fetch(`${API}/TestEstresLaboral/${usuarioId}`);
+            await fetch(
+                `${API}/TestEstresLaboral/${usuarioId}?t=${Date.now()}`
+            );
 
         const est =
             await r2.json();
@@ -136,7 +147,10 @@ async function cargarTests() {
         crearGraficaComparativa(p1, p2);
         crearGraficaNivel(p1, p2);
 
-    } catch { }
+    } catch {
+
+        texto("phq9Box", "Sin test");
+    }
 }
 
 /* ========================================================== */
@@ -159,7 +173,10 @@ async function cargarHistorial() {
                 : "Sin datos"
         );
 
-    } catch { }
+    } catch {
+
+        texto("historialPredictivo", "Sin datos");
+    }
 }
 
 /* ========================================================== */
@@ -183,7 +200,46 @@ async function cargarCita() {
                 : "Sin citas"
         );
 
-    } catch { }
+    } catch {
+
+        texto("citaBox", "Sin citas");
+    }
+}
+
+/* ==========================================================
+ALERTA + IA
+========================================================== */
+function analizarEstado(a, e) {
+
+    let alerta =
+        "✅ Estado estable.";
+
+    if (a <= 4 && e >= 7)
+        alerta = "🚨 Riesgo emocional alto";
+
+    else if (e >= 7)
+        alerta = "⚠ Estrés elevado";
+
+    else if (a <= 5)
+        alerta = "⚠ Ánimo bajo";
+
+    else if (a >= 8 && e <= 3)
+        alerta = "🌟 Excelente estabilidad";
+
+    texto("alertaBox", alerta);
+
+    return alerta;
+}
+
+function consejoIA(a, e) {
+
+    if (e >= 7)
+        return "Reduce carga mental y descansa.";
+
+    if (a <= 5)
+        return "Busca apoyo emocional.";
+
+    return "Mantén hábitos positivos.";
 }
 
 /* ==========================================================
@@ -194,7 +250,8 @@ function crearGraficaLinea(datos) {
     const c =
         document.getElementById("graficaLineas");
 
-    if (!c || typeof Chart === "undefined") return;
+    if (!c || typeof Chart === "undefined")
+        return;
 
     if (g1) g1.destroy();
 
@@ -206,31 +263,45 @@ function crearGraficaLinea(datos) {
             type: "line",
             data: {
                 labels:
-                    ult.map((x, i) => "R" + (i + 1)),
+                    ult.map((x, i) =>
+                        "Registro " + (i + 1)
+                    ),
                 datasets: [
                     {
                         label: "Ánimo",
-                        data: ult.map(x => x.nivelAnimo),
-                        borderColor: "#3b82f6",
-                        backgroundColor: "rgba(59,130,246,.2)",
+                        data:
+                            ult.map(x => x.nivelAnimo),
+                        borderColor: "#2563eb",
+                        backgroundColor: "rgba(37,99,235,.15)",
+                        fill: true,
                         tension: .45,
                         borderWidth: 4,
-                        fill: true
+                        pointRadius: 5
                     },
                     {
                         label: "Estrés",
-                        data: ult.map(x => x.nivelEstres),
+                        data:
+                            ult.map(x => x.nivelEstres),
                         borderColor: "#ef4444",
-                        backgroundColor: "rgba(239,68,68,.2)",
+                        backgroundColor: "rgba(239,68,68,.12)",
+                        fill: true,
                         tension: .45,
                         borderWidth: 4,
-                        fill: true
+                        pointRadius: 5
                     }
                 ]
             },
             options: {
                 responsive: true,
-                animation: { duration: 2000 }
+                animation: {
+                    duration: 2200
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 10
+                    }
+                }
             }
         });
 }
@@ -243,14 +314,16 @@ function crearGraficaDona(datos) {
     const c =
         document.getElementById("graficaCategorias");
 
-    if (!c || typeof Chart === "undefined") return;
+    if (!c || typeof Chart === "undefined")
+        return;
 
     if (g2) g2.destroy();
 
     const mapa = {};
 
     datos.forEach(x => {
-        mapa[x.categoria] = (mapa[x.categoria] || 0) + 1;
+        mapa[x.categoria] =
+            (mapa[x.categoria] || 0) + 1;
     });
 
     g2 =
@@ -271,21 +344,25 @@ function crearGraficaDona(datos) {
                 }]
             },
             options: {
-                cutout: "70%",
-                animation: { duration: 2200 }
+                cutout: "68%",
+                responsive: true,
+                animation: {
+                    duration: 2200
+                }
             }
         });
 }
 
 /* ==========================================================
-COMPARATIVA TESTS
+BARRAS TESTS
 ========================================================== */
 function crearGraficaComparativa(phq, est) {
 
     const c =
         document.getElementById("graficaTests");
 
-    if (!c || typeof Chart === "undefined") return;
+    if (!c || typeof Chart === "undefined")
+        return;
 
     if (g3) g3.destroy();
 
@@ -300,28 +377,33 @@ function crearGraficaComparativa(phq, est) {
                         "#8b5cf6",
                         "#ef4444"
                     ],
-                    borderRadius: 12
+                    borderRadius: 14
                 }]
             },
             options: {
                 responsive: true,
                 plugins: {
-                    legend: { display: false }
+                    legend: {
+                        display: false
+                    }
                 },
-                animation: { duration: 1800 }
+                animation: {
+                    duration: 1800
+                }
             }
         });
 }
 
 /* ==========================================================
-NIVEL CLÍNICO
+RADAR CLÍNICO
 ========================================================== */
 function crearGraficaNivel(phq, est) {
 
     const c =
         document.getElementById("graficaNivel");
 
-    if (!c || typeof Chart === "undefined") return;
+    if (!c || typeof Chart === "undefined")
+        return;
 
     if (g4) g4.destroy();
 
@@ -337,7 +419,7 @@ function crearGraficaNivel(phq, est) {
                     "Riesgo"
                 ],
                 datasets: [{
-                    label: "Perfil emocional",
+                    label: "Perfil Mental",
                     data: [
                         phq,
                         est / 3,
@@ -345,50 +427,35 @@ function crearGraficaNivel(phq, est) {
                         8,
                         est / 8
                     ],
-                    backgroundColor: "rgba(59,130,246,.3)",
-                    borderColor: "#3b82f6",
-                    borderWidth: 3
+                    backgroundColor:
+                        "rgba(99,102,241,.25)",
+                    borderColor: "#6366f1",
+                    borderWidth: 3,
+                    pointRadius: 5
                 }]
             },
             options: {
                 responsive: true,
                 scales: {
-                    r: { beginAtZero: true }
+                    r: {
+                        min: 0,
+                        max: 10,
+                        ticks: {
+                            stepSize: 2,
+                            backdropColor: "transparent"
+                        }
+                    }
                 },
-                animation: { duration: 2200 }
+                animation: {
+                    duration: 2400
+                }
             }
         });
 }
 
-/* ========================================================== */
-function analizarEstado(a, e) {
-
-    if (a >= 8 && e <= 3)
-        return "Excelente estabilidad.";
-
-    if (a <= 4 && e >= 7)
-        return "Riesgo emocional alto.";
-
-    if (e >= 7)
-        return "Estrés elevado.";
-
-    if (a <= 5)
-        return "Ánimo bajo.";
-
-    return "Estado estable.";
-}
-
-function consejoIA(a, e) {
-
-    if (e >= 7)
-        return "Descansa y reduce carga.";
-
-    if (a <= 5)
-        return "Busca apoyo emocional.";
-
-    return "Mantén hábitos positivos.";
-}
-
+/* ==========================================================
+RESULTADOS CLÍNICOS
+========================================================== */
 function explicarResultados(phq, est) {
 
     let t1 =
@@ -405,6 +472,7 @@ function explicarResultados(phq, est) {
     return t1 + " | " + t2;
 }
 
+/* ========================================================== */
 function promedio(lista, campo) {
 
     let total = 0;
@@ -423,11 +491,12 @@ function texto(id, v) {
     const el =
         document.getElementById(id);
 
-    if (el) el.innerText = v;
+    if (el)
+        el.innerText = v;
 }
 
 /* ==========================================================
-PDF DEFINITIVO
+PDF PREMIUM
 ========================================================== */
 window.generarPDF = function () {
 
@@ -439,48 +508,95 @@ window.generarPDF = function () {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
-    doc.setFontSize(22);
-    doc.text("MindCare Reporte Clínico", 20, 20);
+    doc.setFillColor(37, 99, 235);
+    doc.rect(0, 0, 220, 32, "F");
 
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(22);
+    doc.text("MindCare", 20, 20);
+
+    doc.setFontSize(11);
+    doc.text(
+        "Reporte emocional inteligente",
+        20, 27
+    );
+
+    doc.setTextColor(30, 30, 30);
     doc.setFontSize(12);
 
-    doc.text(
-        document.getElementById("bienvenida").innerText,
-        20, 40
-    );
+    let y = 50;
 
-    doc.text(
+    const datos = [
+
+        "Usuario: " +
+        document.getElementById("bienvenida").innerText,
+
         "IA: " +
         document.getElementById("iaResultado").innerText,
-        20, 55
-    );
 
-    doc.text(
-        "Tests: " +
+        "Alerta: " +
+        document.getElementById("alertaBox").innerText,
+
+        "Evaluación: " +
         document.getElementById("phq9Box").innerText,
-        20, 70
-    );
 
-    doc.text(
-        "Interpretación:",
-        20, 90
-    );
-
-    doc.text(
+        "Interpretación: " +
         document.getElementById("phq9Trend").innerText,
-        20, 102
+
+        "Promedio: " +
+        document.getElementById("promedioResultado").innerText,
+
+        "Consejo: " +
+        document.getElementById("consejoBox").innerText
+    ];
+
+    datos.forEach(t => {
+
+        doc.roundedRect(
+            14, y - 6, 182, 14, 3, 3
+        );
+
+        doc.text(t, 18, y + 2);
+
+        y += 20;
+
+    });
+
+    doc.setFontSize(10);
+    doc.setTextColor(120);
+
+    doc.text(
+        "MindCare © Reporte automático",
+        14, 285
     );
 
-    doc.save("MindCare_Reporte.pdf");
+    doc.save(
+        "MindCare_Reporte_Premium.pdf"
+    );
 };
 
-/* ========================================================== */
-function inicio() { location.href = "dashboard.html"; }
-function irTest() { location.href = "test.html"; }
-function irRegistro() { location.href = "registroEmocional.html"; }
-function irPsicologos() { location.href = "psicologos.html"; }
+/* ==========================================================
+NAVEGACIÓN
+========================================================== */
+function inicio() {
+    location.href = "dashboard.html";
+}
+
+function irTest() {
+    location.href = "test.html";
+}
+
+function irRegistro() {
+    location.href = "registroEmocional.html";
+}
+
+function irPsicologos() {
+    location.href = "psicologos.html";
+}
 
 function logout() {
+
     localStorage.clear();
     location.href = "login.html";
+
 }

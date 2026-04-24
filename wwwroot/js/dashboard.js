@@ -707,7 +707,7 @@ function generarPDF() {
         291
     );
 
-    doc.save("MindCare_Reporte.pdf");
+    doc.save("MindCare Reporte.pdf");
 }
 
 /* =====================================================

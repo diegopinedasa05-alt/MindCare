@@ -496,8 +496,10 @@ function texto(id, v) {
 }
 
 /* ==========================================================
-PDF PREMIUM ULTRA ELEGANTE
-REEMPLAZA SOLO TU FUNCIÓN generarPDF()
+SOLO REEMPLAZA TU FUNCIÓN generarPDF()
+NO TOQUES NADA MÁS
+✔ quita símbolos raros
+✔ agrega interpretación clínica por puntos
 ========================================================== */
 
 window.generarPDF = function () {
@@ -525,31 +527,65 @@ window.generarPDF = function () {
             .trim();
 
     const ia =
-        document.getElementById("iaResultado")
-            ?.innerText || "-";
+        limpiar(
+            document.getElementById("iaResultado")
+                ?.innerText || "-"
+        );
 
     const alerta =
-        document.getElementById("alertaBox")
-            ?.innerText || "-";
+        limpiar(
+            document.getElementById("alertaBox")
+                ?.innerText || "-"
+        );
 
     const evaluacion =
-        document.getElementById("phq9Box")
-            ?.innerText || "-";
+        limpiar(
+            document.getElementById("phq9Box")
+                ?.innerText || "-"
+        );
 
     const interpretacion =
-        document.getElementById("phq9Trend")
-            ?.innerText || "-";
+        limpiar(
+            document.getElementById("phq9Trend")
+                ?.innerText || "-"
+        );
 
     const promedio =
-        document.getElementById("promedioResultado")
-            ?.innerText || "-";
+        limpiar(
+            document.getElementById("promedioResultado")
+                ?.innerText || "-"
+        );
 
     const consejo =
-        document.getElementById("consejoBox")
-            ?.innerText || "-";
+        limpiar(
+            document.getElementById("consejoBox")
+                ?.innerText || "-"
+        );
 
     const fecha =
         new Date().toLocaleString();
+
+    /* ======================================================
+       OBTENER PUNTOS
+    ====================================================== */
+
+    const phq =
+        extraerNumero(
+            evaluacion,
+            "PHQ9"
+        );
+
+    const estres =
+        extraerNumero(
+            evaluacion,
+            "Estrés"
+        );
+
+    const detallePHQ =
+        interpretarPHQ(phq);
+
+    const detalleEstres =
+        interpretarEstres(estres);
 
     /* ======================================================
        FONDO
@@ -559,173 +595,206 @@ window.generarPDF = function () {
     doc.rect(0, 0, 210, 297, "F");
 
     /* ======================================================
-       HEADER MODERNO
+       HEADER
     ====================================================== */
 
     doc.setFillColor(37, 99, 235);
-    doc.roundedRect(0, 0, 210, 42, 0, 0, "F");
-
-    /* CÍRCULO LOGO */
-    doc.setFillColor(255, 255, 255);
-    doc.circle(20, 21, 9, "F");
-
-    doc.setTextColor(37, 99, 235);
-    doc.setFontSize(16);
-    doc.text("🧠", 16.8, 25);
+    doc.rect(0, 0, 210, 38, "F");
 
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(26);
-    doc.text("MindCare", 34, 18);
+    doc.setFontSize(24);
+    doc.text("MindCare", 14, 16);
 
-    doc.setFontSize(11);
+    doc.setFontSize(10);
     doc.text(
         "Reporte emocional inteligente",
-        34,
-        27
+        14,
+        24
     );
 
-    doc.setFontSize(9);
     doc.text(
         fecha,
-        34,
-        34
+        14,
+        31
     );
 
     /* ======================================================
-       PERFIL USUARIO
+       USUARIO
+    ====================================================== */
+
+    caja(doc, 14, 48, 182, 18);
+    doc.setFontSize(10);
+    doc.setTextColor(120);
+    doc.text("USUARIO", 18, 55);
+
+    doc.setFontSize(15);
+    doc.setTextColor(20);
+    doc.text(nombre, 18, 62);
+
+    /* ======================================================
+       TARJETAS
+    ====================================================== */
+
+    mini(doc, 14, 74, 88, 28, "IA GENERAL", ia);
+    mini(doc, 108, 74, 88, 28, "ALERTA", alerta);
+
+    mini(doc, 14, 108, 88, 28, "EVALUACIÓN", evaluacion);
+    mini(doc, 108, 108, 88, 28, "INTERPRETACIÓN", interpretacion);
+
+    mini(doc, 14, 142, 182, 24, "PROMEDIO", promedio);
+
+    /* ======================================================
+       NUEVO APARTADO TESTS
     ====================================================== */
 
     doc.setFillColor(255, 255, 255);
-    doc.roundedRect(14, 52, 182, 22, 5, 5, "F");
+    doc.roundedRect(14, 176, 182, 66, 5, 5, "F");
+    doc.setDrawColor(225);
+    doc.roundedRect(14, 176, 182, 66, 5, 5);
 
-    doc.setDrawColor(220);
-    doc.roundedRect(14, 52, 182, 22, 5, 5);
+    doc.setFontSize(13);
+    doc.setTextColor(37, 99, 235);
+    doc.text("Interpretación de evaluaciones", 18, 188);
 
-    doc.setTextColor(30, 41, 59);
     doc.setFontSize(10);
-    doc.text("USUARIO", 20, 60);
+    doc.setTextColor(40);
 
-    doc.setFontSize(16);
-    doc.text(nombre, 20, 68);
+    doc.text(
+        `PHQ9 (${phq} pts): ${detallePHQ}`,
+        18,
+        200
+    );
 
-    /* ======================================================
-       TARJETAS PREMIUM
-    ====================================================== */
+    doc.text(
+        `Estrés (${estres} pts): ${detalleEstres}`,
+        18,
+        210
+    );
 
-    tarjetaPDF(doc, 14, 84, 88, 34,
-        "IA GENERAL",
-        ia,
-        59, 130, 246);
+    const recomendacion =
+        sugerenciaFinal(phq, estres);
 
-    tarjetaPDF(doc, 108, 84, 88, 34,
-        "ALERTA",
-        alerta,
-        239, 68, 68);
+    const texto =
+        doc.splitTextToSize(
+            recomendacion,
+            168
+        );
 
-    tarjetaPDF(doc, 14, 126, 88, 34,
-        "EVALUACIÓN",
-        evaluacion,
-        139, 92, 246);
-
-    tarjetaPDF(doc, 108, 126, 88, 34,
-        "INTERPRETACIÓN",
-        interpretacion,
-        16, 185, 129);
-
-    tarjetaPDF(doc, 14, 168, 182, 28,
-        "PROMEDIO EMOCIONAL",
-        promedio,
-        245, 158, 11);
+    doc.text(
+        texto,
+        18,
+        223
+    );
 
     /* ======================================================
-       CONSEJO DESTACADO
+       CONSEJO
     ====================================================== */
 
     doc.setFillColor(37, 99, 235);
-    doc.roundedRect(14, 208, 182, 46, 6, 6, "F");
+    doc.roundedRect(14, 250, 182, 28, 5, 5, "F");
 
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(11);
-    doc.text("CONSEJO INTELIGENTE", 20, 220);
+    doc.setFontSize(10);
+    doc.text("CONSEJO INTELIGENTE", 18, 260);
 
-    doc.setFontSize(14);
-
-    const lineas =
-        doc.splitTextToSize(
-            consejo,
-            170
-        );
-
-    doc.text(lineas, 20, 233);
-
-    /* ======================================================
-       FOOTER
-    ====================================================== */
-
-    doc.setTextColor(120);
-    doc.setFontSize(9);
-
-    doc.text(
-        "MindCare © Plataforma Digital de Bienestar",
-        14,
-        288
-    );
-
-    doc.text(
-        "www.mindcare.app",
-        150,
-        288
-    );
+    doc.setFontSize(12);
+    doc.text(consejo, 18, 270);
 
     doc.save(
         "MindCare_Reporte_Premium.pdf"
     );
 };
 
-/* ==========================================================
-TARJETAS BONITAS
-========================================================== */
+/* ======================================================
+UTILIDADES
+====================================================== */
 
-function tarjetaPDF(
-    doc,
-    x,
-    y,
-    w,
-    h,
-    titulo,
-    valor,
-    r,
-    g,
-    b
-) {
+function limpiar(t) {
+    return t
+        .replace(/[^\x20-\x7EáéíóúÁÉÍÓÚñÑüÜ]/g, "")
+        .trim();
+}
 
+function caja(doc, x, y, w, h) {
     doc.setFillColor(255, 255, 255);
     doc.roundedRect(x, y, w, h, 5, 5, "F");
-
     doc.setDrawColor(225);
     doc.roundedRect(x, y, w, h, 5, 5);
+}
 
-    doc.setFillColor(r, g, b);
-    doc.roundedRect(x + 3, y + 3, 4, h - 6, 2, 2, "F");
+function mini(doc, x, y, w, h, titulo, valor) {
 
-    doc.setTextColor(100);
+    caja(doc, x, y, w, h);
+
     doc.setFontSize(9);
-    doc.text(titulo, x + 12, y + 10);
+    doc.setTextColor(120);
+    doc.text(titulo, x + 4, y + 8);
 
-    doc.setTextColor(30, 41, 59);
-    doc.setFontSize(12);
+    doc.setFontSize(11);
+    doc.setTextColor(20);
 
     const txt =
         doc.splitTextToSize(
             valor,
-            w - 16
+            w - 8
         );
 
     doc.text(
         txt,
-        x + 12,
-        y + 22
+        x + 4,
+        y + 18
     );
+}
+
+function extraerNumero(texto, palabra) {
+
+    const r =
+        new RegExp(
+            palabra + "\\s*(\\d+)",
+            "i"
+        );
+
+    const m =
+        texto.match(r);
+
+    return m ? parseInt(m[1]) : 0;
+}
+
+/* ======================================================
+INTERPRETACIONES
+====================================================== */
+
+function interpretarPHQ(p) {
+
+    if (p <= 4) return "Mínimo o sin depresión.";
+    if (p <= 9) return "Depresión leve.";
+    if (p <= 14) return "Depresión moderada.";
+    if (p <= 19) return "Depresión moderadamente severa.";
+    return "Depresión severa.";
+}
+
+function interpretarEstres(p) {
+
+    if (p <= 12) return "Sin estrés.";
+    if (p <= 24) return "Fase de alarma.";
+    if (p <= 36) return "Estrés leve.";
+    if (p <= 48) return "Estrés medio.";
+    if (p <= 60) return "Estrés alto.";
+    return "Estrés grave.";
+}
+
+function sugerenciaFinal(phq, estres) {
+
+    if (phq >= 15 || estres >= 49)
+        return "Se recomienda apoyo profesional prioritario.";
+
+    if (phq >= 10 || estres >= 37)
+        return "Conviene seguimiento psicológico y manejo emocional.";
+
+    if (phq >= 5 || estres >= 25)
+        return "Se recomienda autocuidado, descanso y monitoreo.";
+
+    return "Estado general favorable. Mantener hábitos saludables.";
 }
 /* ==========================================================
 NAVEGACIÓN

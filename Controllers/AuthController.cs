@@ -16,113 +16,248 @@ namespace AppTesisAPI.Controllers
             _context = context;
         }
 
+        /* =====================================
+           VARIABLES TEMPORALES RECUPERACIÓN
+        ===================================== */
         static string codigoGlobal = "";
         static string correoGlobal = "";
 
-        // LOGIN
+        /* =====================================
+           LOGIN
+        ===================================== */
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        public async Task<IActionResult> Login(
+            [FromBody] LoginRequest request)
         {
-            var user = await _context.Credenciales
-                .FirstOrDefaultAsync(x => x.Email == request.Email);
-
-            if (user == null)
-                return BadRequest("Usuario no encontrado.");
-
-            if (user.PasswordHash != request.Password)
-                return BadRequest("Contraseña incorrecta.");
-
-            var usuario = await _context.Usuarios
-                .FirstOrDefaultAsync(x => x.Id == user.UsuarioId);
-
-            return Ok(new
+            try
             {
-                usuarioId = usuario.Id,
-                nombre = usuario.Nombre
-            });
+                if (request == null)
+                    return BadRequest("Datos inválidos.");
+
+                var user =
+                    await _context.Credenciales
+                    .FirstOrDefaultAsync(x =>
+                        x.Email == request.Email);
+
+                if (user == null)
+                    return BadRequest("Usuario no encontrado.");
+
+                if (user.PasswordHash != request.Password)
+                    return BadRequest("Contraseña incorrecta.");
+
+                var usuario =
+                    await _context.Usuarios
+                    .FirstOrDefaultAsync(x =>
+                        x.Id == user.UsuarioId);
+
+                if (usuario == null)
+                    return BadRequest("Usuario inválido.");
+
+                return Ok(new
+                {
+                    usuarioId = usuario.Id,
+                    nombre = usuario.Nombre,
+                    rol = user.Rol ?? "Usuario"
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    ex.Message
+                );
+            }
         }
 
-        // REGISTRO
+        /* =====================================
+           REGISTRO
+        ===================================== */
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+        public async Task<IActionResult> Register(
+            [FromBody] RegisterRequest request)
         {
-            var existe = await _context.Credenciales
-                .AnyAsync(x => x.Email == request.Email);
-
-            if (existe)
-                return BadRequest("Correo ya registrado.");
-
-            var usuario = new Usuario
+            try
             {
-                Nombre = request.Nombre,
-                FechaRegistro = DateTime.UtcNow
-            };
+                if (request == null)
+                    return BadRequest("Sin datos.");
 
-            _context.Usuarios.Add(usuario);
-            await _context.SaveChangesAsync();
+                if (string.IsNullOrWhiteSpace(request.Nombre) ||
+                    string.IsNullOrWhiteSpace(request.Email) ||
+                    string.IsNullOrWhiteSpace(request.Password))
+                {
+                    return BadRequest(
+                        "Completa nombre, correo y contraseña."
+                    );
+                }
 
-            _context.Credenciales.Add(new Credenciales
+                bool existe =
+                    await _context.Credenciales
+                    .AnyAsync(x =>
+                        x.Email == request.Email);
+
+                if (existe)
+                    return BadRequest(
+                        "Correo ya registrado."
+                    );
+
+                /* CREAR USUARIO */
+                var usuario =
+                    new Usuario
+                    {
+                        Nombre = request.Nombre.Trim(),
+                        Telefono =
+                            request.Telefono ?? "",
+                        Zona =
+                            request.Zona ?? "",
+                        Especialidad = "",
+                        FechaRegistro =
+                            DateTime.Now
+                    };
+
+                _context.Usuarios.Add(usuario);
+                await _context.SaveChangesAsync();
+
+                /* CREAR CREDENCIALES */
+                var credencial =
+                    new Credenciales
+                    {
+                        Email =
+                            request.Email.Trim(),
+                        PasswordHash =
+                            request.Password.Trim(),
+                        UsuarioId =
+                            usuario.Id,
+                        Rol = "Usuario"
+                    };
+
+                _context.Credenciales.Add(
+                    credencial
+                );
+
+                await _context.SaveChangesAsync();
+
+                return Ok(new
+                {
+                    mensaje =
+                        "Cuenta creada correctamente."
+                });
+            }
+            catch (Exception ex)
             {
-                Email = request.Email,
-                PasswordHash = request.Password,
-                UsuarioId = usuario.Id,
-                Rol = "Usuario"
-            });
-
-            await _context.SaveChangesAsync();
-
-            return Ok("Cuenta creada.");
+                return BadRequest(
+                    ex.InnerException?.Message ??
+                    ex.Message
+                );
+            }
         }
 
-        // =====================================
-        // ENVIAR CODIGO
-        // =====================================
+        /* =====================================
+           ENVIAR CODIGO
+        ===================================== */
         [HttpPost("enviar-codigo")]
-        public async Task<IActionResult> EnviarCodigo([FromBody] string email)
+        public async Task<IActionResult> EnviarCodigo(
+            [FromBody] string email)
         {
-            var existe = await _context.Credenciales
-                .AnyAsync(x => x.Email == email);
+            try
+            {
+                if (string.IsNullOrWhiteSpace(email))
+                    return BadRequest(
+                        "Correo inválido."
+                    );
 
-            if (!existe)
-                return BadRequest("Correo no encontrado.");
+                bool existe =
+                    await _context.Credenciales
+                    .AnyAsync(x =>
+                        x.Email == email);
 
-            var rnd = new Random();
-            codigoGlobal = rnd.Next(100000, 999999).ToString();
-            correoGlobal = email;
+                if (!existe)
+                    return BadRequest(
+                        "Correo no encontrado."
+                    );
 
-            // DEMO RAPIDA
-            return Ok("Código generado: " + codigoGlobal);
+                var rnd =
+                    new Random();
+
+                codigoGlobal =
+                    rnd.Next(
+                        100000,
+                        999999
+                    ).ToString();
+
+                correoGlobal =
+                    email;
+
+                return Ok(
+                    "Código generado: " +
+                    codigoGlobal
+                );
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    ex.Message
+                );
+            }
         }
 
-        // =====================================
-        // RECUPERAR
-        // =====================================
+        /* =====================================
+           RECUPERAR PASSWORD
+        ===================================== */
         [HttpPost("recuperar")]
-        public async Task<IActionResult> Recuperar([FromBody] RecuperarRequest request)
+        public async Task<IActionResult> Recuperar(
+            [FromBody] RecuperarRequest request)
         {
-            if (request.Email != correoGlobal)
-                return BadRequest("Correo inválido.");
+            try
+            {
+                if (request == null)
+                    return BadRequest(
+                        "Datos inválidos."
+                    );
 
-            if (request.Codigo != codigoGlobal)
-                return BadRequest("Código incorrecto.");
+                if (request.Email != correoGlobal)
+                    return BadRequest(
+                        "Correo inválido."
+                    );
 
-            var user = await _context.Credenciales
-                .FirstOrDefaultAsync(x => x.Email == request.Email);
+                if (request.Codigo != codigoGlobal)
+                    return BadRequest(
+                        "Código incorrecto."
+                    );
 
-            if (user == null)
-                return BadRequest("Usuario no existe.");
+                var user =
+                    await _context.Credenciales
+                    .FirstOrDefaultAsync(x =>
+                        x.Email ==
+                        request.Email);
 
-            user.PasswordHash = request.NuevaPassword;
+                if (user == null)
+                    return BadRequest(
+                        "Usuario no existe."
+                    );
 
-            await _context.SaveChangesAsync();
+                user.PasswordHash =
+                    request.NuevaPassword;
 
-            codigoGlobal = "";
-            correoGlobal = "";
+                await _context.SaveChangesAsync();
 
-            return Ok("Contraseña actualizada.");
+                codigoGlobal = "";
+                correoGlobal = "";
+
+                return Ok(
+                    "Contraseña actualizada."
+                );
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    ex.Message
+                );
+            }
         }
     }
 
+    /* =====================================
+       REQUEST RECUPERAR
+    ===================================== */
     public class RecuperarRequest
     {
         public string Email { get; set; }

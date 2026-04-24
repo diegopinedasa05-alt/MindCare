@@ -31,10 +31,10 @@ async function guardarRegistro() {
         document.getElementById("estres").value;
 
     const categoria =
-        document.getElementById("categoria").value;
+        document.getElementById("Define Una categoria por la cual estás así").value;
 
     const nota =
-        document.getElementById("nota").value.trim();
+        document.getElementById("nota (Obligatoria)").value.trim();
 
     const mensaje =
         document.getElementById("mensaje");
@@ -110,7 +110,7 @@ async function guardarRegistro() {
 
         /* LIMPIAR */
         document.getElementById("nota").value = "";
-        document.getElementById("categoria").value = "";
+        document.getElementById("Define Una categoria por la cual estás así").value = "";
         document.getElementById("animo").value = "";
         document.getElementById("estres").value = 5;
         document.getElementById("valor").innerText = 5;

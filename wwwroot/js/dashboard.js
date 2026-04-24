@@ -564,3 +564,89 @@ function logout() {
     localStorage.clear();
     location.href = "login.html";
 }
+/* =====================================================
+PDF PREMIUM RESTAURADO
+===================================================== */
+function generarPDF() {
+
+    if (!window.jspdf) {
+        alert("No cargó jsPDF");
+        return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF("p", "mm", "a4");
+
+    const nombre =
+        (localStorage.getItem("nombre") || "Usuario")
+            .split(" ")[0];
+
+    const ia =
+        document.getElementById("iaResultado")?.innerText || "-";
+
+    const alerta =
+        document.getElementById("alertaBox")?.innerText || "-";
+
+    const test =
+        document.getElementById("phq9Box")?.innerText || "-";
+
+    const nivel =
+        document.getElementById("phq9Trend")?.innerText || "-";
+
+    const promedio =
+        document.getElementById("promedioResultado")?.innerText || "-";
+
+    const consejo =
+        document.getElementById("consejoBox")?.innerText || "-";
+
+    /* HEADER */
+    doc.setFillColor(37, 99, 235);
+    doc.rect(0, 0, 210, 35, "F");
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(24);
+    doc.text("MindCare", 14, 18);
+
+    doc.setFontSize(10);
+    doc.text("Reporte emocional inteligente", 14, 27);
+
+    /* CONTENIDO */
+    doc.setTextColor(20, 20, 20);
+    doc.setFontSize(12);
+
+    let y = 50;
+
+    function bloque(titulo, valor) {
+
+        doc.setDrawColor(230);
+        doc.roundedRect(14, y, 182, 18, 4, 4);
+
+        doc.setFontSize(10);
+        doc.setTextColor(120);
+        doc.text(titulo, 18, y + 6);
+
+        doc.setFontSize(12);
+        doc.setTextColor(20);
+        doc.text(valor, 18, y + 13);
+
+        y += 24;
+    }
+
+    bloque("Usuario", nombre);
+    bloque("IA General", ia);
+    bloque("Alerta", alerta);
+    bloque("Evaluación", test);
+    bloque("Interpretación", nivel);
+    bloque("Promedio", promedio);
+    bloque("Consejo", consejo);
+
+    doc.setFontSize(9);
+    doc.setTextColor(120);
+    doc.text(
+        "MindCare © Reporte generado automáticamente",
+        14,
+        287
+    );
+
+    doc.save("MindCare_Reporte.pdf");
+}

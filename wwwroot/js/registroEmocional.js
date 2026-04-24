@@ -7,6 +7,7 @@ Corrige:
 ✅ Guarda perfecto
 ✅ Limpia formulario
 ✅ Historial bonito
+✅ Fecha y hora México
 ========================================== */
 
 const API =
@@ -174,7 +175,17 @@ async function mostrarHistorial() {
 
             const fecha =
                 new Date(reg.fecha)
-                    .toLocaleString();
+                    .toLocaleString(
+                        "es-MX",
+                        {
+                            timeZone:
+                                "America/Mexico_City",
+                            dateStyle:
+                                "short",
+                            timeStyle:
+                                "short"
+                        }
+                    );
 
             contenedor.innerHTML += `
             <div class="history-item">

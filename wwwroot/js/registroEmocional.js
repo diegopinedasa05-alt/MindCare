@@ -1,14 +1,16 @@
 ﻿/* ==========================================
 wwwroot/js/registroEmocional.js
-VERSIÓN COMPLETA CORREGIDA 🔥
+VERSIÓN FINAL CORREGIDA 🔥
 Corrige:
-✅ Guarda valores reales
-✅ Historial correcto
-✅ Mensajes visuales
-✅ Compatibilidad con Dashboard
+✅ IDs incorrectos
+✅ Error null.value
+✅ Guarda perfecto
+✅ Limpia formulario
+✅ Historial bonito
 ========================================== */
 
-const API = "https://mindcare-production-d670.up.railway.app/api";
+const API =
+    "https://mindcare-production-d670.up.railway.app/api";
 
 /* ==========================================
 LOAD
@@ -22,7 +24,8 @@ GUARDAR REGISTRO
 ========================================== */
 async function guardarRegistro() {
 
-    const usuarioId = localStorage.getItem("usuarioId");
+    const usuarioId =
+        localStorage.getItem("usuarioId");
 
     const animo =
         document.getElementById("animo").value;
@@ -31,10 +34,10 @@ async function guardarRegistro() {
         document.getElementById("estres").value;
 
     const categoria =
-        document.getElementById("Define Una categoria por la cual estás así").value;
+        document.getElementById("categoria").value;
 
     const nota =
-        document.getElementById("nota (Obligatoria)").value.trim();
+        document.getElementById("nota").value.trim();
 
     const mensaje =
         document.getElementById("mensaje");
@@ -93,6 +96,7 @@ async function guardarRegistro() {
             parseInt(animo) <= 3 &&
             parseInt(estres) >= 8
         ) {
+
             mensaje.innerText =
                 "⚠ Riesgo emocional detectado.";
 
@@ -109,11 +113,11 @@ async function guardarRegistro() {
         }
 
         /* LIMPIAR */
-        document.getElementById("nota").value = "";
-        document.getElementById("Define Una categoria por la cual estás así").value = "";
         document.getElementById("animo").value = "";
         document.getElementById("estres").value = 5;
         document.getElementById("valor").innerText = 5;
+        document.getElementById("categoria").value = "";
+        document.getElementById("nota").value = "";
 
         mostrarHistorial();
 
@@ -161,7 +165,6 @@ async function mostrarHistorial() {
                 Sin registros todavía.
             </div>
             `;
-
             return;
         }
 

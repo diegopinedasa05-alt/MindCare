@@ -45,6 +45,59 @@ namespace AppTesisAPI.Migrations
                     b.ToTable("AuditoriaAccesos");
                 });
 
+            modelBuilder.Entity("AppTesisAPI.Models.AuditoriaEvento", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Accion")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CorrelationId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Detalles")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Entidad")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("EntidadId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("FechaUtc")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Ip")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Resultado")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("UsuarioId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.HasIndex("Entidad", "EntidadId");
+
+                    b.HasIndex("FechaUtc", "Accion");
+
+                    b.ToTable("AuditoriaEventos");
+                });
+
             modelBuilder.Entity("AppTesisAPI.Models.Cita", b =>
                 {
                     b.Property<int>("Id")
@@ -75,7 +128,44 @@ namespace AppTesisAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PsicologoId", "Fecha");
+
+                    b.HasIndex("UsuarioId", "Fecha");
+
                     b.ToTable("Citas");
+                });
+
+            modelBuilder.Entity("AppTesisAPI.Models.ConsentimientoUsuario", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("FechaAceptacion")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Ip")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserAgent")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("VersionDocumento")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId", "FechaAceptacion");
+
+                    b.ToTable("ConsentimientosUsuario");
                 });
 
             modelBuilder.Entity("AppTesisAPI.Models.Credenciales", b =>
@@ -106,7 +196,90 @@ namespace AppTesisAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.ToTable("Credenciales");
+                });
+
+            modelBuilder.Entity("AppTesisAPI.Models.DocumentoProfesional", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Bucket")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("FechaCarga")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime?>("FechaRevision")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("HashSha256")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("MimeType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("MotivoRechazo")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("NombreOriginal")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("NumeroDocumento")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Observaciones")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("PerfilPsicologoId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("RevisadoPorUsuarioId")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("SizeBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("StorageKey")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("StorageProvider")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TipoDocumento")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HashSha256");
+
+                    b.HasIndex("PerfilPsicologoId");
+
+                    b.HasIndex("RevisadoPorUsuarioId");
+
+                    b.HasIndex("PerfilPsicologoId", "Estado");
+
+                    b.ToTable("DocumentosProfesionales");
                 });
 
             modelBuilder.Entity("AppTesisAPI.Models.HistorialPredictivo", b =>
@@ -133,7 +306,137 @@ namespace AppTesisAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UsuarioId", "Fecha");
+
                     b.ToTable("HistorialPredictivo");
+                });
+
+            modelBuilder.Entity("AppTesisAPI.Models.NotaSeguimiento", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Nota")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("PacienteId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("PlanAccion")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("PsicologoId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PacienteId", "PsicologoId", "Fecha");
+
+                    b.ToTable("NotasSeguimiento");
+                });
+
+            modelBuilder.Entity("AppTesisAPI.Models.PacientePsicologo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("FechaAsignacion")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("PacienteId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PsicologoId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PacienteId", "PsicologoId")
+                        .IsUnique();
+
+                    b.ToTable("PacientePsicologos");
+                });
+
+            modelBuilder.Entity("AppTesisAPI.Models.PerfilPsicologo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("AniosExperiencia")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ApellidoMaterno")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ApellidoPaterno")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Especialidad")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("EstadoVerificacion")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("FechaRegistro")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime?>("FechaVerificacion")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("FotoStorageKey")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Institucion")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("NumeroCedula")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Observaciones")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EstadoVerificacion");
+
+                    b.HasIndex("NumeroCedula")
+                        .IsUnique();
+
+                    b.HasIndex("UsuarioId")
+                        .IsUnique();
+
+                    b.ToTable("PerfilesPsicologo");
                 });
 
             modelBuilder.Entity("AppTesisAPI.Models.Psicologo", b =>
@@ -219,7 +522,60 @@ namespace AppTesisAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UsuarioId", "Fecha");
+
                     b.ToTable("RegistrosEmocionales");
+                });
+
+            modelBuilder.Entity("AppTesisAPI.Models.SeguimientoUsuario", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AccionPrincipal")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("FechaActualizacion")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("NivelRiesgo")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Respuesta1")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Respuesta2")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Respuesta3")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("TareasCompletadas")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TotalTareas")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId", "Fecha")
+                        .IsUnique();
+
+                    b.ToTable("SeguimientosUsuario");
                 });
 
             modelBuilder.Entity("AppTesisAPI.Models.TestEstresLaboral", b =>
@@ -277,6 +633,8 @@ namespace AppTesisAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UsuarioId", "Fecha");
+
                     b.ToTable("TestEstresLaboral");
                 });
 
@@ -326,6 +684,8 @@ namespace AppTesisAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UsuarioId", "Fecha");
+
                     b.ToTable("TestPHQ9");
                 });
 
@@ -359,6 +719,100 @@ namespace AppTesisAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Usuarios");
+                });
+
+            modelBuilder.Entity("AppTesisAPI.Models.VerificacionProfesional", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AdministradorId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("DocumentoProfesionalId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("EstadoAnterior")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("EstadoNuevo")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("FechaUtc")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Observacion")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("PerfilPsicologoId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdministradorId");
+
+                    b.HasIndex("DocumentoProfesionalId");
+
+                    b.HasIndex("PerfilPsicologoId", "FechaUtc");
+
+                    b.ToTable("VerificacionesProfesionales");
+                });
+
+            modelBuilder.Entity("AppTesisAPI.Models.AuditoriaEvento", b =>
+                {
+                    b.HasOne("AppTesisAPI.Models.Usuario", null)
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.SetNull);
+                });
+
+            modelBuilder.Entity("AppTesisAPI.Models.DocumentoProfesional", b =>
+                {
+                    b.HasOne("AppTesisAPI.Models.PerfilPsicologo", null)
+                        .WithMany()
+                        .HasForeignKey("PerfilPsicologoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AppTesisAPI.Models.Usuario", null)
+                        .WithMany()
+                        .HasForeignKey("RevisadoPorUsuarioId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("AppTesisAPI.Models.PerfilPsicologo", b =>
+                {
+                    b.HasOne("AppTesisAPI.Models.Usuario", null)
+                        .WithOne()
+                        .HasForeignKey("AppTesisAPI.Models.PerfilPsicologo", "UsuarioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AppTesisAPI.Models.VerificacionProfesional", b =>
+                {
+                    b.HasOne("AppTesisAPI.Models.Usuario", null)
+                        .WithMany()
+                        .HasForeignKey("AdministradorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("AppTesisAPI.Models.DocumentoProfesional", null)
+                        .WithMany()
+                        .HasForeignKey("DocumentoProfesionalId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("AppTesisAPI.Models.PerfilPsicologo", null)
+                        .WithMany()
+                        .HasForeignKey("PerfilPsicologoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

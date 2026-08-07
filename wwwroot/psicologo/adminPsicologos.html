@@ -16,7 +16,10 @@
 
     <!-- CSS -->
     <link rel="stylesheet"
-          href="../css/adminPsicologos.css">
+          href="../css/adminPsicologos.css?v=2">
+    <link rel="stylesheet"
+          href="../css/mindcare-pages-pro.css?v=1">
+    <link rel="stylesheet" href="../css/mindcare-refresh.css?v=1">
 
 </head>
 
@@ -38,20 +41,26 @@
 
             <p class="sub">
 
-                Registrar especialistas autorizados del sistema.
+                Registra los datos necesarios para iniciar la verificación profesional.
 
             </p>
 
             <!-- FORM -->
 
             <input id="nombre"
-                   placeholder="Nombre completo">
+                   placeholder="Nombre(s)" autocomplete="given-name">
 
-            <input id="email"
+            <input id="apellidoPaterno"
+                   placeholder="Apellido paterno" autocomplete="family-name">
+
+            <input id="apellidoMaterno"
+                   placeholder="Apellido materno">
+
+            <input id="email" type="email"
                    placeholder="Correo electrónico">
 
-            <input id="password"
-                   placeholder="Contraseña temporal">
+            <input id="password" type="password" minlength="10"
+                   placeholder="Contraseña temporal (mínimo 10 caracteres)">
 
             <input id="telefono"
                    placeholder="Teléfono">
@@ -59,8 +68,22 @@
             <input id="zona"
                    placeholder="Zona">
 
+            <input id="cedula" inputmode="numeric"
+                   placeholder="Número de cédula profesional">
+
+            <input id="institucion"
+                   placeholder="Institución de procedencia">
+
             <input id="especialidad"
                    placeholder="Especialidad">
+
+            <input id="experiencia" type="number" min="0" max="80"
+                   placeholder="Años de experiencia (opcional)">
+
+            <label class="consent-check">
+                <input id="aceptaTerminos" type="checkbox">
+                Confirmo la captura de los datos profesionales para su revisión.
+            </label>
 
             <!-- BOTÓN -->
 
@@ -77,10 +100,10 @@
             <!-- VOLVER -->
 
             <button class="volver"
-                    onclick="window.location.href='dashboardPsicologo.html'">
+                    onclick="window.location.href='../admin.html'">
 
-                <i class="fa-solid fa-house"></i>
-                Volver al Panel
+                <i class="fa-solid fa-arrow-left"></i>
+                Volver al panel administrativo
 
             </button>
 
@@ -89,7 +112,8 @@
     </div>
 
     <!-- JS -->
-    <script src="../js/adminPsicologos.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/adminPsicologos.js?v=2"></script>
     <div id="toast"></div>
 
 </body>

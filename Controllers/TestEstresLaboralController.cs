@@ -1,24 +1,28 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AppTesisAPI.Data;
 using AppTesisAPI.Models;
+using AppTesisAPI.Services;
 
 namespace AppTesisAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class TestEstresLaboralController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IPatientAccessService _patientAccess;
 
-        public TestEstresLaboralController(AppDbContext context)
+        public TestEstresLaboralController(
+            AppDbContext context,
+            IPatientAccessService patientAccess)
         {
             _context = context;
+            _patientAccess = patientAccess;
         }
 
-        /* ==========================================
-           POST GUARDAR TEST
-        ========================================== */
         [HttpPost]
         public async Task<IActionResult> Guardar(
             [FromBody] TestPHQ9Request body)
@@ -28,36 +32,31 @@ namespace AppTesisAPI.Controllers
                 if (body == null)
                     return BadRequest("Datos inválidos.");
 
-                int usuarioId =
-                    body.UsuarioId;
-
-                var respuestas =
-                    body.Respuestas;
+                var usuarioId = body.UsuarioId;
+                var respuestas = body.Respuestas;
 
                 if (usuarioId <= 0)
+                    return BadRequest("Usuario inválido.");
+
+                if (respuestas == null ||
+                    respuestas.Count != 12)
+                    return BadRequest("Se requieren 12 respuestas.");
+
+                if (respuestas.Any(x => x < 1 || x > 6))
                     return BadRequest(
-                        "Usuario inválido."
-                    );
+                        "Las respuestas deben estar entre 1 y 6.");
 
-                if (
-                    respuestas == null ||
-                    respuestas.Count != 12
-                )
-                    return BadRequest(
-                        "Se requieren 12 respuestas."
-                    );
+                if (!User.IsAdmin() &&
+                    User.GetUserId() != usuarioId)
+                    return Forbid();
 
-                int total =
-                    respuestas.Sum();
+                var total = respuestas.Sum();
+                var nivel = ObtenerNivel(total);
 
-                string nivel =
-                    ObtenerNivel(total);
-
-                var test =
+                _context.TestEstresLaboral.Add(
                     new TestEstresLaboral
                     {
                         UsuarioId = usuarioId,
-
                         P1 = respuestas[0],
                         P2 = respuestas[1],
                         P3 = respuestas[2],
@@ -70,12 +69,9 @@ namespace AppTesisAPI.Controllers
                         P10 = respuestas[9],
                         P11 = respuestas[10],
                         P12 = respuestas[11],
-
                         PuntajeTotal = total,
                         Fecha = DateTime.UtcNow
-                    };
-
-                _context.TestEstresLaboral.Add(test);
+                    });
 
                 _context.HistorialPredictivo.Add(
                     new HistorialPredictivo
@@ -91,72 +87,44 @@ namespace AppTesisAPI.Controllers
                 return Ok(new
                 {
                     puntaje = total,
-                    nivel = nivel
+                    nivel
                 });
             }
-            catch (Exception ex)
+            catch
             {
-                return BadRequest(
-                    ex.InnerException != null
-                    ? ex.InnerException.Message
-                    : ex.Message
-                );
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    "No se pudo guardar la evaluación de estrés.");
             }
         }
 
-        /* ==========================================
-           GET HISTORIAL
-        ========================================== */
         [HttpGet("{usuarioId}")]
-        public async Task<IActionResult> Obtener(
-            int usuarioId)
+        public async Task<IActionResult> Obtener(int usuarioId)
         {
+            if (!await _patientAccess.CanReadAsync(User, usuarioId))
+                return Forbid();
+
             var lista =
                 await _context.TestEstresLaboral
-                .Where(x =>
-                    x.UsuarioId == usuarioId)
-                .OrderByDescending(x =>
-                    x.Fecha)
+                .Where(x => x.UsuarioId == usuarioId)
+                .OrderByDescending(x => x.Fecha)
                 .ToListAsync();
 
-            return Ok(
-                lista.Select(x => new
-                {
-                    puntaje =
-                        x.PuntajeTotal,
-
-                    nivel =
-                        ObtenerNivel(
-                            x.PuntajeTotal
-                        ),
-
-                    fecha =
-                        x.Fecha
-                })
-            );
+            return Ok(lista.Select(x => new
+            {
+                puntaje = x.PuntajeTotal,
+                nivel = ObtenerNivel(x.PuntajeTotal),
+                fecha = x.Fecha
+            }));
         }
 
-        /* ==========================================
-           NIVEL
-        ========================================== */
-        private string ObtenerNivel(
-            int p)
+        private string ObtenerNivel(int p)
         {
-            if (p <= 12)
-                return "Sin estrés";
-
-            if (p <= 24)
-                return "Fase de alarma";
-
-            if (p <= 36)
-                return "Estrés leve";
-
-            if (p <= 48)
-                return "Estrés medio";
-
-            if (p <= 60)
-                return "Estrés alto";
-
+            if (p <= 12) return "Sin estrés";
+            if (p <= 24) return "Fase de alarma";
+            if (p <= 36) return "Estrés leve";
+            if (p <= 48) return "Estrés medio";
+            if (p <= 60) return "Estrés alto";
             return "Estrés grave";
         }
     }

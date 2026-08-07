@@ -1,102 +1,96 @@
-﻿/* URL base de la API */
-const API = "https://mindcare-production-d670.up.railway.app/api";
+const API = window.MINDCARE_API_BASE;
 
-/* Registra un nuevo psicólogo en el sistema */
-function registrarPsicologo() {
+document.addEventListener("DOMContentLoaded", () => {
+    const token = localStorage.getItem("token");
+    const rol = (localStorage.getItem("rol") || "").toLowerCase();
 
-    /* Captura y limpieza de campos */
-    const nombre =
-        document.getElementById("nombre").value.trim();
+    if (!token || rol !== "admin") {
+        window.location.href = "../login.html";
+    }
+});
 
-    const email =
-        document.getElementById("email").value.trim();
+async function registrarPsicologo() {
+    const msg = document.getElementById("msg");
+    const data = {
+        nombre: valor("nombre"),
+        apellidoPaterno: valor("apellidoPaterno"),
+        apellidoMaterno: valor("apellidoMaterno"),
+        email: valor("email"),
+        password: valor("password"),
+        telefono: valor("telefono"),
+        zona: valor("zona"),
+        numeroCedula: valor("cedula"),
+        institucion: valor("institucion"),
+        especialidad: valor("especialidad"),
+        aniosExperiencia: valor("experiencia")
+            ? Number(valor("experiencia"))
+            : null,
+        aceptaTerminos: document.getElementById("aceptaTerminos").checked
+    };
 
-    const password =
-        document.getElementById("password").value.trim();
+    msg.textContent = "";
 
-    const telefono =
-        document.getElementById("telefono").value.trim();
-
-    const zona =
-        document.getElementById("zona").value.trim();
-
-    const especialidad =
-        document.getElementById("especialidad").value.trim();
-
-    /* Área de mensajes */
-    const msg =
-        document.getElementById("msg");
-
-    msg.innerText = "";
-
-    /* Validación de campos obligatorios */
-    if (!nombre || !email || !password || !especialidad) {
-
-        msg.style.color = "red";
-        msg.innerText =
-            "Completa todos los campos obligatorios.";
-
+    if (Object.entries(data)
+        .filter(([key]) => !["aniosExperiencia", "aceptaTerminos"].includes(key))
+        .some(([, value]) => !value) || !data.aceptaTerminos) {
+        mostrarMensaje("Completa los datos profesionales obligatorios.", "error");
         return;
     }
 
-    /* Objeto enviado al servidor */
-    const data = {
-        nombre,
-        email,
-        password,
-        telefono,
-        zona,
-        especialidad
-    };
+    if (data.password.length < 10) {
+        mostrarMensaje("La contraseña temporal debe tener al menos 10 caracteres.", "error");
+        return;
+    }
 
-    /* Solicitud de registro */
-    fetch(`${API}/Admin/crear-psicologo`, {
-
-        method: "POST",
-
-        headers: {
-            "Content-Type": "application/json"
-        },
-
-        body: JSON.stringify(data)
-
-    })
-        .then(async res => {
-
-            const texto = await res.text();
-
-            if (!res.ok)
-                throw new Error(texto);
-
-            return texto;
-        })
-
-        .then(() => {
-
-            msg.style.color = "green";
-            msg.innerText =
-                "Psicólogo registrado correctamente.";
-
-            limpiarCampos();
-        })
-
-        .catch(error => {
-
-            console.log(error);
-
-            msg.style.color = "red";
-            msg.innerText =
-                "No se pudo registrar.";
+    try {
+        const response = await fetch(`${API}/psicologos-profesionales/registro`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
         });
+        const texto = await response.text();
+
+        if (!response.ok)
+            throw new Error(extraerMensaje(texto));
+
+        mostrarMensaje(
+            "Perfil creado. El profesional debe cargar su cédula desde Mi verificación.",
+            "ok"
+        );
+        limpiarCampos();
+    } catch (error) {
+        mostrarMensaje(
+            error.message || "No se pudo registrar el perfil profesional.",
+            "error"
+        );
+    }
 }
 
-/* Limpia los campos del formulario */
 function limpiarCampos() {
+    [
+        "nombre", "apellidoPaterno", "apellidoMaterno", "email", "password",
+        "telefono", "zona", "cedula", "institucion", "especialidad", "experiencia"
+    ].forEach(id => {
+        document.getElementById(id).value = "";
+    });
+    document.getElementById("aceptaTerminos").checked = false;
+}
 
-    document.getElementById("nombre").value = "";
-    document.getElementById("email").value = "";
-    document.getElementById("password").value = "";
-    document.getElementById("telefono").value = "";
-    document.getElementById("zona").value = "";
-    document.getElementById("especialidad").value = "";
+function valor(id) {
+    return document.getElementById(id).value.trim();
+}
+
+function mostrarMensaje(texto, tipo) {
+    const msg = document.getElementById("msg");
+    msg.style.color = tipo === "error" ? "#b42318" : "#087f5b";
+    msg.textContent = texto;
+}
+
+function extraerMensaje(texto) {
+    try {
+        const data = JSON.parse(texto);
+        return data.mensaje || data.title || texto;
+    } catch {
+        return String(texto || "").replaceAll('"', "").trim();
+    }
 }

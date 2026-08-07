@@ -1,0 +1,2119 @@
+/* Shared professional layer for MindCare dashboards. */
+:root {
+    --mc-page: #f3f7fb;
+    --mc-surface: #ffffff;
+    --mc-surface-soft: #f8fafc;
+    --mc-border: #d9e4f2;
+    --mc-border-strong: #b9c9dc;
+    --mc-text: #172033;
+    --mc-muted: #60708a;
+    --mc-blue: #2f6fed;
+    --mc-blue-dark: #174eb6;
+    --mc-teal: #0f9f8f;
+    --mc-green: #168a55;
+    --mc-amber: #c47a12;
+    --mc-red: #d83a3a;
+    --mc-violet: #6850d8;
+    --mc-shadow: 0 14px 36px rgba(21, 37, 64, 0.08);
+    --mc-shadow-soft: 0 8px 22px rgba(21, 37, 64, 0.05);
+    --mc-radius: 14px;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background:
+        radial-gradient(circle at top right, rgba(47, 111, 237, 0.10), transparent 30rem),
+        linear-gradient(180deg, #f8fbff 0%, var(--mc-page) 42%, #eef4fa 100%) !important;
+    color: var(--mc-text);
+}
+
+.bg-circle {
+    display: none !important;
+}
+
+.panel,
+.main {
+    color: var(--mc-text);
+}
+
+.panel {
+    width: min(1440px, calc(100% - 40px)) !important;
+    margin: 28px auto !important;
+}
+
+.main {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(246, 250, 255, 0.92)) !important;
+}
+
+.sidebar {
+    border-right: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: 18px 0 45px rgba(24, 55, 110, 0.12) !important;
+}
+
+.top {
+    position: relative;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.82) !important;
+    border: 1px solid var(--mc-border) !important;
+    border-radius: 18px !important;
+    box-shadow: var(--mc-shadow-soft) !important;
+    padding: 22px 24px !important;
+    margin-bottom: 22px !important;
+    overflow: hidden;
+}
+
+.top::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 6px;
+    background: linear-gradient(180deg, var(--mc-blue), var(--mc-teal));
+}
+
+.top h1 {
+    color: var(--mc-text) !important;
+    line-height: 1.05;
+    letter-spacing: 0;
+}
+
+.top p,
+.subtop,
+.chart-desc,
+.chart-top small,
+.ia-hero p,
+.queue-main p,
+.workbench-main p,
+.institution-command p,
+.priority-card p,
+.admin-alert-card p,
+.history-table td,
+.tabla-box td,
+.busqueda-box label {
+    color: var(--mc-muted) !important;
+}
+
+.cards {
+    gap: 16px !important;
+}
+
+.card,
+.chart-card,
+.chart-card-wide,
+.info-card,
+.ia-lab,
+.ia-panel,
+.patient-command,
+.clinical-queue,
+.clinical-workbench,
+.admin-workbench,
+.institution-command,
+.tabla-box,
+.calendar-box,
+.busqueda-box,
+.workbench-main,
+.workbench-side,
+.side-card,
+.priority-card,
+.admin-alert-card,
+.history-card,
+.modal-box {
+    background: rgba(255, 255, 255, 0.94) !important;
+    border: 1px solid var(--mc-border) !important;
+    border-radius: var(--mc-radius) !important;
+    box-shadow: var(--mc-shadow-soft) !important;
+}
+
+.card:hover,
+.chart-card:hover,
+.chart-card-wide:hover,
+.info-card:hover,
+.priority-card:hover,
+.admin-alert-card:hover {
+    border-color: var(--mc-border-strong) !important;
+    box-shadow: var(--mc-shadow) !important;
+    transform: translateY(-2px);
+}
+
+.card {
+    position: relative;
+    min-height: 128px;
+    overflow: hidden;
+}
+
+.card::after {
+    content: "";
+    position: absolute;
+    inset: auto 16px 14px 16px;
+    height: 3px;
+    border-radius: 999px;
+    background: currentColor;
+    opacity: 0.15;
+}
+
+.card h3 {
+    color: var(--mc-muted) !important;
+    font-size: 0.82rem !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.04em !important;
+    text-transform: uppercase;
+}
+
+.card p,
+.card strong {
+    color: var(--mc-text) !important;
+}
+
+.card.blue,
+.card.primary,
+.card.purple,
+.card.green,
+.card.red,
+.card.orange,
+.card.dark {
+    color: var(--mc-blue) !important;
+}
+
+.card.green {
+    color: var(--mc-teal) !important;
+}
+
+.card.red {
+    color: var(--mc-red) !important;
+}
+
+.card.orange {
+    color: var(--mc-amber) !important;
+}
+
+.card.purple {
+    color: var(--mc-violet) !important;
+}
+
+.card.dark {
+    color: #334155 !important;
+}
+
+.patient-command,
+.clinical-queue,
+.clinical-workbench,
+.admin-workbench,
+.institution-command {
+    position: relative;
+    overflow: hidden;
+}
+
+.patient-command::before,
+.clinical-queue::before,
+.clinical-workbench::before,
+.admin-workbench::before,
+.institution-command::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--mc-blue), var(--mc-teal), var(--mc-amber));
+}
+
+.command-label,
+.queue-label,
+.workbench-label,
+.status-label,
+.insight-label,
+.evidence-label {
+    color: var(--mc-blue-dark) !important;
+    background: #eaf2ff !important;
+    border: 1px solid #cfe0ff !important;
+}
+
+.ia-chip,
+.risk-chip,
+.status-chip,
+.role-chip,
+.priority-chip,
+.tag {
+    border-radius: 999px !important;
+    border: 1px solid var(--mc-border) !important;
+    font-weight: 800 !important;
+}
+
+.ia-score,
+.command-score,
+.queue-score,
+.admin-risk-score {
+    background: linear-gradient(135deg, #ffffff, #eef6ff) !important;
+    border: 1px solid #cfe0ff !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72), var(--mc-shadow-soft) !important;
+}
+
+.chart-card canvas,
+.chart-card-wide canvas {
+    background: linear-gradient(180deg, #ffffff, #f9fbfe);
+    border: 1px solid #ecf1f7;
+    border-radius: 12px;
+    padding: 10px;
+}
+
+.chart-heading h3,
+.chart-card h3,
+.info-card h3,
+.ia-panel h3,
+.tabla-box h2,
+.calendar-box h2,
+.busqueda-box h2,
+.workbench-main h2,
+.institution-command h2 {
+    color: var(--mc-text) !important;
+    letter-spacing: 0;
+}
+
+.trend-strip div,
+.clinical-levels div,
+.plan-metrics div,
+.ia-metrics,
+.side-metric,
+.admin-side-metric,
+.alert-summary-card,
+.evidence-card {
+    background: var(--mc-surface-soft) !important;
+    border: 1px solid var(--mc-border) !important;
+    border-radius: 12px !important;
+}
+
+.meter,
+.risk-meter,
+.admin-meter {
+    background: #e8eef6 !important;
+    border-radius: 999px !important;
+    overflow: hidden;
+}
+
+.meter div,
+.risk-meter div,
+.admin-meter div {
+    background: linear-gradient(90deg, var(--mc-teal), var(--mc-blue)) !important;
+}
+
+table {
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    width: 100%;
+}
+
+th {
+    background: #f6f9fd !important;
+    color: #45566f !important;
+    font-size: 0.76rem !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+td {
+    color: var(--mc-text) !important;
+}
+
+tbody tr {
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+tbody tr:hover {
+    background: #f7fbff !important;
+}
+
+button,
+.pdf-btn,
+.nuevo-btn,
+.logout-btn,
+.priority-actions button,
+.busqueda button,
+.modal-box button,
+td button {
+    border-radius: 10px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0 !important;
+    box-shadow: none !important;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+}
+
+button:hover,
+.pdf-btn:hover,
+.nuevo-btn:hover,
+.logout-btn:hover,
+.priority-actions button:hover,
+.busqueda button:hover,
+.modal-box button:hover,
+td button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(47, 111, 237, 0.16) !important;
+}
+
+.pdf-btn,
+.nuevo-btn,
+.priority-actions button,
+.busqueda button,
+.modal-box button[type="submit"] {
+    background: linear-gradient(135deg, var(--mc-blue), #3f8df5) !important;
+}
+
+.logout-btn,
+.logout {
+    border: 1px solid #ffd1d1 !important;
+}
+
+input,
+select,
+textarea {
+    border: 1px solid var(--mc-border) !important;
+    border-radius: 10px !important;
+    background: #fbfdff !important;
+    color: var(--mc-text) !important;
+    outline: none;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--mc-blue) !important;
+    background: #ffffff !important;
+    box-shadow: 0 0 0 4px rgba(47, 111, 237, 0.12) !important;
+}
+
+.menu button {
+    border-radius: 12px !important;
+}
+
+.menu button:hover,
+.menu button:focus {
+    background: rgba(255, 255, 255, 0.16) !important;
+}
+
+.legend-box,
+.chart-note,
+.ia-empty,
+.empty-state {
+    background: #f8fbff !important;
+    border: 1px dashed var(--mc-border-strong) !important;
+    border-radius: 12px !important;
+}
+
+@media (max-width: 860px) {
+    .panel {
+        width: min(100% - 24px, 720px) !important;
+        margin: 16px auto !important;
+    }
+
+    .top {
+        align-items: stretch !important;
+        padding: 18px !important;
+    }
+
+    .top h1 {
+        font-size: clamp(1.8rem, 8vw, 2.6rem) !important;
+    }
+
+    .pdf-btn,
+    .nuevo-btn,
+    .logout-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .card,
+    .chart-card,
+    .chart-card-wide,
+    .info-card,
+    .ia-panel,
+    .priority-card,
+    .admin-alert-card {
+        transform: none !important;
+    }
+}
+
+/* =====================================================
+   MindCare executive workspace layer v4
+   Final override for cleaner, less crowded dashboards.
+===================================================== */
+
+.mindcare-dashboard {
+    --surface: #ffffff;
+    --surface-soft: #f8fafc;
+    --line: #dbe4ef;
+    --ink: #172033;
+    --muted: #64748b;
+    --brand: #2563eb;
+    --brand-2: #0f766e;
+    --danger: #dc2626;
+    --warning: #b45309;
+    --success: #15803d;
+}
+
+.mindcare-dashboard .main,
+.mindcare-dashboard .panel {
+    width: min(100%, 1380px) !important;
+}
+
+.mindcare-dashboard .main {
+    padding: clamp(24px, 3vw, 40px) !important;
+}
+
+.mindcare-dashboard .panel {
+    padding: clamp(24px, 3vw, 38px) !important;
+}
+
+.mindcare-dashboard .top {
+    position: relative;
+    overflow: hidden;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 20px !important;
+    margin-bottom: 14px !important;
+    padding: 20px 24px !important;
+    border: 1px solid var(--line) !important;
+    border-radius: 14px !important;
+    background:
+        linear-gradient(135deg, rgba(255,255,255,.96), rgba(248,250,252,.96)),
+        radial-gradient(circle at right top, rgba(37,99,235,.12), transparent 38%) !important;
+    box-shadow: 0 16px 42px rgba(23, 32, 51, .08) !important;
+}
+
+.mindcare-dashboard .top h1 {
+    font-size: clamp(1.9rem, 3vw, 2.45rem) !important;
+    letter-spacing: 0 !important;
+}
+
+.dashboard-tabs {
+    top: 10px;
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    margin-bottom: 14px !important;
+    padding: 7px !important;
+    border-radius: 14px !important;
+    background: rgba(255,255,255,.9) !important;
+}
+
+.dashboard-tabs button {
+    min-height: 46px !important;
+    border-radius: 10px !important;
+    white-space: normal;
+}
+
+.dashboard-tabs button.active {
+    background: linear-gradient(135deg, #eff6ff, #ecfeff) !important;
+    color: #1d4ed8 !important;
+    box-shadow: inset 0 0 0 1px #bfdbfe !important;
+}
+
+.view-intro {
+    margin-bottom: 18px;
+}
+
+.view-intro > div {
+    display: none;
+    position: relative;
+    overflow: hidden;
+    padding: 22px 24px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background:
+        linear-gradient(135deg, #ffffff, #f8fafc),
+        radial-gradient(circle at right center, rgba(15,118,110,.12), transparent 32%);
+    box-shadow: 0 16px 34px rgba(23, 32, 51, .07);
+}
+
+.view-intro span {
+    display: inline-flex;
+    margin-bottom: 8px;
+    color: var(--brand);
+    font-size: .76rem;
+    font-weight: 900;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.view-intro h2 {
+    margin: 0;
+    color: var(--ink);
+    font-size: clamp(1.45rem, 2.2vw, 2rem);
+    line-height: 1.12;
+}
+
+.view-intro p {
+    max-width: 780px;
+    margin: 8px 0 0;
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+.user-dashboard[data-dashboard-view="resumen"] .view-intro [data-view-panel="resumen"],
+.user-dashboard[data-dashboard-view="ia"] .view-intro [data-view-panel="ia"],
+.user-dashboard[data-dashboard-view="graficas"] .view-intro [data-view-panel="graficas"],
+.user-dashboard[data-dashboard-view="evaluaciones"] .view-intro [data-view-panel="evaluaciones"],
+.admin-dashboard[data-dashboard-view="resumen"] .view-intro [data-view-panel="resumen"],
+.admin-dashboard[data-dashboard-view="analitica"] .view-intro [data-view-panel="analitica"],
+.admin-dashboard[data-dashboard-view="gestion"] .view-intro [data-view-panel="gestion"],
+.psychologist-dashboard[data-dashboard-view="resumen"] .view-intro [data-view-panel="resumen"],
+.psychologist-dashboard[data-dashboard-view="analitica"] .view-intro [data-view-panel="analitica"],
+.psychologist-dashboard[data-dashboard-view="gestion"] .view-intro [data-view-panel="gestion"] {
+    display: block;
+}
+
+.patient-command,
+.institution-command,
+.clinical-queue,
+.care-roadmap,
+.ia-lab,
+.admin-workbench,
+.clinical-workbench,
+.admin-analytics,
+.clinical-analytics,
+.tabla-box,
+.chart-box,
+.calendar-box,
+.busqueda-box,
+.info-card,
+.chart-card,
+.analytics-card,
+.clinical-chart-card {
+    border: 1px solid var(--line) !important;
+    border-radius: 14px !important;
+    background: var(--surface) !important;
+    box-shadow: 0 14px 34px rgba(23, 32, 51, .065) !important;
+}
+
+.patient-command,
+.institution-command,
+.clinical-queue {
+    grid-template-columns: minmax(0, 1fr) 132px minmax(260px, .72fr) !important;
+    gap: 20px !important;
+    padding: 24px !important;
+}
+
+.care-roadmap,
+.admin-workbench,
+.clinical-workbench {
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 320px) !important;
+    gap: 20px !important;
+}
+
+.mindcare-dashboard .cards {
+    gap: 16px !important;
+    margin-bottom: 18px !important;
+}
+
+.mindcare-dashboard .card {
+    min-height: 132px !important;
+    border: 1px solid var(--line) !important;
+    border-radius: 14px !important;
+    background: #ffffff !important;
+    box-shadow: 0 12px 28px rgba(23, 32, 51, .055) !important;
+}
+
+.mindcare-dashboard .card h3 {
+    color: #51617a !important;
+    font-size: .92rem !important;
+    font-weight: 900 !important;
+}
+
+.mindcare-dashboard .card p {
+    color: var(--ink) !important;
+    font-size: clamp(1.25rem, 2vw, 1.75rem) !important;
+    font-weight: 950 !important;
+}
+
+.mindcare-dashboard .card.primary {
+    background: linear-gradient(135deg, #1d4ed8, #0f766e) !important;
+}
+
+.mindcare-dashboard .card.primary h3,
+.mindcare-dashboard .card.primary p {
+    color: #ffffff !important;
+}
+
+.command-score,
+.queue-score,
+.ia-score {
+    width: 132px !important;
+    min-width: 132px !important;
+    max-width: 132px !important;
+    height: 132px !important;
+    background: #ffffff !important;
+    border: 10px solid #dbeafe !important;
+    box-shadow: inset 0 0 0 1px #bfdbfe;
+}
+
+.command-score strong,
+.queue-score strong,
+.ia-score span {
+    color: #1d4ed8 !important;
+}
+
+.plan-metrics,
+.risk-summary,
+.queue-breakdown,
+.analytics-kpis,
+.trend-strip,
+.clinical-levels,
+.patient-vitals,
+.patient-ai-evidence {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.plan-metrics div,
+.risk-summary div,
+.queue-breakdown div,
+.analytics-kpis div,
+.trend-strip div,
+.clinical-levels div,
+.patient-vitals div,
+.patient-ai-evidence div,
+.roadmap-side div,
+.side-card,
+.audit-card,
+.ia-panel,
+.care-step {
+    border: 1px solid #e5edf6 !important;
+    border-radius: 12px !important;
+    background: #f8fafc !important;
+}
+
+.alert-card-metrics strong,
+.patient-ai-evidence strong {
+    display: inline-flex;
+    max-width: 100%;
+    align-items: center;
+    padding: 5px 8px;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-size: .78rem !important;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.charts,
+.analytics-grid {
+    gap: 20px !important;
+}
+
+.chart-card,
+.analytics-card,
+.clinical-chart-card {
+    padding: 22px !important;
+}
+
+.chart-heading,
+.chart-title,
+.analytics-head,
+.section-head,
+.roadmap-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #e5edf6;
+}
+
+.chart-heading span,
+.chart-title span,
+.analytics-head span,
+.section-head span,
+.roadmap-head span,
+.command-label,
+.queue-label {
+    color: var(--brand) !important;
+    font-size: .72rem !important;
+    font-weight: 950 !important;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.chart-card canvas,
+.chart-card-wide canvas,
+.analytics-card canvas,
+.clinical-chart-card canvas,
+.chart-box canvas {
+    height: 300px !important;
+}
+
+.chart-card-wide canvas {
+    height: 410px !important;
+}
+
+.analytics-card.wide canvas,
+.clinical-chart-card.wide canvas {
+    height: 380px !important;
+}
+
+/* =====================================================
+   MindCare AI cockpit v8
+   Final dashboard AI experience.
+===================================================== */
+
+.user-dashboard[data-dashboard-view="resumen"] .ai-cockpit,
+.user-dashboard[data-dashboard-view="graficas"] .ai-cockpit,
+.user-dashboard[data-dashboard-view="evaluaciones"] .ai-cockpit {
+    display: none !important;
+}
+
+.ai-cockpit {
+    display: grid;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.ai-cockpit-main,
+.ai-cockpit-grid article,
+.ai-questions {
+    border: 1px solid #dbe4ef !important;
+    border-radius: 16px !important;
+    background: #ffffff !important;
+    box-shadow: 0 16px 34px rgba(23, 32, 51, .07) !important;
+}
+
+.ai-cockpit-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 160px;
+    gap: 20px;
+    align-items: center;
+    padding: 24px;
+    background:
+        linear-gradient(135deg, #ffffff, #f8fafc),
+        radial-gradient(circle at right top, rgba(37,99,235,.14), transparent 34%) !important;
+}
+
+.ai-cockpit-main span,
+.ai-cockpit-grid span,
+.ai-questions span {
+    color: #2563eb;
+    font-size: .72rem;
+    font-weight: 950;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.ai-cockpit-main h2 {
+    margin: 8px 0;
+    color: #172033;
+    font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+    line-height: 1.1;
+}
+
+.ai-cockpit-main p,
+.ai-cockpit-grid p,
+.ai-questions p {
+    margin: 0;
+    color: #64748b;
+    line-height: 1.58;
+}
+
+.wellbeing-ring {
+    --wellbeing: 0%;
+    width: 150px;
+    height: 150px;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    border-radius: 50%;
+    background:
+        radial-gradient(circle, #ffffff 58%, transparent 59%),
+        conic-gradient(#0f766e var(--wellbeing), #e5edf6 0);
+}
+
+.wellbeing-ring strong {
+    color: #172033;
+    font-size: 2.45rem;
+    line-height: 1;
+}
+
+.wellbeing-ring span {
+    max-width: 96px;
+    color: #64748b !important;
+    font-size: .72rem !important;
+    letter-spacing: 0 !important;
+    text-align: center;
+    text-transform: none !important;
+}
+
+.wellbeing-ring[data-level*="prioritario"],
+.wellbeing-ring[data-level*="comprometido"] {
+    background:
+        radial-gradient(circle, #ffffff 58%, transparent 59%),
+        conic-gradient(#dc2626 var(--wellbeing), #e5edf6 0);
+}
+
+.wellbeing-ring[data-level*="vigilancia"] {
+    background:
+        radial-gradient(circle, #ffffff 58%, transparent 59%),
+        conic-gradient(#b45309 var(--wellbeing), #e5edf6 0);
+}
+
+.ai-cockpit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+}
+
+.ai-cockpit-grid article {
+    padding: 18px;
+    min-height: 154px;
+}
+
+.ai-cockpit-grid strong {
+    display: block;
+    margin: 8px 0 6px;
+    color: #172033;
+    font-size: 1.08rem;
+}
+
+.ai-questions {
+    display: grid;
+    grid-template-columns: minmax(220px, .36fr) minmax(0, 1fr);
+    gap: 18px;
+    padding: 20px;
+}
+
+.ai-questions h3 {
+    margin: 8px 0 0;
+    color: #172033;
+    font-size: 1.24rem;
+}
+
+#iaPreguntasSeguimiento {
+    display: grid;
+    gap: 10px;
+}
+
+.ai-question-item {
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 10px;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid #e5edf6;
+    border-radius: 12px;
+    background: #f8fafc;
+}
+
+.ai-question-item b {
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.ai-question-item span {
+    color: #334155;
+    font-size: .92rem;
+    font-weight: 750;
+    letter-spacing: 0;
+    line-height: 1.38;
+    text-transform: none;
+}
+
+@media (max-width: 980px) {
+    .ai-cockpit-main,
+    .ai-questions {
+        grid-template-columns: 1fr;
+    }
+
+    .ai-cockpit-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .wellbeing-ring {
+        width: 128px;
+        height: 128px;
+    }
+}
+
+/* =====================================================
+   MindCare product polish v6
+   Quick actions, ribbons and high-end product composition.
+===================================================== */
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 12px;
+    margin: 0 0 18px;
+}
+
+.quick-actions button {
+    width: 100% !important;
+    min-height: 82px;
+    display: grid !important;
+    grid-template-columns: 42px minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+    margin: 0 !important;
+    padding: 14px !important;
+    border: 1px solid #dbe4ef !important;
+    border-radius: 14px !important;
+    background: #ffffff !important;
+    color: #172033 !important;
+    text-align: left !important;
+    box-shadow: 0 12px 28px rgba(23, 32, 51, .055) !important;
+}
+
+.quick-actions button:hover {
+    transform: translateY(-2px) !important;
+    border-color: #bfdbfe !important;
+    box-shadow: 0 18px 34px rgba(37, 99, 235, .12) !important;
+}
+
+.quick-actions i {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #eff6ff, #ecfeff);
+    color: #1d4ed8;
+    font-size: 1rem;
+}
+
+.quick-actions span {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+}
+
+.quick-actions strong {
+    color: #172033;
+    font-size: .98rem;
+    line-height: 1.2;
+}
+
+.quick-actions small {
+    color: #64748b;
+    font-size: .78rem;
+    font-weight: 750;
+    line-height: 1.35;
+}
+
+.section-ribbon {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 14px;
+    margin: 22px 0 10px;
+    padding: 0 2px;
+}
+
+.section-ribbon span {
+    display: block;
+    margin-bottom: 4px;
+    color: #2563eb;
+    font-size: .72rem;
+    font-weight: 950;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.section-ribbon h2 {
+    margin: 0;
+    color: #172033;
+    font-size: clamp(1.1rem, 1.6vw, 1.38rem);
+    line-height: 1.2;
+}
+
+.user-dashboard[data-dashboard-view="resumen"] .ia-lab + .section-ribbon,
+.user-dashboard[data-dashboard-view="resumen"] .charts + .section-ribbon,
+.user-dashboard[data-dashboard-view="ia"] .section-ribbon,
+.user-dashboard[data-dashboard-view="graficas"] .section-ribbon,
+.user-dashboard[data-dashboard-view="evaluaciones"] .section-ribbon,
+.admin-dashboard[data-dashboard-view="resumen"] .admin-analytics + .section-ribbon,
+.admin-dashboard[data-dashboard-view="analitica"] .section-ribbon,
+.admin-dashboard[data-dashboard-view="gestion"] .section-ribbon,
+.psychologist-dashboard[data-dashboard-view="resumen"] .clinical-analytics + .section-ribbon,
+.psychologist-dashboard[data-dashboard-view="analitica"] .section-ribbon,
+.psychologist-dashboard[data-dashboard-view="gestion"] .section-ribbon {
+    display: none !important;
+}
+
+.user-dashboard[data-dashboard-view="resumen"] .section-ribbon:nth-of-type(2),
+.user-dashboard[data-dashboard-view="resumen"] .section-ribbon:nth-of-type(3),
+.user-dashboard[data-dashboard-view="ia"] .ia-lab,
+.user-dashboard[data-dashboard-view="graficas"] .charts,
+.user-dashboard[data-dashboard-view="evaluaciones"] .info-tests {
+    display: grid;
+}
+
+.user-dashboard[data-dashboard-view="ia"] .section-ribbon:has(+ .ia-lab),
+.user-dashboard[data-dashboard-view="graficas"] .section-ribbon:has(+ .charts),
+.user-dashboard[data-dashboard-view="evaluaciones"] .section-ribbon:has(+ .info-tests),
+.admin-dashboard[data-dashboard-view="analitica"] .section-ribbon:has(+ .admin-analytics),
+.admin-dashboard[data-dashboard-view="gestion"] .section-ribbon:has(+ .tabla-box),
+.psychologist-dashboard[data-dashboard-view="analitica"] .section-ribbon:has(+ .clinical-analytics),
+.psychologist-dashboard[data-dashboard-view="gestion"] .section-ribbon:has(+ .busqueda-box) {
+    display: flex !important;
+}
+
+/* =====================================================
+   MindCare clinical trust layer v7
+===================================================== */
+
+.trust-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+    margin: 0 0 18px;
+}
+
+.trust-strip article {
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+    min-height: 76px;
+    padding: 13px 14px;
+    border: 1px solid #dbe4ef;
+    border-radius: 14px;
+    background:
+        linear-gradient(135deg, rgba(255,255,255,.96), rgba(248,250,252,.96));
+    box-shadow: 0 10px 24px rgba(23, 32, 51, .052);
+}
+
+.trust-strip i {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: #ecfeff;
+    color: #0f766e;
+}
+
+.trust-strip strong {
+    display: block;
+    color: #172033;
+    font-size: .9rem;
+    line-height: 1.25;
+}
+
+.trust-strip span {
+    display: block;
+    margin-top: 2px;
+    color: #64748b;
+    font-size: .76rem;
+    font-weight: 750;
+    line-height: 1.35;
+}
+
+.audit-item:first-child {
+    border-color: #bfdbfe !important;
+    background: linear-gradient(135deg, #eff6ff, #f8fafc) !important;
+}
+
+.ia-item.recommendation:first-child {
+    border-color: #bfdbfe !important;
+    background: #eff6ff !important;
+}
+
+@media (max-width: 760px) {
+    .trust-strip {
+        grid-template-columns: 1fr;
+    }
+}
+
+.admin-dashboard[data-dashboard-view="resumen"] .section-ribbon:has(+ .cards),
+.admin-dashboard[data-dashboard-view="resumen"] .section-ribbon:has(+ .institution-command),
+.psychologist-dashboard[data-dashboard-view="resumen"] .section-ribbon:has(+ .cards),
+.psychologist-dashboard[data-dashboard-view="resumen"] .section-ribbon:has(+ .clinical-queue),
+.user-dashboard[data-dashboard-view="resumen"] .section-ribbon:has(+ .care-roadmap),
+.user-dashboard[data-dashboard-view="resumen"] .section-ribbon:has(+ .cards) {
+    display: flex !important;
+}
+
+.mindcare-dashboard .card {
+    position: relative;
+    overflow: hidden;
+}
+
+.mindcare-dashboard .card::after {
+    content: "";
+    position: absolute;
+    inset: auto 16px 12px 16px;
+    height: 3px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(37,99,235,.7), rgba(15,118,110,.55));
+    opacity: .35;
+}
+
+.mindcare-dashboard .card.primary::after {
+    background: rgba(255,255,255,.72);
+}
+
+.view-intro > div {
+    min-height: 132px;
+}
+
+.view-intro > div::after {
+    content: "";
+    position: absolute;
+    right: 22px;
+    top: 22px;
+    width: 84px;
+    height: 84px;
+    border-radius: 24px;
+    background:
+        linear-gradient(135deg, rgba(37,99,235,.14), rgba(15,118,110,.12));
+    transform: rotate(8deg);
+}
+
+.chart-card,
+.analytics-card,
+.clinical-chart-card {
+    min-height: 360px !important;
+}
+
+.chart-card-wide {
+    min-height: 500px !important;
+}
+
+.tabla-box,
+.calendar-box,
+.chart-box {
+    padding: 24px !important;
+}
+
+@media (max-width: 760px) {
+    .quick-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .section-ribbon {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .view-intro > div::after {
+        display: none;
+    }
+}
+
+/* Section ribbon visibility lock */
+.mindcare-dashboard .section-ribbon {
+    display: none !important;
+}
+
+.user-dashboard[data-dashboard-view="resumen"] .section-ribbon:has(+ .care-roadmap),
+.user-dashboard[data-dashboard-view="resumen"] .section-ribbon:has(+ .cards),
+.user-dashboard[data-dashboard-view="ia"] .section-ribbon:has(+ .ia-lab),
+.user-dashboard[data-dashboard-view="graficas"] .section-ribbon:has(+ .charts),
+.user-dashboard[data-dashboard-view="evaluaciones"] .section-ribbon:has(+ .info-tests),
+.admin-dashboard[data-dashboard-view="resumen"] .section-ribbon:has(+ .cards),
+.admin-dashboard[data-dashboard-view="resumen"] .section-ribbon:has(+ .institution-command),
+.admin-dashboard[data-dashboard-view="analitica"] .section-ribbon:has(+ .admin-analytics),
+.admin-dashboard[data-dashboard-view="gestion"] .section-ribbon:has(+ .tabla-box),
+.psychologist-dashboard[data-dashboard-view="resumen"] .section-ribbon:has(+ .cards),
+.psychologist-dashboard[data-dashboard-view="resumen"] .section-ribbon:has(+ .clinical-queue),
+.psychologist-dashboard[data-dashboard-view="analitica"] .section-ribbon:has(+ .clinical-analytics),
+.psychologist-dashboard[data-dashboard-view="gestion"] .section-ribbon:has(+ .busqueda-box) {
+    display: flex !important;
+}
+
+.chart-note,
+.analytics-card p,
+.clinical-chart-card p {
+    margin-top: 14px !important;
+    color: var(--muted) !important;
+    line-height: 1.55 !important;
+}
+
+.tabla-box h2,
+.chart-box h2,
+.calendar-box h2,
+.busqueda-box h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px !important;
+    color: var(--ink);
+    font-size: clamp(1.25rem, 1.8vw, 1.55rem) !important;
+}
+
+.tabla-box table {
+    min-width: 880px !important;
+}
+
+.tabla-box thead th {
+    border: 0 !important;
+    background: #eef5ff !important;
+}
+
+.tabla-box tbody td {
+    line-height: 1.45 !important;
+}
+
+.empty-state,
+.chart-fallback,
+.tabla-box td[colspan],
+.calendar-box:empty {
+    color: #64748b !important;
+}
+
+.acciones-admin {
+    margin: 0 0 16px !important;
+}
+
+.pdf-btn,
+.logout-btn,
+.nuevo-btn,
+.btn-secondary {
+    border-radius: 10px !important;
+}
+
+@media (max-width: 1180px) {
+    .patient-command,
+    .institution-command,
+    .clinical-queue,
+    .care-roadmap,
+    .admin-workbench,
+    .clinical-workbench {
+        grid-template-columns: 1fr !important;
+    }
+
+    .command-score,
+    .queue-score,
+    .ia-score {
+        width: 116px !important;
+        min-width: 116px !important;
+        max-width: 116px !important;
+        height: 116px !important;
+    }
+}
+
+@media (max-width: 760px) {
+    .mindcare-dashboard .main,
+    .mindcare-dashboard .panel {
+        padding: 16px !important;
+    }
+
+    .mindcare-dashboard .top,
+    .view-intro > div {
+        padding: 18px !important;
+    }
+
+    .dashboard-tabs {
+        grid-template-columns: 1fr !important;
+    }
+
+    .chart-heading,
+    .chart-title,
+    .analytics-head,
+    .section-head,
+    .roadmap-head {
+        flex-direction: column;
+    }
+
+    .chart-card canvas,
+    .chart-card-wide canvas,
+    .analytics-card canvas,
+    .clinical-chart-card canvas,
+    .chart-box canvas {
+        height: 260px !important;
+    }
+}
+
+/* MindCare dashboard workspace layer v3 */
+.mindcare-dashboard {
+    background: #f4f7fb !important;
+}
+
+.mindcare-dashboard .main,
+.mindcare-dashboard .panel {
+    max-width: 1440px !important;
+    margin-inline: auto !important;
+}
+
+.dashboard-tabs {
+    position: sticky;
+    top: 12px;
+    z-index: 20;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin: 0 0 18px;
+    padding: 8px;
+    border: 1px solid #dbe4ef;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, .92);
+    box-shadow: 0 14px 34px rgba(23, 32, 51, .08);
+    backdrop-filter: blur(14px);
+}
+
+.dashboard-tabs button {
+    width: auto !important;
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 0 !important;
+    padding: 10px 14px !important;
+    border: 1px solid transparent !important;
+    border-radius: 8px !important;
+    background: transparent !important;
+    color: #51617a !important;
+    box-shadow: none !important;
+    font-size: .92rem !important;
+    font-weight: 850 !important;
+}
+
+.dashboard-tabs button:hover,
+.dashboard-tabs button.active {
+    background: #eff6ff !important;
+    border-color: #bfdbfe !important;
+    color: #1d4ed8 !important;
+    transform: none !important;
+}
+
+.dashboard-tabs button.active {
+    box-shadow: inset 0 -2px 0 #2563eb !important;
+}
+
+.user-dashboard[data-dashboard-view="resumen"] .ia-lab,
+.user-dashboard[data-dashboard-view="resumen"] .charts,
+.user-dashboard[data-dashboard-view="resumen"] .info-tests,
+.user-dashboard[data-dashboard-view="ia"] .patient-command,
+.user-dashboard[data-dashboard-view="ia"] .care-roadmap,
+.user-dashboard[data-dashboard-view="ia"] .cards,
+.user-dashboard[data-dashboard-view="ia"] .charts,
+.user-dashboard[data-dashboard-view="ia"] .info-tests,
+.user-dashboard[data-dashboard-view="graficas"] .patient-command,
+.user-dashboard[data-dashboard-view="graficas"] .care-roadmap,
+.user-dashboard[data-dashboard-view="graficas"] .cards,
+.user-dashboard[data-dashboard-view="graficas"] .ia-lab,
+.user-dashboard[data-dashboard-view="graficas"] .info-tests,
+.user-dashboard[data-dashboard-view="evaluaciones"] .patient-command,
+.user-dashboard[data-dashboard-view="evaluaciones"] .care-roadmap,
+.user-dashboard[data-dashboard-view="evaluaciones"] .cards,
+.user-dashboard[data-dashboard-view="evaluaciones"] .ia-lab,
+.user-dashboard[data-dashboard-view="evaluaciones"] .charts {
+    display: none !important;
+}
+
+.admin-dashboard[data-dashboard-view="resumen"] .admin-analytics,
+.admin-dashboard[data-dashboard-view="resumen"] .tabla-box,
+.admin-dashboard[data-dashboard-view="resumen"] .chart-box,
+.admin-dashboard[data-dashboard-view="resumen"] .acciones-admin,
+.admin-dashboard[data-dashboard-view="analitica"] .cards,
+.admin-dashboard[data-dashboard-view="analitica"] .institution-command,
+.admin-dashboard[data-dashboard-view="analitica"] .admin-workbench,
+.admin-dashboard[data-dashboard-view="analitica"] .tabla-box,
+.admin-dashboard[data-dashboard-view="analitica"] .acciones-admin,
+.admin-dashboard[data-dashboard-view="gestion"] .cards,
+.admin-dashboard[data-dashboard-view="gestion"] .institution-command,
+.admin-dashboard[data-dashboard-view="gestion"] .admin-workbench,
+.admin-dashboard[data-dashboard-view="gestion"] .admin-analytics,
+.admin-dashboard[data-dashboard-view="gestion"] .chart-box {
+    display: none !important;
+}
+
+.psychologist-dashboard[data-dashboard-view="resumen"] .clinical-analytics,
+.psychologist-dashboard[data-dashboard-view="resumen"] .busqueda-box,
+.psychologist-dashboard[data-dashboard-view="resumen"] .tabla-box,
+.psychologist-dashboard[data-dashboard-view="resumen"] .calendar-box,
+.psychologist-dashboard[data-dashboard-view="analitica"] .cards,
+.psychologist-dashboard[data-dashboard-view="analitica"] .clinical-queue,
+.psychologist-dashboard[data-dashboard-view="analitica"] .clinical-workbench,
+.psychologist-dashboard[data-dashboard-view="analitica"] .busqueda-box,
+.psychologist-dashboard[data-dashboard-view="analitica"] .tabla-box,
+.psychologist-dashboard[data-dashboard-view="analitica"] .calendar-box,
+.psychologist-dashboard[data-dashboard-view="gestion"] .cards,
+.psychologist-dashboard[data-dashboard-view="gestion"] .clinical-queue,
+.psychologist-dashboard[data-dashboard-view="gestion"] .clinical-workbench,
+.psychologist-dashboard[data-dashboard-view="gestion"] .clinical-analytics {
+    display: none !important;
+}
+
+.mindcare-dashboard .top {
+    min-height: unset !important;
+    margin-bottom: 16px !important;
+}
+
+.mindcare-dashboard .top h1 {
+    max-width: 780px;
+}
+
+.patient-command,
+.institution-command,
+.clinical-queue {
+    align-items: stretch !important;
+}
+
+.patient-command > div:first-child,
+.institution-command > div:first-child,
+.queue-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 120px;
+}
+
+.patient-command,
+.care-roadmap,
+.clinical-queue,
+.clinical-workbench,
+.admin-workbench,
+.admin-analytics,
+.institution-command,
+.ia-lab,
+.tabla-box,
+.chart-box,
+.calendar-box,
+.busqueda-box,
+.info-card,
+.chart-card,
+.chart-card-wide {
+    border-radius: 14px !important;
+}
+
+.user-dashboard .cards,
+.admin-dashboard .cards,
+.psychologist-dashboard .cards {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+    gap: 14px !important;
+}
+
+.user-dashboard .card,
+.admin-dashboard .card,
+.psychologist-dashboard .card {
+    min-height: 138px !important;
+}
+
+.user-dashboard .cards .card p,
+.admin-dashboard .cards .card p,
+.psychologist-dashboard .cards .card p {
+    font-size: clamp(1rem, 1.4vw, 1.25rem) !important;
+    line-height: 1.35 !important;
+}
+
+.charts {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.35fr) minmax(320px, .85fr) !important;
+    gap: 18px !important;
+    align-items: start;
+}
+
+.chart-card-wide {
+    grid-row: span 2;
+}
+
+.chart-card,
+.analytics-card,
+.clinical-chart-card,
+.chart-box {
+    position: relative;
+    overflow: hidden !important;
+    background: #ffffff !important;
+}
+
+.chart-card canvas,
+.chart-card-wide canvas,
+.analytics-card canvas,
+.clinical-chart-card canvas,
+.chart-box canvas {
+    display: block;
+    width: 100% !important;
+    height: 260px !important;
+}
+
+.chart-card-wide canvas {
+    height: 360px !important;
+}
+
+.analytics-card.wide canvas,
+.clinical-chart-card.wide canvas {
+    height: 340px !important;
+}
+
+.analytics-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 18px !important;
+}
+
+.analytics-card.wide,
+.clinical-chart-card.wide {
+    grid-column: 1 / -1;
+}
+
+.table-toolbar,
+.busqueda {
+    display: grid !important;
+    grid-template-columns: minmax(260px, 1fr) auto auto auto;
+    gap: 10px !important;
+}
+
+.busqueda {
+    grid-template-columns: minmax(260px, 1fr) auto;
+}
+
+.tabla-box {
+    background: #ffffff !important;
+}
+
+.tabla-box table {
+    border-collapse: separate !important;
+    border-spacing: 0 8px !important;
+}
+
+.tabla-box thead th {
+    background: #f8fafc !important;
+    color: #60708a !important;
+    font-size: .76rem !important;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+.tabla-box tbody tr {
+    background: #ffffff;
+    box-shadow: 0 1px 0 #e5edf6;
+}
+
+.tabla-box tbody td {
+    background: #ffffff;
+    border-top: 1px solid #eef2f7;
+    border-bottom: 1px solid #eef2f7;
+}
+
+.tabla-box tbody td:first-child {
+    border-left: 1px solid #eef2f7;
+    border-radius: 8px 0 0 8px;
+}
+
+.tabla-box tbody td:last-child {
+    border-right: 1px solid #eef2f7;
+    border-radius: 0 8px 8px 0;
+}
+
+.calendar-box #calendar {
+    min-height: 640px;
+}
+
+@media (max-width: 1180px) {
+    .charts,
+    .analytics-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .chart-card-wide {
+        grid-row: auto;
+    }
+
+    .table-toolbar,
+    .busqueda {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (max-width: 720px) {
+    .dashboard-tabs {
+        position: static;
+    }
+
+    .dashboard-tabs button {
+        flex: 1 1 calc(50% - 8px);
+    }
+
+    .chart-card canvas,
+    .chart-card-wide canvas,
+    .analytics-card canvas,
+    .clinical-chart-card canvas,
+    .chart-box canvas {
+        height: 250px !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+}
+
+/* =====================================================
+   MindCare visual order layer v2
+   Tightens spacing, hierarchy and dashboard consistency.
+===================================================== */
+
+body {
+    font-size: 15px;
+    line-height: 1.45;
+}
+
+.layout {
+    background: transparent !important;
+    grid-template-columns: 280px minmax(0, 1fr) !important;
+}
+
+.main {
+    padding: clamp(22px, 2.8vw, 34px) !important;
+}
+
+.panel {
+    max-width: 1360px !important;
+}
+
+.top {
+    min-height: auto !important;
+    padding: 18px 22px !important;
+}
+
+.top h1 {
+    font-size: clamp(2rem, 3.2vw, 2.6rem) !important;
+}
+
+.top p {
+    margin-top: 5px !important;
+}
+
+.cards {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(176px, 1fr)) !important;
+    margin-bottom: 20px !important;
+}
+
+.card {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    min-height: 112px !important;
+    padding: 17px 18px !important;
+}
+
+.card h3 {
+    align-items: center;
+    display: flex;
+    gap: 7px;
+    line-height: 1.25 !important;
+    margin-bottom: 12px !important;
+}
+
+.card h3 i {
+    margin-right: 0 !important;
+}
+
+.card p {
+    font-size: clamp(1.02rem, 1.25vw, 1.35rem) !important;
+    line-height: 1.28 !important;
+    overflow-wrap: anywhere;
+}
+
+.card.primary {
+    background: linear-gradient(135deg, #275fda, #2f86ed) !important;
+}
+
+.card.primary,
+.card.primary h3,
+.card.primary p {
+    color: #ffffff !important;
+}
+
+.patient-command,
+.care-roadmap,
+.clinical-queue,
+.clinical-workbench,
+.admin-workbench,
+.admin-analytics,
+.institution-command,
+.ia-lab,
+.tabla-box,
+.chart-box,
+.calendar-box,
+.busqueda-box,
+.info-card,
+.chart-card,
+.chart-card-wide {
+    margin-bottom: 20px !important;
+    padding: clamp(18px, 2vw, 22px) !important;
+}
+
+.patient-command,
+.institution-command,
+.clinical-queue {
+    grid-template-columns: minmax(0, 1fr) 118px minmax(230px, .82fr) !important;
+}
+
+.care-roadmap,
+.clinical-workbench,
+.admin-workbench {
+    grid-template-columns: minmax(0, 1fr) minmax(250px, 300px) !important;
+}
+
+.admin-analytics .analytics-grid,
+.clinical-analytics .analytics-grid,
+.charts {
+    gap: 16px !important;
+}
+
+.command-score,
+.queue-score,
+.ia-score {
+    width: 118px !important;
+    max-width: 118px !important;
+    min-width: 118px !important;
+    height: 118px !important;
+    border-width: 8px !important;
+}
+
+.command-score strong,
+.queue-score strong,
+.ia-score span {
+    font-size: clamp(1.8rem, 2.8vw, 2.35rem) !important;
+}
+
+.plan-metrics,
+.risk-summary,
+.queue-breakdown,
+.analytics-kpis,
+.alert-card-metrics,
+.patient-vitals,
+.patient-ai-evidence,
+.trend-strip,
+.clinical-levels {
+    gap: 9px !important;
+}
+
+.plan-metrics div,
+.risk-summary div,
+.queue-breakdown div,
+.analytics-kpis div,
+.alert-card-metrics div,
+.patient-vitals div,
+.patient-ai-evidence div,
+.trend-strip div,
+.clinical-levels div,
+.roadmap-side div,
+.side-card {
+    padding: 11px 12px !important;
+}
+
+.ia-grid,
+.ia-audit,
+.patient-priority-grid,
+.admin-alert-grid,
+.care-steps {
+    gap: 14px !important;
+}
+
+.ia-panel,
+.audit-card,
+.priority-card,
+.admin-alert-card,
+.care-step,
+.analytics-card,
+.clinical-chart-card {
+    border-radius: 12px !important;
+    padding: 16px !important;
+}
+
+.chart-card,
+.analytics-card,
+.clinical-chart-card {
+    min-height: 300px !important;
+}
+
+.chart-card-wide {
+    min-height: 390px !important;
+}
+
+.chart-card canvas,
+.chart-card-wide canvas,
+.analytics-card canvas,
+.clinical-chart-card canvas {
+    max-width: 100% !important;
+}
+
+.chart-heading,
+.analytics-head,
+.roadmap-head,
+.section-head {
+    margin-bottom: 14px !important;
+}
+
+.chart-heading h3,
+.analytics-head h2,
+.roadmap-head h2,
+.section-head h2,
+.ia-hero h2,
+.queue-main h2,
+.institution-command h2,
+.patient-command h2 {
+    font-size: clamp(1.25rem, 2.1vw, 1.75rem) !important;
+}
+
+.ia-hero {
+    margin-bottom: 18px !important;
+}
+
+.ia-hero h2 {
+    margin: 7px 0 5px !important;
+}
+
+.table-toolbar {
+    align-items: stretch !important;
+}
+
+.tabla-box,
+.chart-box,
+.calendar-box {
+    overflow-x: auto !important;
+}
+
+.tabla-box table,
+.chart-box table,
+.calendar-box table {
+    min-width: 760px;
+}
+
+th,
+td {
+    padding: 11px 12px !important;
+    vertical-align: top !important;
+}
+
+td button,
+.action-row button,
+.priority-actions button {
+    margin: 0 !important;
+    min-height: 36px !important;
+    padding: 8px 10px !important;
+}
+
+.action-row,
+.priority-actions {
+    gap: 7px !important;
+}
+
+.fc .fc-toolbar {
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.fc .fc-toolbar-title {
+    font-size: clamp(1.15rem, 2vw, 1.45rem) !important;
+}
+
+.modal-box {
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+}
+
+@media (max-width: 1180px) {
+    .patient-command,
+    .institution-command,
+    .clinical-queue,
+    .care-roadmap,
+    .clinical-workbench,
+    .admin-workbench {
+        grid-template-columns: 1fr !important;
+    }
+
+    .command-score,
+    .queue-score,
+    .ia-score {
+        align-self: start;
+    }
+
+    .charts,
+    .admin-analytics .analytics-grid,
+    .clinical-analytics .analytics-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (max-width: 860px) {
+    .layout {
+        grid-template-columns: 1fr !important;
+    }
+
+    .main {
+        padding: 16px !important;
+    }
+
+    .top,
+    .patient-command,
+    .care-roadmap,
+    .ia-lab,
+    .clinical-queue,
+    .clinical-workbench,
+    .admin-workbench,
+    .admin-analytics,
+    .institution-command,
+    .tabla-box,
+    .chart-box,
+    .calendar-box,
+    .busqueda-box,
+    .info-card,
+    .chart-card {
+        border-radius: 12px !important;
+        padding: 16px !important;
+    }
+
+    .cards,
+    .ia-grid,
+    .ia-audit,
+    .care-steps,
+    .patient-priority-grid,
+    .admin-alert-grid,
+    .analytics-kpis,
+    .trend-strip,
+    .clinical-levels,
+    .patient-vitals,
+    .patient-ai-evidence {
+        grid-template-columns: 1fr !important;
+    }
+
+    .table-toolbar {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* =====================================================
+   MindCare v4 final lock
+   Must stay at the end of this file.
+===================================================== */
+
+.mindcare-dashboard .top,
+.view-intro > div,
+.patient-command,
+.institution-command,
+.clinical-queue,
+.care-roadmap,
+.ia-lab,
+.admin-workbench,
+.clinical-workbench,
+.admin-analytics,
+.clinical-analytics,
+.tabla-box,
+.chart-box,
+.calendar-box,
+.busqueda-box,
+.info-card,
+.chart-card,
+.analytics-card,
+.clinical-chart-card {
+    border: 1px solid #dbe4ef !important;
+    border-radius: 14px !important;
+    background: #ffffff !important;
+    box-shadow: 0 14px 34px rgba(23, 32, 51, .065) !important;
+}
+
+.view-intro {
+    margin-bottom: 18px !important;
+}
+
+.view-intro > div {
+    display: none;
+    padding: 22px 24px !important;
+}
+
+.user-dashboard[data-dashboard-view="resumen"] .view-intro [data-view-panel="resumen"],
+.user-dashboard[data-dashboard-view="ia"] .view-intro [data-view-panel="ia"],
+.user-dashboard[data-dashboard-view="graficas"] .view-intro [data-view-panel="graficas"],
+.user-dashboard[data-dashboard-view="evaluaciones"] .view-intro [data-view-panel="evaluaciones"],
+.admin-dashboard[data-dashboard-view="resumen"] .view-intro [data-view-panel="resumen"],
+.admin-dashboard[data-dashboard-view="analitica"] .view-intro [data-view-panel="analitica"],
+.admin-dashboard[data-dashboard-view="gestion"] .view-intro [data-view-panel="gestion"],
+.psychologist-dashboard[data-dashboard-view="resumen"] .view-intro [data-view-panel="resumen"],
+.psychologist-dashboard[data-dashboard-view="analitica"] .view-intro [data-view-panel="analitica"],
+.psychologist-dashboard[data-dashboard-view="gestion"] .view-intro [data-view-panel="gestion"] {
+    display: block !important;
+}
+
+.view-intro span,
+.chart-heading span,
+.chart-title span,
+.analytics-head span,
+.section-head span,
+.roadmap-head span,
+.command-label,
+.queue-label {
+    color: #2563eb !important;
+    font-size: .72rem !important;
+    font-weight: 950 !important;
+    letter-spacing: .06em !important;
+    text-transform: uppercase !important;
+}
+
+.view-intro h2 {
+    margin: 0 !important;
+    color: #172033 !important;
+    font-size: clamp(1.45rem, 2.2vw, 2rem) !important;
+    line-height: 1.12 !important;
+}
+
+.view-intro p {
+    max-width: 780px !important;
+    margin: 8px 0 0 !important;
+    color: #64748b !important;
+    line-height: 1.6 !important;
+}
+
+.dashboard-tabs {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+    gap: 8px !important;
+    border-radius: 14px !important;
+}
+
+.dashboard-tabs button {
+    width: 100% !important;
+    min-height: 46px !important;
+    border-radius: 10px !important;
+}
+
+.dashboard-tabs button.active {
+    background: linear-gradient(135deg, #eff6ff, #ecfeff) !important;
+    color: #1d4ed8 !important;
+    box-shadow: inset 0 0 0 1px #bfdbfe !important;
+}
+
+.mindcare-dashboard .card {
+    min-height: 132px !important;
+    border: 1px solid #dbe4ef !important;
+    border-radius: 14px !important;
+    background: #ffffff !important;
+    box-shadow: 0 12px 28px rgba(23, 32, 51, .055) !important;
+}
+
+.mindcare-dashboard .card.primary {
+    background: linear-gradient(135deg, #1d4ed8, #0f766e) !important;
+}
+
+.chart-card canvas,
+.chart-card-wide canvas,
+.analytics-card canvas,
+.clinical-chart-card canvas,
+.chart-box canvas {
+    height: 300px !important;
+}
+
+.chart-card-wide canvas {
+    height: 410px !important;
+}
+
+.analytics-card.wide canvas,
+.clinical-chart-card.wide canvas {
+    height: 380px !important;
+}

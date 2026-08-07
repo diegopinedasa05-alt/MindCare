@@ -10,10 +10,13 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/admin.css?v=5">
+    <link rel="stylesheet" href="css/mindcare-dashboard-pro.css?v=10">
+    <link rel="stylesheet" href="css/mindcare-refresh.css?v=1">
 </head>
 
-<body>
+<body class="mindcare-dashboard admin-dashboard"
+      data-dashboard-view="resumen">
 
     <div class="bg-circle c1"></div>
     <div class="bg-circle c2"></div>
@@ -46,9 +49,117 @@
                 Nuevo Psicólogo
             </button>
 
+            <button onclick="window.location.href='psicologo/adminPsicologos.html'" class="nuevo-btn">
+                <i class="fa-solid fa-file-medical"></i>
+                Alta detallada
+            </button>
+
         </div>
 
+        <nav class="dashboard-tabs"
+             aria-label="Secciones del panel administrativo">
+            <button type="button"
+                    data-dashboard-view-button="resumen">
+                <i class="fa-solid fa-gauge-high"></i>
+                Resumen
+            </button>
+
+            <button type="button"
+                    data-dashboard-view-button="analitica">
+                <i class="fa-solid fa-chart-pie"></i>
+                Analítica IA
+            </button>
+
+            <button type="button"
+                    data-dashboard-view-button="gestion">
+                <i class="fa-solid fa-table-list"></i>
+                Gestión
+            </button>
+        </nav>
+
+        <section class="view-intro">
+            <div data-view-panel="resumen">
+                <span>Dirección institucional</span>
+                <h2>Indicadores generales y prioridad operativa</h2>
+                <p>Consulta usuarios, psicólogos, citas, riesgo alto y alertas principales sin entrar aún al detalle administrativo.</p>
+            </div>
+
+            <div data-view-panel="analitica">
+                <span>Observatorio IA</span>
+                <h2>Riesgo, tendencia y explicabilidad</h2>
+                <p>Analiza la distribución institucional, tendencias emocionales y dimensiones del modelo para seguimiento operativo.</p>
+            </div>
+
+            <div data-view-panel="gestion">
+                <span>Control administrativo</span>
+                <h2>Usuarios, psicólogos, citas y consentimientos</h2>
+                <p>Administra registros clave del ecosistema MindCare desde una vista separada y más ordenada.</p>
+            </div>
+        </section>
+
+        <section class="quick-actions"
+                 aria-label="Acciones rápidas administrativas">
+            <button type="button"
+                    onclick="setDashboardView('gestion')">
+                <i class="fa-solid fa-users-gear"></i>
+                <span>
+                    <strong>Gestionar usuarios</strong>
+                    <small>Revisar roles, estado y actividad</small>
+                </span>
+            </button>
+
+            <button type="button"
+                    onclick="abrirModalPsicologo()">
+                <i class="fa-solid fa-user-doctor"></i>
+                <span>
+                    <strong>Nuevo psicólogo</strong>
+                    <small>Registrar especialista autorizado</small>
+                </span>
+            </button>
+
+            <button type="button"
+                    onclick="setDashboardView('analitica')">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>
+                    <strong>Ver analítica IA</strong>
+                    <small>Riesgo, tendencia y explicabilidad</small>
+                </span>
+            </button>
+        </section>
+
+        <section class="trust-strip"
+                 aria-label="Gobernanza y seguridad MindCare">
+            <article>
+                <i class="fa-solid fa-lock"></i>
+                <div>
+                    <strong>Gobernanza de datos</strong>
+                    <span>Control de usuarios, roles y consentimiento.</span>
+                </div>
+            </article>
+
+            <article>
+                <i class="fa-solid fa-brain"></i>
+                <div>
+                    <strong>IA auditable</strong>
+                    <span>Priorización explicable para seguimiento clínico.</span>
+                </div>
+            </article>
+
+            <article>
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <div>
+                    <strong>Riesgo priorizado</strong>
+                    <span>Alertas para seguimiento oportuno, no diagnóstico.</span>
+                </div>
+            </article>
+        </section>
+
         <!-- CARDS -->
+        <div class="section-ribbon">
+            <span>Resumen ejecutivo</span>
+            <h2>Estado general de la plataforma</h2>
+        </div>
+
         <section class="cards">
 
             <div class="card blue">
@@ -83,27 +194,227 @@
 
         </section>
 
-        <!-- TABLA USUARIOS -->
+        <div class="section-ribbon">
+            <span>Prioridad institucional</span>
+            <h2>Alertas y seguimiento basado en IA</h2>
+        </div>
+
+        <section class="institution-command">
+
+            <div>
+                <span class="command-label">Centro institucional IA</span>
+                <h2 id="adminPacientePrioritario">Sin alertas priorizadas</h2>
+                <p id="adminAccionPrioritaria">
+                    La plataforma ordena pacientes por score de riesgo para seguimiento oportuno.
+                </p>
+            </div>
+
+            <div class="command-score">
+                <strong id="adminScoreMaximo">0</strong>
+                <span>score máximo</span>
+            </div>
+
+            <div class="risk-summary">
+                <div>
+                    <span>Crítico/Alto</span>
+                    <b id="adminAlto">0</b>
+                </div>
+                <div>
+                    <span>Medio</span>
+                    <b id="adminMedio">0</b>
+                </div>
+                <div>
+                    <span>Bajo</span>
+                    <b id="adminBajo">0</b>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="admin-workbench">
+
+            <div class="workbench-main">
+
+                <div class="section-head">
+                    <div>
+                        <span>Gobernanza clínica</span>
+                        <h2>Alertas priorizadas por IA</h2>
+                    </div>
+                    <small id="adminActualizacionIA">Actualizando...</small>
+                </div>
+
+                <div id="adminAlertCards"
+                     class="admin-alert-grid">
+                    <div class="empty-state">
+                        Cargando alertas institucionales...
+                    </div>
+                </div>
+
+            </div>
+
+            <aside class="workbench-side">
+
+                <div class="side-card">
+                    <span>Promedio IA</span>
+                    <strong id="adminPromedioIA">0</strong>
+                    <small>score promedio de usuarios activos</small>
+                </div>
+
+                <div class="side-card">
+                    <span>Seguimiento cercano</span>
+                    <strong id="adminSeguimientoCercano">0</strong>
+                    <small>usuarios con prioridad media o alta</small>
+                </div>
+
+                <div class="side-card">
+                    <span>Sin datos suficientes</span>
+                    <strong id="adminSinDatos">0</strong>
+                    <small>requieren registros o evaluaciones iniciales</small>
+                </div>
+
+                <div class="side-card">
+                    <span>Confianza promedio</span>
+                    <strong id="adminConfianzaPromedio">0%</strong>
+                    <small>calidad de señal para priorización</small>
+                </div>
+
+            </aside>
+
+        </section>
+
+        <div class="section-ribbon">
+            <span>Observatorio</span>
+            <h2>Analítica institucional para toma de decisiones</h2>
+        </div>
+
+        <section class="admin-analytics">
+
+            <div class="analytics-head">
+                <div>
+                    <span>Observatorio institucional IA</span>
+                    <h2>Riesgo, tendencia y calidad de señal</h2>
+                    <p>
+                        Lectura ejecutiva de priorización clínica, trazabilidad del motor IA y cobertura de datos emocionales.
+                    </p>
+                </div>
+                <div class="analytics-status">
+                    <strong id="adminCoberturaIA">0%</strong>
+                    <span>cobertura IA</span>
+                </div>
+            </div>
+
+            <div class="analytics-grid">
+
+                <article class="analytics-card">
+                    <div class="chart-title">
+                        <span>Riesgo institucional</span>
+                        <h3>Distribución de usuarios</h3>
+                    </div>
+                    <canvas id="graficaRiesgoAdmin"></canvas>
+                    <div id="fallbackRiesgoAdmin"
+                         class="chart-fallback"></div>
+                    <p id="adminInsightRiesgo">Esperando análisis de usuarios activos.</p>
+                </article>
+
+                <article class="analytics-card">
+                    <div class="chart-title">
+                        <span>Evolución emocional</span>
+                        <h3>Tendencias detectadas</h3>
+                    </div>
+                    <canvas id="graficaTendenciaAdmin"></canvas>
+                    <div id="fallbackTendenciaAdmin"
+                         class="chart-fallback"></div>
+                    <p id="adminInsightTendencia">Sin tendencia institucional calculada.</p>
+                </article>
+
+                <article class="analytics-card wide">
+                    <div class="chart-title">
+                        <span>Explicabilidad IA</span>
+                        <h3>Dimensiones promedio del modelo</h3>
+                    </div>
+                    <canvas id="graficaDimensionesAdmin"></canvas>
+                    <div id="fallbackDimensionesAdmin"
+                         class="chart-fallback dimensions"></div>
+                    <div class="analytics-kpis">
+                        <div>
+                            <span>Usuarios evaluables</span>
+                            <strong id="adminEvaluables">0</strong>
+                        </div>
+                        <div>
+                            <span>Alta prioridad</span>
+                            <strong id="adminAltaPrioridad">0</strong>
+                        </div>
+                        <div>
+                            <span>Gobernanza sugerida</span>
+                            <strong id="adminGobernanza">Completar datos</strong>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+
+        </section>
+
+        <!-- GESTION USUARIOS -->
+        <div class="section-ribbon">
+            <span>Administración</span>
+            <h2>Operación y control del sistema</h2>
+        </div>
+
         <section class="tabla-box">
 
             <h2>
                 <i class="fa-solid fa-users"></i>
-                Usuarios recientes
+                Gestión de usuarios
             </h2>
+
+            <div class="table-toolbar">
+                <div class="toolbar-search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input id="filtroUsuariosTexto"
+                           type="text"
+                           placeholder="Buscar por nombre, correo o zona"
+                           oninput="aplicarFiltrosUsuarios()">
+                </div>
+
+                <select id="filtroUsuariosRol"
+                        onchange="aplicarFiltrosUsuarios()">
+                    <option value="">Todos los roles</option>
+                    <option value="Usuario">Usuarios</option>
+                    <option value="Psicologo">Psicólogos</option>
+                    <option value="Admin">Administradores</option>
+                </select>
+
+                <select id="filtroUsuariosEstado"
+                        onchange="aplicarFiltrosUsuarios()">
+                    <option value="">Todos los estados</option>
+                    <option value="activo">Activos</option>
+                    <option value="inactivo">Inactivos</option>
+                </select>
+
+                <button class="btn-secondary"
+                        onclick="limpiarFiltrosUsuarios()">
+                    Limpiar
+                </button>
+            </div>
 
             <table>
 
                 <thead>
                     <tr>
                         <th>Nombre</th>
-                        <th>Fecha</th>
-                        <th>Zona</th>
+                        <th>Correo</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Actividad</th>
+                        <th>Registro</th>
+                        <th>Acción</th>
                     </tr>
                 </thead>
 
                 <tbody id="tablaUsuarios">
                     <tr>
-                        <td colspan="3">Cargando...</td>
+                        <td colspan="7">Cargando...</td>
                     </tr>
                 </tbody>
 
@@ -140,6 +451,115 @@
 
         </section>
 
+        <section class="tabla-box" aria-labelledby="verificacionProfesionalTitulo">
+            <h2 id="verificacionProfesionalTitulo">
+                <i class="fa-solid fa-user-shield"></i>
+                Verificación profesional
+            </h2>
+            <p class="table-caption">
+                Revisa credenciales y decide el acceso clínico de las cuentas profesionales.
+            </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Profesional</th>
+                        <th>Cédula</th>
+                        <th>Documento</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaVerificaciones">
+                    <tr><td colspan="5">Cargando...</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="tabla-box">
+
+            <h2>
+                <i class="fa-solid fa-calendar-check"></i>
+                Citas próximas
+            </h2>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Paciente</th>
+                        <th>Psicólogo</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaCitas">
+                    <tr>
+                        <td colspan="4">Cargando...</td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </section>
+
+        <section class="tabla-box">
+
+            <h2>
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                Priorización IA
+            </h2>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Paciente</th>
+                        <th>Nivel</th>
+                        <th>Score</th>
+                        <th>Confianza</th>
+                        <th>Acción recomendada</th>
+                        <th>Expediente</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaAlertas">
+                    <tr>
+                        <td colspan="6">Cargando...</td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </section>
+
+        <section class="tabla-box">
+
+            <h2>
+                <i class="fa-solid fa-file-signature"></i>
+                Consentimientos recientes
+            </h2>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Documento</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaConsentimientos">
+                    <tr>
+                        <td colspan="3">Cargando...</td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </section>
+
         <!-- GRAFICA -->
         <section class="chart-box">
 
@@ -161,12 +581,21 @@
 
             <h2>Registrar Psicólogo</h2>
 
-            <input id="nombrePsico" placeholder="Nombre">
-            <input id="correoPsico" placeholder="Correo">
-            <input id="passPsico" placeholder="Contraseña">
-            <input id="telPsico" placeholder="Teléfono">
+            <input id="nombrePsico" placeholder="Nombre(s)" autocomplete="given-name">
+            <input id="apellidoPaternoPsico" placeholder="Apellido paterno" autocomplete="family-name">
+            <input id="apellidoMaternoPsico" placeholder="Apellido materno">
+            <input id="correoPsico" type="email" placeholder="Correo profesional" autocomplete="email">
+            <input id="passPsico" type="password" placeholder="Contraseña temporal (mínimo 10 caracteres)" autocomplete="new-password">
+            <input id="telPsico" type="tel" placeholder="Teléfono">
             <input id="zonaPsico" placeholder="Zona">
+            <input id="cedulaPsico" inputmode="numeric" placeholder="Número de cédula profesional">
+            <input id="institucionPsico" placeholder="Institución de procedencia">
             <input id="espPsico" placeholder="Especialidad">
+            <input id="experienciaPsico" type="number" min="0" max="80" placeholder="Años de experiencia (opcional)">
+            <label class="consent-check">
+                <input id="aceptaPsico" type="checkbox">
+                Confirmo la captura de datos profesionales para su verificación.
+            </label>
 
             <button onclick="guardarPsicologo()">
                 Guardar
@@ -183,7 +612,9 @@
     <div id="toast"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="js/admin.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/mindcare-dashboard-shell.js?v=3"></script>
+    <script src="js/admin.js?v=13"></script>
 
 </body>
 </html>

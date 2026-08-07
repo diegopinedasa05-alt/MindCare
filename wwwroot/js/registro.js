@@ -3,7 +3,7 @@
    REEMPLAZA COMPLETO
 ===================================== */
 
-const API = "https://mindcare-production-d670.up.railway.app/api";
+const API = window.MINDCARE_API_BASE;
 
 /* =====================================
 LOAD
@@ -89,13 +89,32 @@ async function registrar() {
         return;
     }
 
-    if (password.length < 6) {
+    if (password.length < 10) {
 
         msg.innerText =
-            "La contraseña debe tener mínimo 6 caracteres.";
+            "La contraseña debe tener mínimo 10 caracteres.";
 
         msg.style.color =
             "#ef4444";
+
+        return;
+    }
+
+    const consentimiento =
+        document.getElementById("consentimiento");
+
+    if (!consentimiento || !consentimiento.checked) {
+
+        msg.innerText =
+            "Debes aceptar los términos y el consentimiento informado.";
+
+        msg.style.color =
+            "#ef4444";
+
+        mostrarToast(
+            "Acepta el consentimiento informado",
+            "error"
+        );
 
         return;
     }
@@ -108,7 +127,8 @@ async function registrar() {
         telefono: telefono,
         zona: zona,
         rol: "Usuario",
-        especialidad: ""
+        especialidad: "",
+        aceptaTerminos: true
 
     };
 
@@ -176,7 +196,6 @@ async function registrar() {
     }
 
 }
-
 /* =====================================
 UTILIDADES
 ===================================== */
@@ -189,7 +208,6 @@ function limpiarFormulario() {
     document.getElementById("zona").value = "";
 
 }
-
 function limpiarTexto(txt) {
 
     return txt
@@ -227,6 +245,6 @@ function mostrarToast(
 
         toast.className = "";
 
-    }, 3000);
+}, 3000);
 
 }

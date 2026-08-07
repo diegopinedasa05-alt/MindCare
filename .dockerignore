@@ -1,0 +1,12 @@
+bin/
+bin_*/
+obj/
+artifacts/
+.git/
+.vs/
+*.user
+*.suo
+scripts/mindcare-env.local.ps1
+scripts/mindcare-env.neon.local.ps1
+.env
+*.env

@@ -15,11 +15,15 @@
           href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css">
 
     <link rel="stylesheet"
-          href="../css/dashboardPsicologo.css">
+          href="../css/dashboardPsicologo.css?v=5">
+    <link rel="stylesheet"
+          href="../css/mindcare-dashboard-pro.css?v=10">
+    <link rel="stylesheet" href="../css/mindcare-refresh.css?v=1">
 
 </head>
 
-<body>
+<body class="mindcare-dashboard psychologist-dashboard"
+      data-dashboard-view="resumen">
 
     <div class="bg-circle c1"></div>
     <div class="bg-circle c2"></div>
@@ -39,17 +43,128 @@
                 </p>
             </div>
 
-            <button onclick="logout()"
-                    class="logout-btn">
+            <div class="top-actions">
+                <button type="button"
+                        class="profile-status-btn"
+                        onclick="location.href='perfilProfesional.html'">
+                    <i class="fa-solid fa-id-card-clip"></i>
+                    Mi verificación
+                </button>
+                <button onclick="logout()"
+                        class="logout-btn">
 
-                <i class="fa-solid fa-right-from-bracket"></i>
-                Cerrar sesión
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Cerrar sesión
 
-            </button>
+                </button>
+            </div>
 
         </header>
 
+        <nav class="dashboard-tabs"
+             aria-label="Secciones del panel del psicólogo">
+            <button type="button"
+                    data-dashboard-view-button="resumen">
+                <i class="fa-solid fa-stethoscope"></i>
+                Seguimiento
+            </button>
+
+            <button type="button"
+                    data-dashboard-view-button="analitica">
+                <i class="fa-solid fa-chart-line"></i>
+                Analítica
+            </button>
+
+            <button type="button"
+                    data-dashboard-view-button="gestion">
+                <i class="fa-solid fa-calendar-days"></i>
+                Pacientes y agenda
+            </button>
+        </nav>
+
+        <section class="view-intro">
+            <div data-view-panel="resumen">
+                <span>Seguimiento clínico</span>
+                <h2>Pacientes priorizados y carga del día</h2>
+                <p>Consulta la cola clínica, pacientes con seguimiento cercano y señales relevantes para tomar decisiones rápidas.</p>
+            </div>
+
+            <div data-view-panel="analitica">
+                <span>Analítica grupal</span>
+                <h2>Mapa de riesgo y evolución emocional</h2>
+                <p>Revisa distribución de riesgo, tendencia grupal y dimensiones promedio del modelo de IA explicable.</p>
+            </div>
+
+            <div data-view-panel="gestion">
+                <span>Pacientes y agenda</span>
+                <h2>Búsqueda, asignación y calendario profesional</h2>
+                <p>Gestiona pacientes, consulta expedientes, agenda citas y registra notas de seguimiento clínico.</p>
+            </div>
+        </section>
+
+        <section class="quick-actions"
+                 aria-label="Acciones rápidas del psicólogo">
+            <button type="button"
+                    onclick="setDashboardView('gestion')">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <span>
+                    <strong>Buscar paciente</strong>
+                    <small>Consultar expediente o seguimiento</small>
+                </span>
+            </button>
+
+            <button type="button"
+                    onclick="setDashboardView('gestion')">
+                <i class="fa-solid fa-calendar-plus"></i>
+                <span>
+                    <strong>Agenda profesional</strong>
+                    <small>Revisar citas y disponibilidad</small>
+                </span>
+            </button>
+
+            <button type="button"
+                    onclick="setDashboardView('analitica')">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>
+                    <strong>Analítica clínica</strong>
+                    <small>Riesgo grupal y tendencias</small>
+                </span>
+            </button>
+        </section>
+
+        <section class="trust-strip"
+                 aria-label="Soporte clínico MindCare">
+            <article>
+                <i class="fa-solid fa-notes-medical"></i>
+                <div>
+                    <strong>Seguimiento trazable</strong>
+                    <span>Pacientes, notas, citas y expediente emocional.</span>
+                </div>
+            </article>
+
+            <article>
+                <i class="fa-solid fa-brain"></i>
+                <div>
+                    <strong>IA como apoyo</strong>
+                    <span>Prioriza señales, el criterio clínico prevalece.</span>
+                </div>
+            </article>
+
+            <article>
+                <i class="fa-solid fa-chart-line"></i>
+                <div>
+                    <strong>Lectura longitudinal</strong>
+                    <span>Tendencias de riesgo y calidad de señal.</span>
+                </div>
+            </article>
+        </section>
+
         <!-- METRICAS -->
+        <div class="section-ribbon">
+            <span>Resumen clínico</span>
+            <h2>Carga del día y pacientes prioritarios</h2>
+        </div>
+
         <section class="cards">
 
             <div class="card purple">
@@ -74,7 +189,167 @@
 
         </section>
 
+        <div class="section-ribbon">
+            <span>Cola clínica</span>
+            <h2>Priorización de seguimiento por IA</h2>
+        </div>
+
+        <section class="clinical-queue">
+
+            <div class="queue-main">
+                <span class="queue-label">Cola clínica IA</span>
+                <h2 id="pacientePrioritario">Sin paciente prioritario</h2>
+                <p id="accionPrioritaria">
+                    Los pacientes se ordenan por score de riesgo y prioridad de seguimiento.
+                </p>
+            </div>
+
+            <div class="queue-score">
+                <strong id="scorePrioritario">0</strong>
+                <span>score máximo</span>
+            </div>
+
+            <div class="queue-breakdown">
+                <div>
+                    <span>Crítico/Alto</span>
+                    <b id="conteoAlto">0</b>
+                </div>
+                <div>
+                    <span>Medio</span>
+                    <b id="conteoMedio">0</b>
+                </div>
+                <div>
+                    <span>Bajo</span>
+                    <b id="conteoBajo">0</b>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="clinical-workbench">
+
+            <div class="workbench-main">
+
+                <div class="section-head">
+                    <div>
+                        <span>Seguimiento activo</span>
+                        <h2>Pacientes priorizados por IA</h2>
+                    </div>
+                    <small id="actualizacionClinica">Actualizando...</small>
+                </div>
+
+                <div id="pacientesPrioritarios"
+                     class="patient-priority-grid">
+                    <div class="empty-state">
+                        Cargando priorización clínica...
+                    </div>
+                </div>
+
+            </div>
+
+            <aside class="workbench-side">
+
+                <div class="side-card">
+                    <span>Promedio IA</span>
+                    <strong id="promedioIAClinica">0</strong>
+                    <small>score global de pacientes asignados</small>
+                </div>
+
+                <div class="side-card">
+                    <span>Seguimiento cercano</span>
+                    <strong id="seguimientoCercano">0</strong>
+                    <small>pacientes con prioridad clínica media o alta</small>
+                </div>
+
+                <div class="side-card">
+                    <span>Sin datos suficientes</span>
+                    <strong id="sinDatosClinicos">0</strong>
+                    <small>requieren nuevos registros o pruebas</small>
+                </div>
+
+            </aside>
+
+        </section>
+
+        <div class="section-ribbon">
+            <span>Analítica clínica</span>
+            <h2>Lectura grupal y explicación del modelo</h2>
+        </div>
+
+        <section class="clinical-analytics">
+
+            <div class="analytics-head">
+                <div>
+                    <span>Lectura clínica grupal</span>
+                    <h2>Mapa de riesgo y evolución</h2>
+                    <p>
+                        Resumen visual de pacientes asignados, útil para priorizar seguimiento y explicar el modelo IA.
+                    </p>
+                </div>
+                <div class="analytics-status">
+                    <strong id="analiticaConfianza">0%</strong>
+                    <span>confianza promedio</span>
+                </div>
+            </div>
+
+            <div class="analytics-grid">
+
+                <article class="clinical-chart-card">
+                    <div class="chart-title">
+                        <span>Priorización</span>
+                        <h3>Distribución de riesgo</h3>
+                    </div>
+                    <canvas id="graficaRiesgoClinico"></canvas>
+                    <div id="fallbackRiesgoClinico"
+                         class="chart-fallback"></div>
+                    <p id="analiticaRiesgoTexto">Sin datos clínicos suficientes.</p>
+                </article>
+
+                <article class="clinical-chart-card">
+                    <div class="chart-title">
+                        <span>Evolución</span>
+                        <h3>Tendencia emocional</h3>
+                    </div>
+                    <canvas id="graficaTendenciaClinica"></canvas>
+                    <div id="fallbackTendenciaClinica"
+                         class="chart-fallback"></div>
+                    <p id="analiticaTendenciaTexto">Esperando registros recientes.</p>
+                </article>
+
+                <article class="clinical-chart-card wide">
+                    <div class="chart-title">
+                        <span>Modelo explicable</span>
+                        <h3>Dimensiones IA promedio</h3>
+                    </div>
+                    <canvas id="graficaDimensionesClinicas"></canvas>
+                    <div id="fallbackDimensionesClinicas"
+                         class="chart-fallback dimensions"></div>
+                    <div class="analytics-kpis">
+                        <div>
+                            <span>Alta prioridad</span>
+                            <strong id="analiticaCriticos">0</strong>
+                        </div>
+                        <div>
+                            <span>Sin datos</span>
+                            <strong id="analiticaSinDatos">0</strong>
+                        </div>
+                        <div>
+                            <span>Acción sugerida</span>
+                            <strong id="analiticaAccion">Monitorear</strong>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+
+        </section>
+
         <!-- BUSQUEDA -->
+        <div class="section-ribbon">
+            <span>Gestión clínica</span>
+            <h2>Pacientes, expedientes y agenda</h2>
+        </div>
+
         <section class="busqueda-box">
 
             <h2>
@@ -128,6 +403,40 @@
 
         </section>
 
+        <section class="tabla-box">
+
+            <h2>
+                <i class="fa-solid fa-user-group"></i>
+                Pacientes asignados
+            </h2>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Paciente</th>
+                        <th>Estado reciente</th>
+                        <th>Evaluaciones</th>
+                        <th>IA clínica</th>
+                        <th>Próxima cita</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaPacientesAsignados">
+
+                    <tr>
+                        <td colspan="6">
+                            Cargando pacientes asignados...
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </section>
+
         <!-- CALENDARIO -->
         <section class="calendar-box">
 
@@ -139,6 +448,32 @@
             <div id="calendar"></div>
 
         </section>
+
+    </div>
+
+    <div id="modalNota"
+         class="modal">
+
+        <div class="modal-box">
+
+            <h2>Nota de seguimiento</h2>
+
+            <textarea id="notaSeguimiento"
+                      placeholder="Resumen clínico, observaciones o acuerdos"></textarea>
+
+            <textarea id="planAccion"
+                      placeholder="Plan de acción o siguiente paso"></textarea>
+
+            <button onclick="guardarNota()">
+                Guardar nota
+            </button>
+
+            <button onclick="cerrarNota()"
+                    class="cancelar">
+                Cancelar
+            </button>
+
+        </div>
 
     </div>
 
@@ -172,8 +507,11 @@
     <div id="toast"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <script src="../js/dashboardPsicologo.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/mindcare-dashboard-shell.js?v=3"></script>
+    <script src="../js/dashboardPsicologo.js?v=12"></script>
 
 </body>
 </html>

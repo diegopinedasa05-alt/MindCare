@@ -1,0 +1,504 @@
+/*
+    MindCare page polish layer v1
+    Shared visual system for forms, clinical pages, legal content and auxiliary flows.
+*/
+
+:root {
+    --mc-ink: #172033;
+    --mc-muted: #60708a;
+    --mc-soft: #f6f8fb;
+    --mc-panel: #ffffff;
+    --mc-line: #dbe4ef;
+    --mc-blue: #2563eb;
+    --mc-blue-dark: #1d4ed8;
+    --mc-teal: #0f766e;
+    --mc-green: #15803d;
+    --mc-red: #dc2626;
+    --mc-amber: #b45309;
+    --mc-shadow: 0 18px 45px rgba(23, 32, 51, .08);
+    --mc-radius: 8px;
+}
+
+html {
+    background: #f4f7fb;
+}
+
+body {
+    color: var(--mc-ink);
+    line-height: 1.55;
+    overflow-x: hidden;
+    overflow-y: auto !important;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(244, 247, 251, .98)),
+        radial-gradient(circle at top left, rgba(37, 99, 235, .10), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(15, 118, 110, .10), transparent 30%) !important;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(rgba(23, 32, 51, .035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(23, 32, 51, .035) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, .45), transparent 70%);
+    z-index: 0;
+}
+
+body > * {
+    position: relative;
+    z-index: 1;
+}
+
+.blur {
+    opacity: .18 !important;
+    filter: blur(110px) !important;
+}
+
+.login-container,
+.registro-container,
+.recover-wrap,
+.test-container,
+.page,
+.legal-shell,
+.clinical-shell,
+.container {
+    position: relative;
+    z-index: 1;
+}
+
+.login-card,
+.registro-card,
+.recover-card,
+.test-card,
+.outer-card,
+.container,
+.legal-section,
+.card,
+.card-psico,
+.question-box,
+.risk-panel,
+.metric,
+.panel,
+.clinical-note {
+    border-radius: var(--mc-radius) !important;
+    border: 1px solid rgba(219, 228, 239, .95) !important;
+    box-shadow: var(--mc-shadow) !important;
+}
+
+.login-card,
+.registro-card,
+.recover-card,
+.test-card,
+.outer-card,
+.container {
+    background: rgba(255, 255, 255, .96) !important;
+}
+
+.brand-side {
+    background:
+        linear-gradient(145deg, rgba(29, 78, 216, .96), rgba(15, 118, 110, .92)) !important;
+}
+
+.brand-side h1,
+.form-side h2,
+.registro-card h1,
+.recover-card h1,
+.test-card h1,
+.top-left h1,
+.header-text h1,
+.clinical-header h1,
+.brand h1 {
+    color: var(--mc-ink);
+    letter-spacing: 0;
+}
+
+.brand-side h1,
+.brand-side .subtitle,
+.brand-side .features {
+    color: #ffffff;
+}
+
+.form-side h2,
+.registro-card h1,
+.recover-card h1,
+.test-card h1,
+.top-left h1,
+.header-text h1,
+.clinical-header h1,
+.brand h1 {
+    font-size: 40px !important;
+    line-height: 1.08 !important;
+}
+
+.subtitle,
+.header-text p,
+.top-left p,
+.clinical-header p,
+.brand p,
+.legal-section p {
+    color: var(--mc-muted) !important;
+}
+
+input,
+select,
+textarea {
+    border-radius: var(--mc-radius) !important;
+    border: 1px solid var(--mc-line) !important;
+    box-shadow: none !important;
+    background: #f8fafc !important;
+    color: var(--mc-ink) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none !important;
+    border-color: var(--mc-blue) !important;
+    background: #ffffff !important;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, .12) !important;
+}
+
+button,
+.btn,
+.btn-main,
+.btn-register,
+.btn-save,
+.btn-home,
+.volver,
+.guardar,
+.btn-whats {
+    border-radius: var(--mc-radius) !important;
+    letter-spacing: 0 !important;
+    box-shadow: none !important;
+    transition: background .2s ease, transform .2s ease, box-shadow .2s ease !important;
+}
+
+button:hover,
+.btn:hover,
+.btn-main:hover,
+.btn-register:hover,
+.btn-save:hover,
+.btn-home:hover,
+.volver:hover,
+.guardar:hover,
+.btn-whats:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 12px 24px rgba(37, 99, 235, .16) !important;
+}
+
+.btn,
+.btn-main,
+.btn-register,
+.btn-save,
+.btn-home,
+.volver,
+.guardar,
+button:not(.ghost):not(.btn-whats) {
+    background: linear-gradient(135deg, var(--mc-blue), var(--mc-teal)) !important;
+}
+
+.btn.ghost {
+    background: #ffffff !important;
+    color: var(--mc-ink) !important;
+}
+
+.btn-whats {
+    background: linear-gradient(135deg, #16a34a, #0f766e) !important;
+}
+
+.logo-circle,
+.logo,
+.hero,
+.icon,
+.icon-box,
+.avatar {
+    box-shadow: none !important;
+    background: linear-gradient(135deg, var(--mc-blue), var(--mc-teal)) !important;
+}
+
+.links a,
+.back-link,
+.legal-link,
+.consent-box a {
+    color: var(--mc-blue-dark) !important;
+}
+
+.consent-box,
+.rol-box,
+.history-item,
+.timeline-item,
+.clinical-item,
+.empty,
+.risk-details div,
+.lista li {
+    border-radius: var(--mc-radius) !important;
+    border: 1px solid var(--mc-line) !important;
+    background: #f8fafc !important;
+}
+
+.progress-box,
+.progress-fill,
+.score-card,
+.risk-chip {
+    border-radius: var(--mc-radius) !important;
+}
+
+.progress-fill {
+    background: linear-gradient(90deg, var(--mc-blue), var(--mc-teal)) !important;
+}
+
+.answers {
+    align-items: stretch;
+}
+
+.answers button {
+    min-height: 64px;
+    text-align: left;
+    background: #ffffff !important;
+    color: var(--mc-ink) !important;
+    border: 1px solid var(--mc-line) !important;
+}
+
+.answers button:hover {
+    background: linear-gradient(135deg, var(--mc-blue), var(--mc-teal)) !important;
+}
+
+.login-card {
+    grid-template-columns: minmax(320px, .92fr) minmax(360px, 1fr) !important;
+}
+
+.brand-side,
+.form-side,
+.registro-card,
+.recover-card,
+.test-card,
+.outer-card,
+.container {
+    padding: 40px !important;
+}
+
+.registro-container,
+.recover-wrap {
+    max-width: 620px !important;
+}
+
+.test-card {
+    max-width: 900px !important;
+}
+
+.question-box {
+    background: #ffffff !important;
+    padding: 28px !important;
+}
+
+.outer-card {
+    max-width: 1180px !important;
+}
+
+.grid {
+    gap: 20px !important;
+}
+
+.card h2,
+.card h3,
+.question-box h2,
+.panel h2 {
+    color: var(--mc-ink) !important;
+    letter-spacing: 0;
+}
+
+.card h2 {
+    font-size: 34px !important;
+}
+
+.card h3,
+.question-box h2 {
+    font-size: 26px !important;
+}
+
+.legal-shell,
+.clinical-shell {
+    width: min(1180px, calc(100% - 40px)) !important;
+}
+
+.legal-section {
+    padding: 26px !important;
+}
+
+.legal-section.warning {
+    border-left: 6px solid var(--mc-red) !important;
+    background: #fffafa !important;
+}
+
+.clinical-header {
+    background: #ffffff;
+    border: 1px solid var(--mc-line);
+    border-radius: var(--mc-radius);
+    padding: 22px;
+    box-shadow: var(--mc-shadow);
+}
+
+.score-card {
+    border-color: var(--mc-blue) !important;
+}
+
+.risk-chip.bajo {
+    background: #dcfce7 !important;
+    color: #166534 !important;
+}
+
+.risk-chip.medio {
+    background: #fef3c7 !important;
+    color: #92400e !important;
+}
+
+.risk-chip.alto {
+    background: #ffedd5 !important;
+    color: #9a3412 !important;
+}
+
+.risk-chip.critico {
+    background: #fee2e2 !important;
+    color: #991b1b !important;
+}
+
+#toast {
+    border-radius: var(--mc-radius) !important;
+    box-shadow: 0 16px 35px rgba(23, 32, 51, .18) !important;
+}
+
+/* Legacy appointment pages */
+body > header,
+body > .card:only-of-type,
+body > .container {
+    position: relative;
+    z-index: 1;
+}
+
+body > header {
+    width: min(960px, calc(100% - 40px));
+    margin: 28px auto 16px;
+    padding: 22px;
+    border: 1px solid var(--mc-line);
+    border-radius: var(--mc-radius);
+    background: #ffffff;
+    box-shadow: var(--mc-shadow);
+}
+
+body > header h1 {
+    color: var(--mc-ink);
+    font-size: 36px;
+}
+
+body > .container,
+body > .card:only-of-type {
+    width: min(960px, calc(100% - 40px));
+    margin: 0 auto 32px;
+}
+
+body > .container .card,
+body > .card:only-of-type {
+    background: #ffffff;
+    padding: 26px;
+}
+
+body > .card:only-of-type {
+    display: grid;
+    gap: 14px;
+}
+
+body > .card:only-of-type label,
+body > .container label {
+    color: var(--mc-ink);
+    font-weight: 800;
+}
+
+body > .card:only-of-type ul {
+    display: grid;
+    gap: 10px;
+    list-style: none;
+}
+
+body > .card:only-of-type li {
+    padding: 12px;
+    border: 1px solid var(--mc-line);
+    border-radius: var(--mc-radius);
+    background: #f8fafc;
+}
+
+@media (max-width: 900px) {
+    body {
+        padding: 18px !important;
+        align-items: flex-start !important;
+        overflow-y: auto !important;
+    }
+
+    .login-card {
+        grid-template-columns: 1fr !important;
+    }
+
+    .brand-side,
+    .form-side,
+    .registro-card,
+    .recover-card,
+    .test-card,
+    .outer-card,
+    .container {
+        padding: 26px !important;
+    }
+
+    .form-side h2,
+    .registro-card h1,
+    .recover-card h1,
+    .test-card h1,
+    .top-left h1,
+    .header-text h1,
+    .clinical-header h1,
+    .brand h1 {
+        font-size: 32px !important;
+    }
+
+    .clinical-header,
+    .risk-panel {
+        grid-template-columns: 1fr !important;
+    }
+
+    .clinical-header {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 640px) {
+    .brand-side,
+    .form-side,
+    .registro-card,
+    .recover-card,
+    .test-card,
+    .outer-card,
+    .container,
+    .legal-section,
+    .clinical-header {
+        padding: 20px !important;
+    }
+
+    .links,
+    .header-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .answers {
+        grid-template-columns: 1fr !important;
+    }
+
+    .legal-shell,
+    .clinical-shell,
+    body > header,
+    body > .container,
+    body > .card:only-of-type {
+        width: min(100%, calc(100% - 4px)) !important;
+    }
+}

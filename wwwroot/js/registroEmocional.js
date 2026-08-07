@@ -10,8 +10,7 @@ Corrige:
 ✅ Fecha y hora México
 ========================================== */
 
-const API =
-    "https://mindcare-production-d670.up.railway.app/api";
+const API = window.MINDCARE_API_BASE;
 
 /* ==========================================
 LOAD
@@ -89,8 +88,11 @@ async function guardarRegistro() {
                 }
             );
 
+        const texto =
+            await response.text();
+
         if (!response.ok)
-            throw new Error();
+            throw new Error(extraerMensaje(texto));
 
         /* MENSAJE IA */
         if (
@@ -122,13 +124,25 @@ async function guardarRegistro() {
 
         mostrarHistorial();
 
-    } catch {
+    } catch (error) {
 
         mensaje.innerText =
-            "❌ Error al guardar registro.";
+            error.message || "Error al guardar registro.";
 
         mensaje.style.color =
             "#ef4444";
+    }
+}
+
+function extraerMensaje(texto) {
+
+    try {
+        const data = JSON.parse(texto);
+        return data.mensaje || data.title || texto;
+    } catch {
+        return String(texto || "Error")
+            .replaceAll('"', '')
+            .trim();
     }
 }
 

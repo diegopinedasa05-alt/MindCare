@@ -1,0 +1,151 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: #f8fafc;
+    color: #172033;
+    padding: 28px;
+}
+
+.legal-shell {
+    width: min(980px, 100%);
+    margin: 0 auto;
+}
+
+.legal-header {
+    margin-bottom: 24px;
+}
+
+.back-link {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 800;
+    margin-bottom: 18px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.logo-circle {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    font-size: 30px;
+    background: linear-gradient(135deg,#2563eb,#14b8a6);
+}
+
+h1 {
+    font-size: 42px;
+    line-height: 1.1;
+    color: #0f172a;
+}
+
+.brand p {
+    margin-top: 6px;
+    color: #64748b;
+    font-weight: 700;
+}
+
+.legal-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.legal-meta span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: #e0f2fe;
+    color: #075985;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.legal-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.legal-section {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 12px 28px rgba(15,23,42,.06);
+}
+
+.legal-section.warning {
+    border-left: 6px solid #dc2626;
+}
+
+.legal-section.danger {
+    border-left: 6px solid #b91c1c;
+    background: #fff7f7;
+}
+
+h2 {
+    font-size: 22px;
+    color: #0f172a;
+    margin-bottom: 12px;
+}
+
+p {
+    color: #334155;
+    line-height: 1.7;
+    margin-bottom: 10px;
+}
+
+.legal-list {
+    display: grid;
+    gap: 10px;
+    padding-left: 20px;
+    color: #334155;
+    line-height: 1.55;
+}
+
+.legal-list li::marker {
+    color: #2563eb;
+}
+
+@media(max-width:620px) {
+    body {
+        padding: 18px;
+    }
+
+    .brand {
+        align-items: flex-start;
+    }
+
+    h1 {
+        font-size: 32px;
+    }
+
+    .legal-section {
+        padding: 18px;
+    }
+
+    .legal-grid {
+        grid-template-columns: 1fr;
+    }
+}

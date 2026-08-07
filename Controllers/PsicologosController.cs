@@ -1,14 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AppTesisAPI.Data;
 using AppTesisAPI.Models;
 
 namespace AppTesisAPI.Controllers
 {
-    /// <summary>
-    /// Controlador encargado de la gestión de psicólogos.
-    /// Permite listar, consultar y registrar psicólogos.
-    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class PsicologosController : ControllerBase
@@ -20,9 +17,6 @@ namespace AppTesisAPI.Controllers
             _context = context;
         }
 
-        /// <summary>
-        /// Obtiene todos los psicólogos.
-        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetPsicologos()
         {
@@ -30,13 +24,11 @@ namespace AppTesisAPI.Controllers
             return Ok(lista);
         }
 
-        /// <summary>
-        /// Obtiene un psicólogo por ID.
-        /// </summary>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPsicologo(int id)
         {
-            var psicologo = await _context.Psicologos.FindAsync(id);
+            var psicologo =
+                await _context.Psicologos.FindAsync(id);
 
             if (psicologo == null)
                 return NotFound("Psicólogo no encontrado");
@@ -44,32 +36,38 @@ namespace AppTesisAPI.Controllers
             return Ok(psicologo);
         }
 
-        /// <summary>
-        /// Filtra psicólogos por zona.
-        /// </summary>
         [HttpGet("zona/{zona}")]
         public async Task<IActionResult> GetPorZona(string zona)
         {
-            var lista = await _context.Psicologos
+            var lista =
+                await _context.Psicologos
                 .Where(p => p.Zona == zona)
                 .ToListAsync();
 
             return Ok(lista);
         }
 
-        /// <summary>
-        /// Registra un nuevo psicólogo.
-        /// </summary>
         [HttpPost]
-        public async Task<IActionResult> CrearPsicologo([FromBody] Psicologo psicologo)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CrearPsicologo(
+            [FromBody] Psicologo psicologo)
         {
-            if (psicologo == null || string.IsNullOrWhiteSpace(psicologo.Nombre))
+            if (psicologo == null ||
+                string.IsNullOrWhiteSpace(psicologo.Nombre))
                 return BadRequest("Datos inválidos");
+
+            psicologo.Nombre = psicologo.Nombre.Trim();
+            psicologo.Especialidad ??= "";
+            psicologo.Zona ??= "";
+            psicologo.Telefono ??= "";
 
             _context.Psicologos.Add(psicologo);
             await _context.SaveChangesAsync();
 
-            return Ok(new { mensaje = "Psicólogo registrado correctamente" });
+            return Ok(new
+            {
+                mensaje = "Psicólogo registrado correctamente"
+            });
         }
     }
 }

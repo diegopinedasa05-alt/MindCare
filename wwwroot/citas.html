@@ -1,41 +1,72 @@
-﻿<!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="es">
 
 <head>
-    <title>Citas</title>
-    <link rel="stylesheet" href="estilos.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MindCare | Mis citas</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet"
+          href="css/mindcare-pages-pro.css?v=1">
+    <link rel="stylesheet" href="css/mindcare-refresh.css?v=1">
+    <link rel="stylesheet" href="css/citasUsuario.css?v=1">
 </head>
 
 <body>
 
-    <header>
-        <h1>Agendar Cita</h1>
+    <header class="page-header">
+        <div>
+            <span class="eyebrow">AGENDA PERSONAL</span>
+            <h1>Mis citas</h1>
+            <p>Consulta las citas asignadas por tu psicólogo.</p>
+        </div>
+
+        <a class="back-link" href="dashboard.html">
+            <i class="fa-solid fa-arrow-left"></i>
+            Volver al inicio
+        </a>
     </header>
 
-    <div class="container">
+    <main class="appointments-layout">
 
-        <div class="card">
+        <section class="card contact-card">
+            <div class="card-icon">
+                <i class="fa-solid fa-user-doctor"></i>
+            </div>
+            <div>
+                <h2>¿Necesitas seguimiento?</h2>
+                <p>Consulta los psicólogos disponibles y establece contacto para solicitar atención.</p>
+            </div>
+            <a class="primary-action" href="psicologos.html">
+                <i class="fa-solid fa-comments"></i>
+                Contactar psicólogo
+            </a>
+        </section>
 
-            <label>ID Psicólogo</label>
-            <input id="psicologoId">
+        <section class="card">
+            <div class="section-heading">
+                <div>
+                    <span class="eyebrow">SEGUIMIENTO</span>
+                    <h2>Citas asignadas</h2>
+                </div>
+                <button class="icon-button" type="button" onclick="cargarCitas()" title="Actualizar citas" aria-label="Actualizar citas">
+                    <i class="fa-solid fa-rotate"></i>
+                </button>
+            </div>
 
-            <label>Fecha</label>
-            <input id="fecha" type="date">
+            <div id="resultado" class="status-message" role="status" aria-live="polite">
+                Cargando citas...
+            </div>
+            <div id="listaCitas" class="appointments-list"></div>
+        </section>
 
-            <button onclick="crearCita()">Agendar</button>
+    </main>
 
-        </div>
-
-        <div class="card">
-
-            <h3>Resultado</h3>
-            <div id="resultado"></div>
-
-        </div>
-
-    </div>
-
-    <script src="app.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/citasUsuario.js?v=1"></script>
     <div id="toast"></div>
 
 </body>

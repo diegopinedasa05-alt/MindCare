@@ -172,6 +172,22 @@ button {
     min-height: 25px;
 }
 
+.consent-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    color: #40516a;
+    font-size: 13px;
+    line-height: 1.4;
+    margin: 8px 2px;
+    text-align: left;
+}
+
+.consent-check input {
+    width: auto;
+    margin: 3px 0 0;
+}
+
 /* =====================================================
    DISEÑO RESPONSIVO
    Ajustes para celulares y tablets.

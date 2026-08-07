@@ -1,0 +1,1428 @@
+/*
+   MindCare visual refresh
+   Shared presentation layer loaded after the existing page styles.
+   It changes presentation only: routes, ids and existing interactions remain intact.
+*/
+
+:root {
+    --mc-ink: #172033;
+    --mc-muted: #64748b;
+    --mc-line: #dbe4ee;
+    --mc-line-strong: #c3d1df;
+    --mc-canvas: #edf2f7;
+    --mc-surface: #ffffff;
+    --mc-soft: #f5f8fb;
+    --mc-blue: #1d66d1;
+    --mc-blue-soft: #eaf2ff;
+    --mc-teal: #0b8178;
+    --mc-teal-soft: #e7f7f4;
+    --mc-coral: #d9574f;
+    --mc-amber: #b87516;
+    --mc-shadow: 0 18px 40px rgba(23, 32, 51, .075);
+    --mc-shadow-small: 0 8px 22px rgba(23, 32, 51, .055);
+    --mc-radius: 12px;
+}
+
+html {
+    background: var(--mc-canvas);
+}
+
+body {
+    font-family: "Segoe UI", Inter, system-ui, -apple-system, sans-serif !important;
+    color: var(--mc-ink) !important;
+    background: var(--mc-canvas) !important;
+}
+
+body::selection {
+    background: #bcd7ff;
+}
+
+.blur,
+.bg-circle {
+    display: none !important;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+button {
+    transition: transform .18s ease, box-shadow .18s ease, background .18s ease,
+        border-color .18s ease, color .18s ease;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid rgba(29, 102, 209, .28);
+    outline-offset: 2px;
+}
+
+/* Shared dashboard shell */
+.mindcare-dashboard {
+    min-height: 100vh;
+    background: var(--mc-canvas) !important;
+}
+
+.mindcare-dashboard .layout {
+    grid-template-columns: 248px minmax(0, 1fr) !important;
+    min-height: 100vh;
+}
+
+.mindcare-dashboard .sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    padding: 24px 16px !important;
+    color: #f8fbff;
+    background: #17283d !important;
+    border: 0 !important;
+    box-shadow: 14px 0 34px rgba(23, 40, 61, .12) !important;
+    z-index: 5;
+}
+
+.mindcare-dashboard .brand {
+    padding: 0 10px 24px;
+    margin-bottom: 18px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, .12);
+}
+
+.mindcare-dashboard .brain-icon {
+    width: 46px;
+    height: 46px;
+    margin: 0 0 14px;
+    border-radius: 12px;
+    font-size: 20px;
+    color: #ffffff;
+    background: #0b8178 !important;
+    box-shadow: none !important;
+}
+
+.mindcare-dashboard .brand h2 {
+    margin-bottom: 4px;
+    color: #ffffff !important;
+    font-size: 24px;
+    letter-spacing: 0;
+}
+
+.mindcare-dashboard .brand p {
+    max-width: 190px;
+    color: #b9c7d7 !important;
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+.mindcare-dashboard .menu {
+    gap: 6px !important;
+    margin-bottom: auto;
+}
+
+.mindcare-dashboard .menu button,
+.mindcare-dashboard .logout {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 46px;
+    padding: 11px 12px !important;
+    color: #dce7f2 !important;
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    border-radius: 9px !important;
+    font-size: 13px;
+    text-align: left;
+}
+
+.mindcare-dashboard .menu button i,
+.mindcare-dashboard .logout i {
+    width: 22px;
+    margin-right: 11px;
+    color: #8fb6d8 !important;
+    text-align: center;
+}
+
+.mindcare-dashboard .menu button:hover,
+.mindcare-dashboard .menu button:focus-visible {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, .09) !important;
+    border-color: rgba(255, 255, 255, .12) !important;
+    transform: translateX(2px);
+    box-shadow: none !important;
+}
+
+.mindcare-dashboard .menu button:hover i,
+.mindcare-dashboard .menu button:focus-visible i {
+    color: #8ee1d7 !important;
+}
+
+.mindcare-dashboard .logout {
+    margin-top: 18px;
+    color: #ffcfca !important;
+    border-top: 1px solid rgba(255, 255, 255, .12) !important;
+    border-radius: 0 !important;
+}
+
+.mindcare-dashboard .logout i {
+    color: #f19188 !important;
+}
+
+.mindcare-dashboard .main {
+    width: 100% !important;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 30px clamp(20px, 3.2vw, 48px) 56px !important;
+    background: transparent !important;
+}
+
+.mindcare-dashboard .top {
+    min-height: 78px;
+    margin-bottom: 16px !important;
+    padding: 17px 20px !important;
+    color: var(--mc-ink);
+    background: var(--mc-surface) !important;
+    border: 1px solid var(--mc-line) !important;
+    border-radius: var(--mc-radius) !important;
+    box-shadow: var(--mc-shadow-small) !important;
+}
+
+.mindcare-dashboard .top::before {
+    width: 4px !important;
+    background: var(--mc-teal) !important;
+}
+
+.mindcare-dashboard .top h1 {
+    color: var(--mc-ink) !important;
+    font-size: clamp(1.6rem, 2.7vw, 2.3rem) !important;
+    letter-spacing: 0 !important;
+}
+
+.mindcare-dashboard .top p,
+.mindcare-dashboard .subtop {
+    color: var(--mc-muted) !important;
+}
+
+.mindcare-dashboard .pdf-btn,
+.mindcare-dashboard .nuevo-btn,
+.mindcare-dashboard .logout-btn,
+.mindcare-dashboard .busqueda button,
+.mindcare-dashboard .modal-box button[type="submit"] {
+    min-height: 42px;
+    padding: 10px 16px !important;
+    color: #ffffff !important;
+    background: var(--mc-blue) !important;
+    border: 1px solid var(--mc-blue) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 8px 18px rgba(29, 102, 209, .16) !important;
+}
+
+.mindcare-dashboard .logout-btn,
+.mindcare-dashboard .logout {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.mindcare-dashboard .pdf-btn:hover,
+.mindcare-dashboard .nuevo-btn:hover,
+.mindcare-dashboard .busqueda button:hover,
+.mindcare-dashboard .modal-box button[type="submit"]:hover {
+    background: #1553ad !important;
+    transform: translateY(-1px);
+}
+
+.mindcare-dashboard .dashboard-tabs {
+    position: static !important;
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 4px !important;
+    padding: 5px !important;
+    margin-bottom: 16px !important;
+    background: var(--mc-surface) !important;
+    border: 1px solid var(--mc-line) !important;
+    border-radius: 10px !important;
+    box-shadow: var(--mc-shadow-small) !important;
+}
+
+.mindcare-dashboard .dashboard-tabs button {
+    flex: 1 1 150px;
+    min-height: 40px !important;
+    padding: 8px 12px !important;
+    color: var(--mc-muted) !important;
+    background: transparent !important;
+    border-radius: 7px !important;
+    font-size: 12px;
+}
+
+.mindcare-dashboard .dashboard-tabs button:hover,
+.mindcare-dashboard .dashboard-tabs button.active {
+    color: var(--mc-blue) !important;
+    background: var(--mc-blue-soft) !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+.mindcare-dashboard .view-intro > div,
+.mindcare-dashboard .patient-command,
+.mindcare-dashboard .institution-command,
+.mindcare-dashboard .clinical-queue,
+.mindcare-dashboard .care-roadmap,
+.mindcare-dashboard .clinical-workbench,
+.mindcare-dashboard .admin-workbench,
+.mindcare-dashboard .ai-cockpit-main,
+.mindcare-dashboard .ai-cockpit-grid article,
+.mindcare-dashboard .ai-questions,
+.mindcare-dashboard .ia-lab,
+.mindcare-dashboard .admin-analytics,
+.mindcare-dashboard .clinical-analytics,
+.mindcare-dashboard .tabla-box,
+.mindcare-dashboard .calendar-box,
+.mindcare-dashboard .busqueda-box,
+.mindcare-dashboard .chart-box,
+.mindcare-dashboard .info-card,
+.mindcare-dashboard .chart-card,
+.mindcare-dashboard .chart-card-wide,
+.mindcare-dashboard .clinical-chart-card,
+.mindcare-dashboard .analytics-card {
+    background: var(--mc-surface) !important;
+    border: 1px solid var(--mc-line) !important;
+    border-radius: var(--mc-radius) !important;
+    box-shadow: var(--mc-shadow-small) !important;
+}
+
+.mindcare-dashboard .view-intro > div {
+    padding: 18px 20px !important;
+    background: #edf5fb !important;
+    box-shadow: none !important;
+}
+
+.mindcare-dashboard .view-intro h2,
+.mindcare-dashboard .patient-command h2,
+.mindcare-dashboard .roadmap-head h2,
+.mindcare-dashboard .section-head h2,
+.mindcare-dashboard .analytics-head h2 {
+    color: var(--mc-ink) !important;
+    letter-spacing: 0 !important;
+}
+
+.mindcare-dashboard .view-intro p,
+.mindcare-dashboard .patient-command p,
+.mindcare-dashboard .roadmap-head p,
+.mindcare-dashboard .analytics-head p {
+    color: var(--mc-muted) !important;
+}
+
+.mindcare-dashboard .section-ribbon {
+    margin: 28px 0 12px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+}
+
+.mindcare-dashboard .section-ribbon span,
+.mindcare-dashboard .command-label,
+.mindcare-dashboard .queue-label,
+.mindcare-dashboard .workbench-label,
+.mindcare-dashboard .status-label,
+.mindcare-dashboard .insight-label {
+    color: var(--mc-teal) !important;
+    font-size: 11px !important;
+    letter-spacing: .08em;
+}
+
+.mindcare-dashboard .section-ribbon h2 {
+    color: var(--mc-ink) !important;
+    font-size: 1.18rem !important;
+}
+
+.mindcare-dashboard .cards {
+    gap: 12px !important;
+    margin-bottom: 18px !important;
+}
+
+.mindcare-dashboard .card {
+    min-height: 118px !important;
+    padding: 18px !important;
+    background: var(--mc-surface) !important;
+    border: 1px solid var(--mc-line) !important;
+    border-radius: var(--mc-radius) !important;
+    box-shadow: var(--mc-shadow-small) !important;
+}
+
+.mindcare-dashboard .card:hover,
+.mindcare-dashboard .chart-card:hover,
+.mindcare-dashboard .priority-card:hover,
+.mindcare-dashboard .admin-alert-card:hover {
+    border-color: var(--mc-line-strong) !important;
+    box-shadow: var(--mc-shadow) !important;
+    transform: translateY(-2px);
+}
+
+.mindcare-dashboard .card h3 {
+    color: var(--mc-muted) !important;
+    font-size: 11px !important;
+    letter-spacing: .06em !important;
+}
+
+.mindcare-dashboard .card p {
+    color: var(--mc-ink) !important;
+    font-size: clamp(1.2rem, 1.8vw, 1.6rem) !important;
+}
+
+.mindcare-dashboard .card.primary {
+    background: var(--mc-ink) !important;
+    border-color: var(--mc-ink) !important;
+}
+
+.mindcare-dashboard .card.primary h3,
+.mindcare-dashboard .card.primary p {
+    color: #ffffff !important;
+}
+
+.mindcare-dashboard .care-step,
+.mindcare-dashboard .plan-metrics div,
+.mindcare-dashboard .roadmap-side div,
+.mindcare-dashboard .audit-card,
+.mindcare-dashboard .side-card,
+.mindcare-dashboard .trend-strip div,
+.mindcare-dashboard .clinical-levels div,
+.mindcare-dashboard .analytics-kpis div,
+.mindcare-dashboard .risk-summary div {
+    background: var(--mc-soft) !important;
+    border: 1px solid var(--mc-line) !important;
+    border-radius: 9px !important;
+}
+
+.mindcare-dashboard .chart-card,
+.mindcare-dashboard .chart-card-wide,
+.mindcare-dashboard .clinical-chart-card,
+.mindcare-dashboard .analytics-card {
+    padding: 18px !important;
+}
+
+.mindcare-dashboard .chart-heading,
+.mindcare-dashboard .chart-title,
+.mindcare-dashboard .analytics-head,
+.mindcare-dashboard .section-head,
+.mindcare-dashboard .roadmap-head {
+    border-bottom: 1px solid var(--mc-line) !important;
+}
+
+.mindcare-dashboard canvas {
+    border: 0 !important;
+    background: transparent !important;
+}
+
+.mindcare-dashboard table {
+    overflow: hidden;
+    border: 1px solid var(--mc-line) !important;
+    border-radius: 9px;
+}
+
+.mindcare-dashboard th {
+    padding: 12px 14px !important;
+    color: #53647a !important;
+    background: #f4f8fb !important;
+    border-bottom: 1px solid var(--mc-line) !important;
+    font-size: 10px !important;
+}
+
+.mindcare-dashboard td {
+    padding: 12px 14px !important;
+    color: var(--mc-ink) !important;
+    border-bottom: 1px solid #edf1f5 !important;
+}
+
+.mindcare-dashboard tbody tr:hover {
+    background: #f5f9fd !important;
+}
+
+.mindcare-dashboard input,
+.mindcare-dashboard select,
+.mindcare-dashboard textarea {
+    min-height: 42px;
+    color: var(--mc-ink) !important;
+    background: #fbfdff !important;
+    border: 1px solid var(--mc-line) !important;
+    border-radius: 8px !important;
+}
+
+/* Standalone screens: auth, forms, legal and clinical record */
+body:not(.mindcare-dashboard) {
+    min-height: 100vh;
+    background: var(--mc-canvas) !important;
+}
+
+.login-container,
+.registro-container,
+.recover-wrap,
+.test-container,
+.legal-shell,
+.clinical-shell,
+.page > .container,
+.page > .outer-card {
+    position: relative;
+    z-index: 1;
+}
+
+.login-card,
+.registro-card,
+.recover-card,
+.test-card,
+.legal-shell,
+.clinical-shell,
+.page > .container,
+.page > .outer-card,
+.page .container .card {
+    background: var(--mc-surface) !important;
+    border: 1px solid var(--mc-line) !important;
+    border-radius: 14px !important;
+    box-shadow: var(--mc-shadow) !important;
+}
+
+.login-card {
+    overflow: hidden;
+}
+
+.brand-side {
+    background: #17283d !important;
+}
+
+.brand-side h1,
+.registro-card h1,
+.recover-card h1,
+.test-card h1,
+.legal-header h1,
+.clinical-header h1 {
+    color: var(--mc-ink) !important;
+    letter-spacing: 0 !important;
+}
+
+.brand-side h1,
+.brand-side .subtitle,
+.brand-side .features {
+    color: #ffffff !important;
+}
+
+.form-side,
+.registro-card,
+.recover-card,
+.test-card {
+    color: var(--mc-ink) !important;
+}
+
+.form-side h2,
+.registro-card h1,
+.recover-card h1,
+.test-card h1,
+.legal-shell h1,
+.clinical-shell h1 {
+    font-size: clamp(1.65rem, 3vw, 2.3rem) !important;
+}
+
+.form-group input,
+.registro-card input,
+.recover-card input,
+.test-card input,
+.registro-card select,
+.registro-card textarea,
+.recover-card select {
+    color: var(--mc-ink) !important;
+    background: #fbfdff !important;
+    border: 1px solid var(--mc-line) !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+}
+
+.form-group input:focus,
+.registro-card input:focus,
+.recover-card input:focus,
+.test-card input:focus,
+.registro-card select:focus,
+.registro-card textarea:focus {
+    border-color: var(--mc-blue) !important;
+    box-shadow: 0 0 0 3px rgba(29, 102, 209, .12) !important;
+}
+
+.form-side button,
+.registro-card .btn-register,
+.recover-card .btn-main,
+.test-card button:not(.volver),
+.page .container button,
+.page .outer-card button {
+    min-height: 44px;
+    color: #ffffff !important;
+    background: var(--mc-blue) !important;
+    border: 1px solid var(--mc-blue) !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+}
+
+.form-side button:hover,
+.registro-card .btn-register:hover,
+.recover-card .btn-main:hover,
+.test-card button:not(.volver):hover,
+.page .container button:hover,
+.page .outer-card button:hover {
+    background: #1553ad !important;
+    transform: translateY(-1px);
+}
+
+.links a,
+.legal-link,
+.back-link {
+    color: var(--mc-blue) !important;
+}
+
+.clinical-shell {
+    width: min(1440px, calc(100% - 36px));
+    margin: 22px auto;
+    padding: clamp(18px, 3vw, 34px) !important;
+}
+
+.clinical-header {
+    padding-bottom: 18px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--mc-line);
+}
+
+.clinical-header p,
+.clinical-note,
+.clinical-shell .empty,
+.clinical-shell small {
+    color: var(--mc-muted) !important;
+}
+
+.metric,
+.risk-panel,
+.ai-summary-panel,
+.clinical-shell .panel {
+    background: var(--mc-surface) !important;
+    border: 1px solid var(--mc-line) !important;
+    border-radius: var(--mc-radius) !important;
+    box-shadow: var(--mc-shadow-small) !important;
+}
+
+.metric strong,
+.score-card strong,
+.wellbeing-card strong {
+    color: var(--mc-ink) !important;
+}
+
+.timeline-item,
+.clinical-item {
+    background: var(--mc-soft) !important;
+    border-color: var(--mc-line) !important;
+    border-radius: 9px !important;
+}
+
+@media (max-width: 900px) {
+    .mindcare-dashboard .layout {
+        display: block !important;
+    }
+
+    .mindcare-dashboard .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        min-height: 0;
+        padding: 14px 16px !important;
+    }
+
+    .mindcare-dashboard .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0 0 14px;
+        margin-bottom: 12px;
+    }
+
+    .mindcare-dashboard .brain-icon {
+        flex: 0 0 42px;
+        margin: 0;
+    }
+
+    .mindcare-dashboard .brand h2 {
+        font-size: 20px;
+    }
+
+    .mindcare-dashboard .brand p {
+        display: none;
+    }
+
+    .mindcare-dashboard .menu {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 6px !important;
+    }
+
+    .mindcare-dashboard .menu button,
+    .mindcare-dashboard .logout {
+        min-height: 42px;
+        justify-content: center;
+        padding: 8px 6px !important;
+        font-size: 11px;
+        text-align: center;
+    }
+
+    .mindcare-dashboard .menu button i,
+    .mindcare-dashboard .logout i {
+        width: auto;
+        margin: 0 5px 0 0;
+    }
+
+    .mindcare-dashboard .logout {
+        display: inline-flex;
+        width: auto;
+        margin-top: 10px;
+        border-top: 0 !important;
+    }
+
+    .mindcare-dashboard .main {
+        padding: 18px 14px 36px !important;
+    }
+
+    .mindcare-dashboard .top {
+        align-items: stretch !important;
+        flex-direction: column;
+    }
+
+    .mindcare-dashboard .top .pdf-btn,
+    .mindcare-dashboard .top .nuevo-btn,
+    .mindcare-dashboard .top .logout-btn {
+        width: 100%;
+    }
+
+    .mindcare-dashboard .patient-command,
+    .mindcare-dashboard .institution-command,
+    .mindcare-dashboard .clinical-queue,
+    .mindcare-dashboard .care-roadmap,
+    .mindcare-dashboard .clinical-workbench,
+    .mindcare-dashboard .admin-workbench {
+        grid-template-columns: 1fr !important;
+    }
+
+    .mindcare-dashboard .command-score,
+    .mindcare-dashboard .queue-score {
+        justify-self: start;
+    }
+
+    .mindcare-dashboard .ai-questions {
+        grid-template-columns: 1fr !important;
+    }
+
+    .mindcare-dashboard .chart-card-wide canvas,
+    .mindcare-dashboard .analytics-card.wide canvas,
+    .mindcare-dashboard .clinical-chart-card.wide canvas {
+        height: 280px !important;
+    }
+
+    .clinical-shell {
+        width: min(100% - 20px, 720px);
+        margin: 10px auto;
+    }
+}
+
+@media (max-width: 560px) {
+    .mindcare-dashboard .menu {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .mindcare-dashboard .dashboard-tabs button {
+        flex-basis: 45%;
+    }
+
+    .login-card {
+        grid-template-columns: 1fr !important;
+    }
+
+    .brand-side,
+    .form-side,
+    .registro-card,
+    .recover-card,
+    .test-card {
+        padding: 24px !important;
+    }
+
+    .clinical-shell {
+        padding: 16px !important;
+    }
+}
+
+@media print {
+    .mindcare-dashboard .sidebar,
+    .mindcare-dashboard .dashboard-tabs,
+    .pdf-btn,
+    .header-actions {
+        display: none !important;
+    }
+
+    body,
+    .mindcare-dashboard .main {
+        background: #ffffff !important;
+    }
+}
+
+/* Visual direction v2: clinical workspace with a stronger hierarchy. */
+.mindcare-dashboard .top {
+    background:
+        linear-gradient(110deg, #ffffff 0%, #ffffff 70%, #eef8f7 100%) !important;
+}
+
+.mindcare-dashboard .top::after {
+    content: "";
+    position: absolute;
+    right: 18px;
+    top: 16px;
+    width: 84px;
+    height: 46px;
+    opacity: .45;
+    background-image: linear-gradient(#d9ecea 1px, transparent 1px),
+        linear-gradient(90deg, #d9ecea 1px, transparent 1px);
+    background-size: 12px 12px;
+    pointer-events: none;
+}
+
+.mindcare-dashboard .top > * {
+    position: relative;
+    z-index: 1;
+}
+
+.mindcare-dashboard .quick-actions {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px !important;
+    margin-bottom: 18px !important;
+}
+
+.mindcare-dashboard .quick-actions button {
+    display: flex !important;
+    align-items: center;
+    gap: 11px;
+    min-height: 64px;
+    padding: 12px 14px !important;
+    color: var(--mc-ink) !important;
+    background: var(--mc-surface) !important;
+    border: 1px solid var(--mc-line) !important;
+    border-radius: 10px !important;
+    box-shadow: var(--mc-shadow-small) !important;
+    text-align: left;
+}
+
+.mindcare-dashboard .quick-actions button:hover {
+    border-color: #9dc7c2 !important;
+    background: #f7fcfb !important;
+    transform: translateY(-2px);
+}
+
+.mindcare-dashboard .quick-actions button > i {
+    display: grid;
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    color: var(--mc-teal) !important;
+    background: var(--mc-teal-soft);
+    border-radius: 8px;
+}
+
+.mindcare-dashboard .quick-actions button:nth-child(2) > i {
+    color: var(--mc-blue) !important;
+    background: var(--mc-blue-soft);
+}
+
+.mindcare-dashboard .quick-actions button:nth-child(3) > i {
+    color: var(--mc-coral) !important;
+    background: #fff0ee;
+}
+
+.mindcare-dashboard .quick-actions button strong,
+.mindcare-dashboard .quick-actions button small {
+    display: block;
+}
+
+.mindcare-dashboard .quick-actions button strong {
+    margin-bottom: 2px;
+    font-size: 12px;
+}
+
+.mindcare-dashboard .quick-actions button small {
+    color: var(--mc-muted);
+    font-size: 10px;
+    line-height: 1.25;
+}
+
+.mindcare-dashboard .trust-strip {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px !important;
+    margin-bottom: 18px !important;
+    padding: 10px !important;
+    background: #eaf1f5 !important;
+    border: 1px solid var(--mc-line) !important;
+    border-radius: 10px !important;
+}
+
+.mindcare-dashboard .trust-strip article {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 0;
+    padding: 8px 10px;
+    border-right: 1px solid #d3dfe8;
+}
+
+.mindcare-dashboard .trust-strip article:last-child {
+    border-right: 0;
+}
+
+.mindcare-dashboard .trust-strip article > i {
+    color: var(--mc-teal);
+    font-size: 16px;
+}
+
+.mindcare-dashboard .trust-strip strong,
+.mindcare-dashboard .trust-strip span {
+    display: block;
+}
+
+.mindcare-dashboard .trust-strip strong {
+    color: var(--mc-ink);
+    font-size: 11px;
+}
+
+.mindcare-dashboard .trust-strip span {
+    margin-top: 2px;
+    color: var(--mc-muted);
+    font-size: 10px;
+}
+
+.mindcare-dashboard .patient-command,
+.mindcare-dashboard .institution-command,
+.mindcare-dashboard .clinical-queue {
+    position: relative;
+    overflow: hidden;
+    background: #ffffff !important;
+}
+
+.mindcare-dashboard .patient-command::before,
+.mindcare-dashboard .institution-command::before,
+.mindcare-dashboard .clinical-queue::before {
+    inset: 0 auto 0 0 !important;
+    width: 6px !important;
+    height: 100% !important;
+    background: var(--mc-teal) !important;
+}
+
+.mindcare-dashboard .patient-command .command-score,
+.mindcare-dashboard .institution-command .command-score,
+.mindcare-dashboard .clinical-queue .queue-score {
+    width: 116px !important;
+    min-width: 116px !important;
+    height: 116px !important;
+    border: 8px solid #cfeee9 !important;
+    background: #f7fcfb !important;
+}
+
+.mindcare-dashboard .patient-command .command-score strong,
+.mindcare-dashboard .institution-command .command-score strong,
+.mindcare-dashboard .clinical-queue .queue-score strong {
+    color: var(--mc-teal) !important;
+    font-size: 30px !important;
+}
+
+/* The command header uses three columns; the audit workspace belongs below it. */
+.mindcare-dashboard .patient-command > .ia-audit {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    margin-top: 4px !important;
+    padding-top: 16px;
+    border-top: 1px solid var(--mc-line);
+}
+
+.mindcare-dashboard .patient-command .ia-audit .audit-card {
+    min-width: 0;
+    background: #f7fafc !important;
+    border-color: #d7e2ed !important;
+    box-shadow: none !important;
+}
+
+.mindcare-dashboard .patient-command .ia-audit .audit-card > span {
+    color: var(--mc-blue) !important;
+}
+
+.mindcare-dashboard .patient-command .ia-audit .audit-card:nth-child(4) > span {
+    color: var(--mc-coral) !important;
+}
+
+.mindcare-dashboard .patient-command .ia-audit .audit-card:nth-child(5) > span {
+    color: var(--mc-teal) !important;
+}
+
+.mindcare-dashboard .ia-cockpit-main {
+    border-left: 6px solid var(--mc-blue) !important;
+    background: #f7fbff !important;
+}
+
+.mindcare-dashboard .wellbeing-ring {
+    width: 132px;
+    height: 132px;
+}
+
+.mindcare-dashboard .chart-card,
+.mindcare-dashboard .chart-card-wide,
+.mindcare-dashboard .clinical-chart-card,
+.mindcare-dashboard .analytics-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.mindcare-dashboard .chart-card::before,
+.mindcare-dashboard .chart-card-wide::before,
+.mindcare-dashboard .clinical-chart-card::before,
+.mindcare-dashboard .analytics-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--mc-blue);
+}
+
+.mindcare-dashboard .chart-card:nth-child(2)::before,
+.mindcare-dashboard .clinical-chart-card:nth-child(2)::before {
+    background: var(--mc-teal);
+}
+
+.mindcare-dashboard .chart-card:nth-child(3)::before,
+.mindcare-dashboard .clinical-chart-card:nth-child(3)::before {
+    background: var(--mc-coral);
+}
+
+.mindcare-dashboard .priority-actions button,
+.mindcare-dashboard td button,
+.mindcare-dashboard .action-row button {
+    min-height: 34px !important;
+    padding: 7px 10px !important;
+    color: var(--mc-blue) !important;
+    background: var(--mc-blue-soft) !important;
+    border: 1px solid #c9ddfb !important;
+    border-radius: 7px !important;
+    font-size: 11px !important;
+}
+
+.mindcare-dashboard .priority-actions button:hover,
+.mindcare-dashboard td button:hover,
+.mindcare-dashboard .action-row button:hover {
+    color: #ffffff !important;
+    background: var(--mc-blue) !important;
+}
+
+.mindcare-dashboard .modal {
+    background: rgba(23, 32, 51, .46) !important;
+    backdrop-filter: blur(4px);
+}
+
+.mindcare-dashboard .modal-box {
+    border-radius: 12px !important;
+    box-shadow: 0 24px 70px rgba(23, 32, 51, .22) !important;
+}
+
+@media (max-width: 1080px) {
+    .mindcare-dashboard .quick-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .mindcare-dashboard .trust-strip {
+        grid-template-columns: 1fr;
+    }
+
+    .mindcare-dashboard .trust-strip article {
+        border-right: 0;
+        border-bottom: 1px solid #d3dfe8;
+    }
+
+    .mindcare-dashboard .trust-strip article:last-child {
+        border-bottom: 0;
+    }
+}
+
+/* Analytics workspace: use the available desktop width and keep each chart readable. */
+.mindcare-dashboard .main {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+}
+
+.mindcare-dashboard .charts {
+    width: 100% !important;
+    max-width: 1480px !important;
+    margin-inline: auto !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.04fr) minmax(0, 1.04fr) minmax(310px, .78fr) !important;
+    grid-template-areas:
+        "trend trend categories"
+        "severity radar radar";
+    gap: 18px !important;
+    align-items: stretch;
+}
+
+.mindcare-dashboard .charts > .chart-card,
+.mindcare-dashboard .charts > .chart-card-wide {
+    min-width: 0 !important;
+    margin: 0 !important;
+}
+
+.mindcare-dashboard .charts > .chart-card-wide {
+    grid-area: trend;
+    grid-row: auto !important;
+    min-height: 390px !important;
+}
+
+.mindcare-dashboard .charts > .chart-card {
+    min-height: 350px !important;
+}
+
+.mindcare-dashboard .charts > .chart-card:nth-child(2) {
+    grid-area: categories;
+}
+
+.mindcare-dashboard .charts > .chart-card:nth-child(3) {
+    grid-area: severity;
+}
+
+.mindcare-dashboard .charts > .chart-card:nth-child(4) {
+    grid-area: radar;
+}
+
+.mindcare-dashboard .charts canvas {
+    display: block;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.mindcare-dashboard .charts > .chart-card-wide canvas {
+    height: 300px !important;
+}
+
+.mindcare-dashboard .charts > .chart-card canvas {
+    height: 240px !important;
+}
+
+.mindcare-dashboard .charts > .chart-card:nth-child(4) canvas {
+    height: 270px !important;
+}
+
+.mindcare-dashboard .chart-heading {
+    min-height: 45px;
+    align-items: flex-start !important;
+}
+
+.mindcare-dashboard .chart-heading span,
+.mindcare-dashboard .chart-heading small {
+    color: var(--mc-blue) !important;
+    font-size: 10px !important;
+    font-weight: 800 !important;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.mindcare-dashboard .chart-heading h3 {
+    margin-top: 5px !important;
+    font-size: 17px !important;
+}
+
+.mindcare-dashboard .charts > .chart-card-wide::before {
+    background: #2f6fe4 !important;
+}
+
+.mindcare-dashboard .charts > .chart-card:nth-child(2)::before {
+    background: #0e938b !important;
+}
+
+.mindcare-dashboard .charts > .chart-card:nth-child(3)::before {
+    background: #d9574f !important;
+}
+
+.mindcare-dashboard .charts > .chart-card:nth-child(4)::before {
+    background: #7658d8 !important;
+}
+
+.mindcare-dashboard .charts > .chart-card,
+.mindcare-dashboard .charts > .chart-card-wide {
+    box-shadow: 0 14px 30px rgba(23, 32, 51, .07) !important;
+}
+
+.mindcare-dashboard .chart-note {
+    margin-top: 10px !important;
+    padding: 10px 11px !important;
+    color: #52647b !important;
+    background: #f7fafc !important;
+    border: 1px solid #d7e2ed !important;
+    border-radius: 8px !important;
+    font-size: 10px !important;
+}
+
+/* Interactive web follow-up, visually aligned with the Flutter experience. */
+.mindcare-dashboard .ai-questions {
+    grid-template-columns: minmax(220px, .32fr) minmax(0, 1fr) !important;
+    align-items: start;
+    background: #ffffff !important;
+    border: 1px solid var(--mc-line) !important;
+    border-radius: 12px !important;
+    box-shadow: var(--mc-shadow-small) !important;
+}
+
+.mindcare-dashboard .ai-questions > div:first-child {
+    position: sticky;
+    top: 18px;
+}
+
+.followup-web-head,
+.followup-web-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.followup-web-head {
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--mc-line);
+}
+
+.followup-web-head > div,
+.followup-web-footer small {
+    min-width: 0;
+}
+
+.followup-kicker {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--mc-teal);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.followup-web-head strong {
+    display: block;
+    color: var(--mc-ink);
+    font-size: 13px;
+}
+
+.followup-state {
+    flex: 0 0 auto;
+    padding: 6px 9px;
+    color: var(--mc-blue);
+    background: var(--mc-blue-soft);
+    border: 1px solid #c9ddfb;
+    border-radius: 7px;
+    font-size: 10px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.followup-web-progress {
+    height: 7px;
+    margin: 13px 0;
+    overflow: hidden;
+    background: #e8eef5;
+    border-radius: 999px;
+}
+
+.followup-web-progress span {
+    display: block;
+    height: 100%;
+    background: var(--mc-teal);
+    border-radius: inherit;
+    transition: width .2s ease;
+}
+
+.followup-web-tasks,
+.followup-web-questions {
+    display: grid;
+    gap: 9px;
+}
+
+.followup-web-tasks {
+    margin-bottom: 14px;
+}
+
+.followup-task {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 39px;
+    padding: 8px 10px;
+    color: #334155;
+    background: #f8fafc;
+    border: 1px solid var(--mc-line);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.followup-task input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.followup-task-check {
+    display: grid;
+    flex: 0 0 22px;
+    width: 22px;
+    height: 22px;
+    place-items: center;
+    color: transparent;
+    border: 1px solid #b9c9d8;
+    border-radius: 6px;
+    background: #ffffff;
+}
+
+.followup-task-check i {
+    font-size: 11px;
+}
+
+.followup-task.is-done {
+    color: #166b64;
+    background: var(--mc-teal-soft);
+    border-color: #bde6e0;
+}
+
+.followup-task.is-done .followup-task-check {
+    color: #ffffff;
+    background: var(--mc-teal);
+    border-color: var(--mc-teal);
+}
+
+.followup-question {
+    display: grid;
+    gap: 7px;
+}
+
+.followup-question > span {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    color: #334155;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.followup-question > span b {
+    display: grid;
+    flex: 0 0 22px;
+    width: 22px;
+    height: 22px;
+    place-items: center;
+    color: var(--mc-blue);
+    background: var(--mc-blue-soft);
+    border-radius: 6px;
+    font-size: 11px;
+}
+
+.followup-question textarea {
+    width: 100%;
+    min-height: 53px;
+    padding: 10px 11px;
+    resize: vertical;
+    color: var(--mc-ink);
+    background: #ffffff;
+    border: 1px solid var(--mc-line);
+    border-radius: 8px;
+    font: inherit;
+    font-size: 11px;
+}
+
+.followup-web-footer {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--mc-line);
+}
+
+.followup-web-footer small {
+    color: var(--mc-muted);
+    font-size: 10px;
+}
+
+.followup-save-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 34px;
+    padding: 8px 11px;
+    color: #ffffff;
+    background: var(--mc-blue);
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    font: inherit;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.followup-save-button:hover {
+    background: #174fa7;
+}
+
+.followup-save-button:disabled {
+    opacity: .65;
+    cursor: wait;
+}
+
+@media (max-width: 1180px) {
+    .mindcare-dashboard .charts {
+        grid-template-columns: 1fr !important;
+        grid-template-areas:
+            "trend"
+            "categories"
+            "severity"
+            "radar";
+    }
+
+    .mindcare-dashboard .charts > .chart-card-wide {
+        grid-row: auto;
+    }
+
+    .mindcare-dashboard .ai-questions {
+        grid-template-columns: 1fr !important;
+    }
+
+    .mindcare-dashboard .ai-questions > div:first-child {
+        position: static;
+    }
+}
+
+@media (max-width: 900px) {
+    .mindcare-dashboard .patient-command > .ia-audit {
+        grid-template-columns: 1fr !important;
+    }
+
+    .mindcare-dashboard .patient-command .ia-audit .audit-card.wide {
+        grid-column: auto !important;
+    }
+}
+
+@media (max-width: 560px) {
+    .followup-web-head,
+    .followup-web-footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .followup-save-button {
+        width: 100%;
+        justify-content: center;
+    }
+}

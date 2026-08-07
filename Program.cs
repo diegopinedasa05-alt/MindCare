@@ -1,8 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using AppTesisAPI.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Threading.RateLimiting;
+using AppTesisAPI.Services;
 
 AppContext.SetSwitch(
     "Npgsql.EnableLegacyTimestampBehavior",
@@ -10,13 +15,37 @@ AppContext.SetSwitch(
 
 var builder = WebApplication.CreateBuilder(args);
 
+var hostPort = Environment.GetEnvironmentVariable("PORT");
+if (int.TryParse(hostPort, out var port) && port is > 0 and <= 65535)
+{
+    builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+}
+
 /* DB */
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
+var connectionString =
+    ResolvePostgresConnectionString(
+        builder.Configuration,
+        builder.Environment);
+
+builder.Services.AddDbContextPool<AppDbContext>(options =>
+    options.UseNpgsql(connectionString, npgsql =>
+        npgsql.EnableRetryOnFailure(
+            maxRetryCount: 3,
+            maxRetryDelay: TimeSpan.FromSeconds(5),
+            errorCodesToAdd: null)));
 
 /* JWT */
-var key = "CLAVE_SUPER_SECRETA_APP_TESIS_2026";
+var key = Environment.GetEnvironmentVariable("JWT_KEY")
+    ?? builder.Configuration["Jwt:Key"];
+
+if (string.IsNullOrWhiteSpace(key) || key.Length < 32)
+{
+    throw new InvalidOperationException(
+        "Configura JWT_KEY con al menos 32 caracteres antes de iniciar MindCare.");
+}
+
+var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "MindCare.Api";
+var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "MindCare.Client";
 
 builder.Services
 .AddAuthentication(options =>
@@ -29,14 +58,16 @@ builder.Services
 })
 .AddJwtBearer(options =>
 {
-    options.RequireHttpsMetadata = false;
-    options.SaveToken = true;
+    options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
+    options.SaveToken = false;
 
     options.TokenValidationParameters =
         new TokenValidationParameters
         {
-            ValidateIssuer = false,
-            ValidateAudience = false,
+            ValidateIssuer = true,
+            ValidIssuer = jwtIssuer,
+            ValidateAudience = true,
+            ValidAudience = jwtAudience,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
 
@@ -49,28 +80,144 @@ builder.Services
 /* CORS */
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", p =>
+    options.AddPolicy("MindCareCors", p =>
     {
-        p.AllowAnyOrigin()
-         .AllowAnyHeader()
+        p.AllowAnyHeader()
          .AllowAnyMethod();
+
+        if (builder.Environment.IsDevelopment())
+        {
+            p.AllowAnyOrigin();
+            return;
+        }
+
+        var allowedOrigins =
+            (Environment.GetEnvironmentVariable("ALLOWED_ORIGINS") ?? "")
+            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+        if (allowedOrigins.Length > 0)
+            p.WithOrigins(allowedOrigins);
+    });
+});
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddFixedWindowLimiter("auth-login", limiter =>
+    {
+        limiter.PermitLimit = 5;
+        limiter.Window = TimeSpan.FromMinutes(1);
+        limiter.QueueLimit = 0;
+    });
+    options.AddFixedWindowLimiter("auth-recovery", limiter =>
+    {
+        limiter.PermitLimit = 3;
+        limiter.Window = TimeSpan.FromMinutes(5);
+        limiter.QueueLimit = 0;
+    });
+    options.AddFixedWindowLimiter("auth-register", limiter =>
+    {
+        limiter.PermitLimit = 5;
+        limiter.Window = TimeSpan.FromMinutes(10);
+        limiter.QueueLimit = 0;
+    });
+    options.AddFixedWindowLimiter("professional-upload", limiter =>
+    {
+        limiter.PermitLimit = 10;
+        limiter.Window = TimeSpan.FromMinutes(10);
+        limiter.QueueLimit = 0;
     });
 });
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<IAService>();
+builder.Services.AddScoped<IPatientAccessService, PatientAccessService>();
+builder.Services.AddScoped<
+    IPsychologistVerificationService,
+    PsychologistVerificationService>();
+builder.Services.AddScoped<
+    IProfessionalDocumentStorageService,
+    ProfessionalDocumentStorageService>();
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
+if (string.Equals(
+        Environment.GetEnvironmentVariable("MINDCARE_MIGRATE_ON_STARTUP"),
+        "true",
+        StringComparison.OrdinalIgnoreCase))
+{
+    using var scope = app.Services.CreateScope();
+    var database = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await database.Database.MigrateAsync();
+}
+
 /* PIPELINE */
 
-app.UseSwagger();
-app.UseSwaggerUI();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseForwardedHeaders(new ForwardedHeadersOptions
+    {
+        ForwardedHeaders =
+            ForwardedHeaders.XForwardedFor |
+            ForwardedHeaders.XForwardedProto,
+        ForwardLimit = 1
+    });
+
+    app.UseHsts();
+}
+
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        var logger = context.RequestServices
+            .GetRequiredService<ILoggerFactory>()
+            .CreateLogger("GlobalException");
+
+        logger.LogError(
+            "Error no controlado. TraceId: {TraceId}",
+            context.TraceIdentifier);
+
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        context.Response.ContentType = "application/problem+json";
+        await context.Response.WriteAsJsonAsync(new
+        {
+            title = "No se pudo completar la solicitud.",
+            status = StatusCodes.Status500InternalServerError,
+            traceId = context.TraceIdentifier
+        });
+    });
+});
 
 app.UseHttpsRedirection();
 
-app.UseCors("AllowAll");
+app.UseRouting();
+app.UseCors("MindCareCors");
+app.UseRateLimiter();
+
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.TryAdd("X-Content-Type-Options", "nosniff");
+    context.Response.Headers.TryAdd("X-Frame-Options", "DENY");
+    context.Response.Headers.TryAdd(
+        "Referrer-Policy",
+        "strict-origin-when-cross-origin");
+    context.Response.Headers.TryAdd(
+        "Permissions-Policy",
+        "camera=(), microphone=(), geolocation=()");
+
+    await next();
+});
 
 /* 👇 IMPORTANTE */
 app.UseDefaultFiles();
@@ -80,5 +227,115 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHealthChecks("/health");
 
 app.Run();
+
+static string ResolvePostgresConnectionString(
+    IConfiguration configuration,
+    IWebHostEnvironment environment)
+{
+    var direct =
+        configuration.GetConnectionString("DefaultConnection");
+
+    if (!string.IsNullOrWhiteSpace(direct))
+        return direct;
+
+    if (environment.IsDevelopment())
+    {
+        var localDirect =
+            ReadLocalPowerShellEnv(
+                environment.ContentRootPath,
+                "ConnectionStrings__DefaultConnection");
+
+        if (!string.IsNullOrWhiteSpace(localDirect))
+            return localDirect;
+    }
+
+    var databaseUrl =
+        Environment.GetEnvironmentVariable("DATABASE_URL");
+
+    if (string.IsNullOrWhiteSpace(databaseUrl) &&
+        environment.IsDevelopment())
+    {
+        databaseUrl =
+            ReadLocalPowerShellEnv(
+                environment.ContentRootPath,
+                "DATABASE_URL");
+    }
+
+    if (string.IsNullOrWhiteSpace(databaseUrl))
+        return "";
+
+    var uri = new Uri(databaseUrl);
+    var userInfo = uri.UserInfo.Split(':', 2);
+    var username = Uri.UnescapeDataString(userInfo[0]);
+    var password =
+        userInfo.Length > 1
+            ? Uri.UnescapeDataString(userInfo[1])
+            : "";
+
+    var database =
+        uri.AbsolutePath.TrimStart('/');
+
+    var port =
+        uri.Port > 0
+            ? uri.Port
+            : 5432;
+
+    return
+        $"Host={uri.Host};" +
+        $"Port={port};" +
+        $"Database={database};" +
+        $"Username={username};" +
+        $"Password={password};" +
+        "SSL Mode=Require;" +
+        "Pooling=true;" +
+        "Maximum Pool Size=20;" +
+        "Timeout=15;" +
+        "Command Timeout=30";
+}
+
+static string ReadLocalPowerShellEnv(
+    string contentRootPath,
+    string variableName)
+{
+    var path =
+        Path.Combine(
+            contentRootPath,
+            "scripts",
+            "mindcare-env.local.ps1");
+
+    if (!File.Exists(path))
+        return "";
+
+    foreach (var rawLine in File.ReadLines(path))
+    {
+        var line = rawLine.Trim();
+
+        if (line.StartsWith("#") ||
+            !line.StartsWith($"$env:{variableName}"))
+        {
+            continue;
+        }
+
+        var separator = line.IndexOf('=');
+
+        if (separator < 0)
+            continue;
+
+        var value =
+            line[(separator + 1)..].Trim();
+
+        if (value.Length >= 2 &&
+            ((value.StartsWith("\"") && value.EndsWith("\"")) ||
+             (value.StartsWith("'") && value.EndsWith("'"))))
+        {
+            value = value[1..^1];
+        }
+
+        return value.Trim();
+    }
+
+    return "";
+}

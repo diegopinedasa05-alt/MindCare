@@ -1,10 +1,15 @@
 bin/
+bin_*/
 obj/
+artifacts/
 .vs/
 *.user
 *.suo
 *.cache
 *.log
+*.backup-*
+__pycache__/
+*.py[cod]
 
 node_modules/
 
@@ -13,3 +18,11 @@ Properties/PublishProfiles/
 
 *.dbmdl
 *.jfm
+scripts/mindcare-env.local.ps1
+
+# Archivos privados MindCare
+scripts/mindcare-env.local.ps1
+scripts/mindcare-env.neon.local.ps1
+.env
+*.env
+appsettings.Production.json

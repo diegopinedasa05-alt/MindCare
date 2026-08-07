@@ -14,5 +14,7 @@
 
         // SOLO lo usa AdminController
         public string Especialidad { get; set; } = "";
+
+        public bool AceptaTerminos { get; set; }
     }
 }

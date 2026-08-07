@@ -12,6 +12,9 @@
 
     <link rel="stylesheet"
           href="css/registro.css?v=1">
+    <link rel="stylesheet"
+          href="css/mindcare-pages-pro.css?v=1">
+    <link rel="stylesheet" href="css/mindcare-refresh.css?v=1">
 
 </head>
 
@@ -98,6 +101,20 @@
 
             </div>
 
+            <label class="consent-box">
+                <input type="checkbox"
+                       id="consentimiento">
+
+                <span>
+                    Acepto los
+                    <a href="terminos.html"
+                       target="_blank">
+                        términos, aviso de privacidad y consentimiento informado
+                    </a>
+                    de MindCare.
+                </span>
+            </label>
+
             <!-- MENSAJE -->
             <p id="msg"></p>
 
@@ -119,11 +136,17 @@
 
             </a>
 
+            <a href="terminos.html"
+               class="legal-link">
+                Términos y privacidad
+            </a>
+
         </div>
 
     </div>
 
-    <script src="js/registro.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/registro.js?v=2"></script>
     <div id="toast"></div>
 
 </body>

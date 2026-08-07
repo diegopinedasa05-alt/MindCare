@@ -14,10 +14,14 @@
 
     <!-- CSS -->
     <link rel="stylesheet"
-          href="css/dashboard.css">
+          href="css/dashboard.css?v=10">
+    <link rel="stylesheet"
+          href="css/mindcare-dashboard-pro.css?v=10">
+    <link rel="stylesheet" href="css/mindcare-refresh.css?v=4">
 </head>
 
-<body>
+<body class="mindcare-dashboard user-dashboard"
+      data-dashboard-view="resumen">
 
     <div class="layout">
 
@@ -57,6 +61,11 @@
                     Psicólogos
                 </button>
 
+                <button onclick="irCitas()">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    Mis citas
+                </button>
+
             </nav>
 
             <button onclick="logout()"
@@ -91,7 +100,298 @@
 
             </header>
 
+            <nav class="dashboard-tabs"
+                 aria-label="Secciones del dashboard">
+                <button type="button"
+                        data-dashboard-view-button="resumen">
+                    <i class="fa-solid fa-table-columns"></i>
+                    Resumen
+                </button>
+
+                <button type="button"
+                        data-dashboard-view-button="ia">
+                    <i class="fa-solid fa-brain"></i>
+                    IA clínica
+                </button>
+
+                <button type="button"
+                        data-dashboard-view-button="graficas">
+                    <i class="fa-solid fa-chart-simple"></i>
+                    Gráficas
+                </button>
+
+                <button type="button"
+                        data-dashboard-view-button="evaluaciones">
+                    <i class="fa-solid fa-clipboard-check"></i>
+                    Evaluaciones
+                </button>
+            </nav>
+
+            <section class="view-intro">
+                <div data-view-panel="resumen">
+                    <span>Vista principal</span>
+                    <h2>Tu estado actual en una lectura clara</h2>
+                    <p>Revisa el plan personal, la ruta de cuidado y los indicadores más importantes sin saturar la pantalla.</p>
+                </div>
+
+                <div data-view-panel="ia">
+                    <span>IA explicable</span>
+                    <h2>Análisis clínico orientativo y transparente</h2>
+                    <p>Consulta el score, factores detectados, banderas clínicas y recomendaciones generadas por el motor de reglas.</p>
+                </div>
+
+                <div data-view-panel="graficas">
+                    <span>Analítica emocional</span>
+                    <h2>Tendencias, categorías y evolución</h2>
+                    <p>Explora tus registros emocionales y evaluaciones en gráficas más limpias para interpretar cambios con facilidad.</p>
+                </div>
+
+                <div data-view-panel="evaluaciones">
+                    <span>Interpretación clínica</span>
+                    <h2>Lectura de PHQ-9 y test de estrés</h2>
+                    <p>Consulta rangos, criterios e interpretación de resultados para entender mejor tus evaluaciones.</p>
+                </div>
+            </section>
+
+            <section class="quick-actions"
+                     aria-label="Acciones rápidas del usuario">
+                <button type="button"
+                        onclick="irRegistro()">
+                    <i class="fa-solid fa-face-smile"></i>
+                    <span>
+                        <strong>Registrar emoción</strong>
+                        <small>Actualiza tu seguimiento diario</small>
+                    </span>
+                </button>
+
+                <button type="button"
+                        onclick="irTest()">
+                    <i class="fa-solid fa-clipboard-check"></i>
+                    <span>
+                        <strong>Completar evaluación</strong>
+                        <small>PHQ-9 y seguimiento emocional</small>
+                    </span>
+                </button>
+
+                <button type="button"
+                        onclick="irPsicologos()">
+                    <i class="fa-solid fa-user-doctor"></i>
+                    <span>
+                        <strong>Ver psicólogos</strong>
+                        <small>Consulta apoyo profesional</small>
+                    </span>
+                </button>
+
+                <button type="button"
+                        onclick="irExpediente()">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <span>
+                        <strong>Expediente</strong>
+                        <small>Historial clínico emocional</small>
+                    </span>
+                </button>
+            </section>
+
+            <section class="trust-strip"
+                     aria-label="Confianza y seguridad MindCare">
+                <article>
+                    <i class="fa-solid fa-shield-heart"></i>
+                    <div>
+                        <strong>Datos emocionales protegidos</strong>
+                        <span>Uso responsable y seguimiento protegido.</span>
+                    </div>
+                </article>
+
+                <article>
+                    <i class="fa-solid fa-brain"></i>
+                    <div>
+                        <strong>IA explicable local</strong>
+                        <span>Reglas ponderadas sin servicios de pago.</span>
+                    </div>
+                </article>
+
+                <article>
+                    <i class="fa-solid fa-user-doctor"></i>
+                    <div>
+                        <strong>No sustituye terapia</strong>
+                        <span>Apoya el monitoreo, no emite diagnósticos.</span>
+                    </div>
+                </article>
+            </section>
+
+            <section class="patient-command">
+
+                <div>
+                    <span class="command-label">Plan personal MindCare</span>
+                    <h2 id="planTitulo">Preparando seguimiento</h2>
+                    <p id="planDetalle">
+                        Registra tu estado emocional y completa evaluaciones para mejorar el análisis.
+                    </p>
+                </div>
+
+                <div class="command-score">
+                    <strong id="planScore">0</strong>
+                    <span>score IA</span>
+                </div>
+
+                <div class="plan-metrics">
+                    <div>
+                        <span>Confianza IA</span>
+                        <strong id="planConfianza">0%</strong>
+                    </div>
+                    <div>
+                        <span>Tendencia</span>
+                        <strong id="planTendencia">Sin datos</strong>
+                    </div>
+                    <div>
+                        <span>Próximo paso</span>
+                        <strong id="planProximoPaso">Registrar seguimiento</strong>
+                    </div>
+                </div>
+
+                <div class="ia-audit">
+
+                    <div class="audit-card">
+                        <span>Calidad de señal</span>
+                        <strong id="iaCalidadDatos">Inicial</strong>
+                        <p id="iaCalidadDetalle">
+                            Completa registros para aumentar la confiabilidad.
+                        </p>
+                    </div>
+
+                    <div class="audit-card">
+                        <span>Volatilidad emocional</span>
+                        <strong id="iaVolatilidad">Sin datos</strong>
+                        <p id="iaVolatilidadDetalle">
+                            Se requieren más registros para calcular variación.
+                        </p>
+                    </div>
+
+                    <div class="audit-card wide">
+                        <span>Plan de seguimiento IA</span>
+                        <div id="iaPlanSeguimiento"
+                             class="audit-list">
+                            Completa tus evaluaciones para generar un plan.
+                        </div>
+                    </div>
+
+                    <div class="audit-card">
+                        <span>Banderas clínicas</span>
+                        <div id="iaBanderas"
+                             class="audit-list">
+                            Sin banderas activas.
+                        </div>
+                    </div>
+
+                    <div class="audit-card">
+                        <span>Factores protectores</span>
+                        <div id="iaProtectores"
+                             class="audit-list">
+                            Sin factores protectores detectados aún.
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <div class="section-ribbon">
+                <span>Ruta recomendada</span>
+                <h2>Seguimiento personal de la semana</h2>
+            </div>
+
+            <section class="care-roadmap">
+
+                <div class="roadmap-main">
+
+                    <div class="roadmap-head">
+                        <div>
+                            <span>Ruta de cuidado semanal</span>
+                            <h2 id="rutaTitulo">Preparando plan personalizado</h2>
+                            <p id="rutaDetalle">
+                                MindCare organizará tus próximos pasos con base en tus registros, evaluaciones e IA.
+                            </p>
+                        </div>
+
+                        <div class="roadmap-pulse">
+                            <strong id="rutaPrioridad">-</strong>
+                            <small>prioridad actual</small>
+                        </div>
+                    </div>
+
+                    <div class="care-steps">
+
+                        <article id="pasoRegistro"
+                                 class="care-step">
+                            <i class="fa-solid fa-face-smile"></i>
+                            <div>
+                                <span>Hoy</span>
+                                <h3>Registro emocional</h3>
+                                <p id="pasoRegistroTexto">Pendiente de análisis.</p>
+                            </div>
+                        </article>
+
+                        <article id="pasoEvaluacion"
+                                 class="care-step">
+                            <i class="fa-solid fa-clipboard-check"></i>
+                            <div>
+                                <span>Evaluación</span>
+                                <h3>PHQ-9 y estrés</h3>
+                                <p id="pasoEvaluacionTexto">Pendiente de análisis.</p>
+                            </div>
+                        </article>
+
+                        <article id="pasoCita"
+                                 class="care-step">
+                            <i class="fa-solid fa-user-doctor"></i>
+                            <div>
+                                <span>Apoyo profesional</span>
+                                <h3>Cita psicológica</h3>
+                                <p id="pasoCitaTexto">Pendiente de análisis.</p>
+                            </div>
+                        </article>
+
+                        <article id="pasoAutocuidado"
+                                 class="care-step">
+                            <i class="fa-solid fa-seedling"></i>
+                            <div>
+                                <span>Autocuidado</span>
+                                <h3>Acción protectora</h3>
+                                <p id="pasoAutocuidadoTexto">Pendiente de análisis.</p>
+                            </div>
+                        </article>
+
+                    </div>
+
+                </div>
+
+                <aside class="roadmap-side">
+
+                    <div>
+                        <span>Señal dominante</span>
+                        <strong id="senalDominante">Sin datos</strong>
+                    </div>
+
+                    <div>
+                        <span>Frecuencia sugerida</span>
+                        <strong id="frecuenciaSugerida">Registrar 3 veces por semana</strong>
+                    </div>
+
+                    <div>
+                        <span>Factor protector</span>
+                        <strong id="factorProtector">Construir constancia</strong>
+                    </div>
+
+                </aside>
+
+            </section>
+
             <!-- CARDS -->
+            <div class="section-ribbon">
+                <span>Indicadores activos</span>
+                <h2>Lectura rápida del estado actual</h2>
+            </div>
+
             <section class="cards">
 
                 <!-- IA -->
@@ -204,34 +504,211 @@
 
             </section>
 
-            <!-- GRÁFICAS -->
-            <section class="charts">
+            <div class="section-ribbon">
+                <span>Modelo explicable</span>
+                <h2>Motor IA de apoyo clínico</h2>
+            </div>
 
-                <div class="chart-card">
-                    <h3>Registro emocional inteligente</h3>
-                    <canvas id="graficaLineas"></canvas>
+            <section class="ai-cockpit">
+                <article class="ai-cockpit-main">
+                    <div>
+                        <span>Decisión orientativa</span>
+                        <h2 id="iaDecisionTitulo">Esperando análisis</h2>
+                        <p id="iaDecisionResumen">
+                            Completa registros y evaluaciones para construir una lectura clínica explicable.
+                        </p>
+                    </div>
+
+                    <div class="wellbeing-ring">
+                        <strong id="iaBienestarScore">0</strong>
+                        <span id="iaBienestarNivel">Sin datos</span>
+                    </div>
+                </article>
+
+                <div class="ai-cockpit-grid">
+                    <article>
+                        <span>Perfil orientativo</span>
+                        <strong id="iaPerfilTipo">Sin perfil</strong>
+                        <p id="iaPerfilDetalle">Aún no hay datos suficientes.</p>
+                    </article>
+
+                    <article>
+                        <span>Trayectoria</span>
+                        <strong id="iaTrayectoriaEstado">Sin datos</strong>
+                        <p id="iaTrayectoriaDetalle">Se requiere historial emocional.</p>
+                    </article>
+
+                    <article>
+                        <span>Siguiente paso</span>
+                        <strong id="iaSiguientePaso">Captura inicial</strong>
+                        <p id="iaSiguienteDetalle">Registra tu estado emocional.</p>
+                    </article>
+
+                    <article>
+                        <span>Matriz de intervención</span>
+                        <strong id="iaMatrizNivel">Inicial</strong>
+                        <p id="iaMatrizDetalle">Construir línea base de seguimiento.</p>
+                    </article>
+
                 </div>
 
-                <div class="chart-card">
-                    <h3>Categorías emocionales</h3>
-                    <canvas id="graficaCategorias"></canvas>
+                <article class="ai-questions">
+                    <div>
+                        <span>Preguntas inteligentes</span>
+                        <h3>Seguimiento sugerido por IA</h3>
+                    </div>
+                    <div id="iaPreguntasSeguimiento">
+                        <p>Completa datos para generar preguntas de seguimiento.</p>
+                    </div>
+                </article>
+            </section>
+
+            <section class="ia-lab">
+
+                <div class="ia-hero">
+
+                    <div>
+                        <span id="iaNivelChip" class="ia-chip">Analizando</span>
+                        <h2>Motor de IA explicable</h2>
+                        <p id="iaMetodo">
+                            Evaluación local basada en reglas clínicas ponderadas.
+                        </p>
+                    </div>
+
+                    <div class="ia-score">
+                        <span id="iaScore">0</span>
+                        <small>score de riesgo</small>
+                    </div>
+
                 </div>
 
-                <div class="chart-card">
-                    <h3>Comparativa de evaluaciones</h3>
-                    <canvas id="graficaTests"></canvas>
-                </div>
+                <div class="ia-grid">
 
-                <div class="chart-card">
-                    <h3>Perfil emocional clínico</h3>
-                    <canvas id="graficaRadar"></canvas>
+                    <div class="ia-panel">
+                        <h3>Semáforo clínico</h3>
+                        <p id="iaSemaforo">Sin datos suficientes.</p>
+                        <div class="meter">
+                            <div id="iaMeterBar"></div>
+                        </div>
+                        <div class="ia-metrics">
+                            <span>Confianza <b id="iaConfianza">0%</b></span>
+                            <span>Prioridad <b id="iaPrioridad">-</b></span>
+                            <span>Modelo <b id="iaModelo">-</b></span>
+                        </div>
+                    </div>
+
+                    <div class="ia-panel">
+                        <h3>Factores detectados</h3>
+                        <div id="iaFactores" class="ia-list">
+                            Sin factores registrados.
+                        </div>
+                    </div>
+
+                    <div class="ia-panel">
+                        <h3>Recomendaciones personalizadas</h3>
+                        <div id="iaRecomendaciones" class="ia-list">
+                            Completa registros y evaluaciones.
+                        </div>
+                    </div>
+
                 </div>
 
             </section>
-   <!-- =====================================================
-    PEGA ESTE BLOQUE DEBAJO DE TUS GRÁFICAS EN dashboard.html
-    (Justo después de </section> de charts)
-    ===================================================== -->
+
+            <!-- GRÁFICAS -->
+            <div class="section-ribbon">
+                <span>Visualización clínica</span>
+                <h2>Panel de tendencias emocionales</h2>
+            </div>
+
+            <section class="charts">
+
+                <div class="chart-card chart-card-wide">
+                    <div class="chart-heading">
+                        <div>
+                            <span>Seguimiento longitudinal</span>
+                            <h3>Ánimo y estrés recientes</h3>
+                        </div>
+                        <small>Escala 0-10</small>
+                    </div>
+                    <div class="trend-strip">
+                        <div>
+                            <span>Promedio ánimo</span>
+                            <strong id="chartPromAnimo">-</strong>
+                        </div>
+                        <div>
+                            <span>Promedio estrés</span>
+                            <strong id="chartPromEstres">-</strong>
+                        </div>
+                        <div>
+                            <span>Cambio reciente</span>
+                            <strong id="chartCambio">-</strong>
+                        </div>
+                        <div>
+                            <span>Registros</span>
+                            <strong id="chartRegistros">0</strong>
+                        </div>
+                    </div>
+                    <canvas id="graficaLineas"></canvas>
+                    <p id="chartInsight" class="chart-note">
+                        Registra emociones para generar lectura de tendencia.
+                    </p>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-heading">
+                        <div>
+                            <span>Distribución</span>
+                            <h3>Categorías emocionales</h3>
+                        </div>
+                    </div>
+                    <canvas id="graficaCategorias"></canvas>
+                    <p id="categoriaInsight" class="chart-note">
+                        Sin categoría predominante.
+                    </p>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-heading">
+                        <div>
+                            <span>Pruebas clínicas</span>
+                            <h3>Severidad normalizada</h3>
+                        </div>
+                        <small>% del máximo</small>
+                    </div>
+                    <canvas id="graficaTests"></canvas>
+                    <div class="clinical-levels">
+                        <div>
+                            <span>PHQ-9</span>
+                            <strong id="chartPhqNivel">Sin datos</strong>
+                        </div>
+                        <div>
+                            <span>Estrés</span>
+                            <strong id="chartEstresNivel">Sin datos</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-heading">
+                        <div>
+                            <span>Perfil integrado</span>
+                            <h3>Dimensiones IA</h3>
+                        </div>
+                        <small>0-100</small>
+                    </div>
+                    <canvas id="graficaRadar"></canvas>
+                    <p id="perfilInsight" class="chart-note">
+                        Esperando análisis integrado de IA.
+                    </p>
+                </div>
+
+            </section>
+
+            <div class="section-ribbon">
+                <span>Interpretación</span>
+                <h2>Guía para comprender evaluaciones</h2>
+            </div>
 
             <section class="info-tests">
 
@@ -262,13 +739,19 @@
                 </div>
 
             </section>
+
+        </main>
+
+    </div>
             <!-- LIBRERÍAS -->
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
             <!-- JS -->
-            <script src="js/dashboard.js?v=5"></script>
+            <script src="js/config.js"></script>
+            <script src="js/mindcare-dashboard-shell.js?v=3"></script>
+            <script src="js/dashboard.js?v=17"></script>
 
             <div id="toast"></div>
 

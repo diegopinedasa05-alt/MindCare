@@ -228,6 +228,22 @@ button {
             color: #1d4ed8;
         }
 
+.legal-link {
+    display: block;
+    margin-top: 18px;
+    color: #475569;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    line-height: 1.5;
+}
+
+.legal-link:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
 /* Notificaciones flotantes */
 #toast {
     position: fixed;

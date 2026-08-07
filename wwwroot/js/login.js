@@ -1,6 +1,17 @@
 ﻿
-const API =
-    "https://mindcare-production-d670.up.railway.app/api";
+const API = window.MINDCARE_API_BASE;
+
+window.addEventListener("load", () => {
+
+    const mensajeSesion =
+        sessionStorage.getItem("mindcareSessionMessage");
+
+    if (!mensajeSesion)
+        return;
+
+    sessionStorage.removeItem("mindcareSessionMessage");
+    mostrarToast(mensajeSesion, "info");
+});
 
 /* ===================================================== */
 async function login() {
@@ -50,7 +61,7 @@ async function login() {
             await response.text();
 
         if (!response.ok)
-            throw new Error(texto);
+            throw new Error(extraerMensaje(texto));
 
         const data =
             JSON.parse(texto);
@@ -69,6 +80,11 @@ async function login() {
         localStorage.setItem(
             "rol",
             data.rol || "Usuario"
+        );
+
+        localStorage.setItem(
+            "token",
+            data.token || ""
         );
 
         mostrarToast("Bienvenido");
@@ -144,4 +160,13 @@ function mostrarToast(
         toast.className = "";
 
     }, 3000);
+}
+function extraerMensaje(texto) {
+
+    try {
+        const data = JSON.parse(texto);
+        return data.mensaje || data.title || texto;
+    } catch {
+        return texto.replaceAll('"', '');
+    }
 }

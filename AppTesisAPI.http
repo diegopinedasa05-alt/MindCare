@@ -1,6 +1,18 @@
-@AppTesisAPI_HostAddress = https://mindcare-production-d670.up.railway.app/api
+@AppTesisAPI_HostAddress = http://localhost:5088
 
-GET {{AppTesisAPI_HostAddress}}/weatherforecast/
+GET {{AppTesisAPI_HostAddress}}/api/Psicologos
 Accept: application/json
+
+###
+
+POST {{AppTesisAPI_HostAddress}}/api/Setup/admin
+Content-Type: application/json
+
+{
+  "setupKey": "CLAVE_TEMPORAL_SOLO_PARA_CREAR_ADMIN",
+  "nombre": "Administrador MindCare",
+  "email": "admin@mindcare.local",
+  "password": "AdminSeguro123"
+}
 
 ###

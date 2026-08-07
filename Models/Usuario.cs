@@ -15,22 +15,22 @@ namespace AppTesisAPI.Models
         /// <summary>
         /// Nombre completo.
         /// </summary>
-        public string Nombre { get; set; }
+        public string Nombre { get; set; } = "";
 
         /// <summary>
         /// Número telefónico.
         /// </summary>
-        public string Telefono { get; set; }
+        public string Telefono { get; set; } = "";
 
         /// <summary>
         /// Especialidad (solo psicólogos).
         /// </summary>
-        public string Especialidad { get; set; }
+        public string Especialidad { get; set; } = "";
 
         /// <summary>
         /// Zona geográfica.
         /// </summary>
-        public string Zona { get; set; }
+        public string Zona { get; set; } = "";
 
         /// <summary>
         /// Fecha de registro.

@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: mindcare-api
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: MINDCARE_MIGRATE_ON_STARTUP
+        value: "true"
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_KEY
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SUPABASE_STORAGE_BUCKET
+        value: documentos-profesionales

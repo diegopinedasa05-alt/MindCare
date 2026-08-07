@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCare | Verificación profesional</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/mindcare-pages-pro.css?v=2">
+    <link rel="stylesheet" href="../css/perfilProfesional.css?v=1">
+</head>
+<body>
+    <main class="verification-page">
+        <header class="verification-header">
+            <div>
+                <a class="back-link" href="dashboardPsicologo.html">
+                    <i class="fa-solid fa-arrow-left"></i> Panel clínico
+                </a>
+                <span class="eyebrow">Cuenta profesional</span>
+                <h1>Verificación de credenciales</h1>
+                <p>Consulta el estado de tu registro y entrega la documentación requerida.</p>
+            </div>
+            <i class="fa-solid fa-user-shield verification-icon" aria-hidden="true"></i>
+        </header>
+
+        <section id="estadoCuenta" class="status-panel" aria-live="polite">
+            <span class="status-label">Estado de verificación</span>
+            <strong>Cargando...</strong>
+            <p>Validando información profesional.</p>
+        </section>
+
+        <section class="content-grid">
+            <article class="surface">
+                <div class="section-heading">
+                    <div>
+                        <span class="eyebrow">Datos registrados</span>
+                        <h2>Perfil profesional</h2>
+                    </div>
+                </div>
+                <dl id="datosPerfil" class="data-list">
+                    <div><dt>Estado</dt><dd>Cargando...</dd></div>
+                </dl>
+            </article>
+
+            <article class="surface">
+                <div class="section-heading">
+                    <div>
+                        <span class="eyebrow">Documento privado</span>
+                        <h2>Cédula profesional</h2>
+                    </div>
+                </div>
+                <form id="documentForm" class="upload-form">
+                    <label for="documentoCedula">PDF, JPG o PNG (máximo 3 MB)</label>
+                    <input id="documentoCedula" name="archivo" type="file" accept="application/pdf,image/jpeg,image/png" required>
+                    <button type="submit"><i class="fa-solid fa-cloud-arrow-up"></i> Enviar documento</button>
+                </form>
+                <p id="uploadMessage" class="form-message" role="status"></p>
+                <div id="documentos" class="document-list"></div>
+            </article>
+        </section>
+    </main>
+    <script src="../js/config.js"></script>
+    <script src="../js/perfilProfesional.js?v=1"></script>
+</body>
+</html>

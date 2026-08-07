@@ -13,6 +13,6 @@ namespace AppTesisAPI.Models
 
         public DateTime Fecha { get; set; }
 
-        public string Ip { get; set; }
+        public string Ip { get; set; } = "";
     }
 }

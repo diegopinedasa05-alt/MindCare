@@ -2,8 +2,7 @@
 recuperar.js LIMPIO FINAL
 ===================================== */
 
-var API =
-    "https://mindcare-production-d670.up.railway.app/api";
+var API = window.MINDCARE_API_BASE;
 
 /* =====================================
 ENVIAR CODIGO
@@ -43,11 +42,23 @@ async function enviarCodigo() {
         if (!res.ok)
             throw new Error(txt);
 
+        let data = null;
+
+        try {
+            data = JSON.parse(txt);
+        } catch {
+            data = null;
+        }
+
         mensaje.style.color =
             "#16a34a";
 
         mensaje.innerText =
-            txt;
+            data
+                ? data.codigoDemo
+                    ? `${data.mensaje} Código demo: ${data.codigoDemo}`
+                    : data.mensaje
+                : txt;
 
         document.getElementById("paso1").style.display =
             "none";
@@ -64,7 +75,6 @@ async function enviarCodigo() {
             error.message;
     }
 }
-
 /* =====================================
 CAMBIAR PASSWORD
 ===================================== */

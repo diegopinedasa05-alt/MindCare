@@ -1,28 +1,28 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AppTesisAPI.Data;
 using AppTesisAPI.Models;
+using AppTesisAPI.Services;
 
 namespace AppTesisAPI.Controllers
 {
-    /// <summary>
-    /// Controlador encargado de la gestión de registros emocionales del usuario.
-    /// Permite almacenar y consultar estados emocionales.
-    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class RegistrosEmocionalesController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IPatientAccessService _patientAccess;
 
-        public RegistrosEmocionalesController(AppDbContext context)
+        public RegistrosEmocionalesController(
+            AppDbContext context,
+            IPatientAccessService patientAccess)
         {
             _context = context;
+            _patientAccess = patientAccess;
         }
 
-        // ==========================================
-        // CREAR REGISTRO
-        // ==========================================
         [HttpPost]
         public async Task<IActionResult> Crear(
             [FromBody] RegistrosEmocionales registro)
@@ -31,99 +31,72 @@ namespace AppTesisAPI.Controllers
             {
                 if (registro == null ||
                     registro.UsuarioId <= 0)
-                {
-                    return BadRequest(
-                        "Datos inválidos"
-                    );
-                }
+                    return BadRequest("Datos inválidos");
+
+                if (!User.IsAdmin() &&
+                    User.GetUserId() != registro.UsuarioId)
+                    return Forbid();
 
                 var existeUsuario =
                     await _context.Usuarios
                     .AnyAsync(x =>
-                        x.Id ==
-                        registro.UsuarioId);
+                        x.Id == registro.UsuarioId);
 
                 if (!existeUsuario)
-                {
-                    return NotFound(
-                        "Usuario no encontrado"
-                    );
-                }
+                    return NotFound("Usuario no encontrado");
 
-                if (
-                    registro.NivelAnimo < 0 ||
+                if (registro.NivelAnimo < 0 ||
                     registro.NivelAnimo > 10 ||
-
                     registro.NivelEstres < 0 ||
-                    registro.NivelEstres > 10
-                )
-                {
+                    registro.NivelEstres > 10)
                     return BadRequest(
-                        "Los niveles deben estar entre 0 y 10"
-                    );
-                }
+                        "Los niveles deben estar entre 0 y 10");
 
-                /* =====================================
-                   FECHA MÉXICO 🇲🇽 CORREGIDA
-                ===================================== */
+                registro.Fecha = DateTime.UtcNow;
+                registro.Nota ??= "";
+                registro.Categoria ??= "";
 
-                registro.Fecha =
-                    ObtenerHoraMexico();
-
-                _context
-                    .RegistrosEmocionales
-                    .Add(registro);
-
-                await _context
-                    .SaveChangesAsync();
+                _context.RegistrosEmocionales.Add(registro);
+                await _context.SaveChangesAsync();
 
                 return Ok(new
                 {
                     mensaje =
-                    "Registro emocional guardado correctamente"
+                        "Registro emocional guardado correctamente"
                 });
             }
-            catch (Exception ex)
+            catch
             {
-                return BadRequest(
-                    ex.Message
-                );
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    "No se pudo guardar el registro emocional.");
             }
         }
 
-        // ==========================================
-        // OBTENER HISTORIAL
-        // ==========================================
         [HttpGet("{usuarioId}")]
-        public async Task<IActionResult> Get(
-            int usuarioId)
+        public async Task<IActionResult> Get(int usuarioId)
         {
+            if (!await _patientAccess.CanReadAsync(User, usuarioId))
+                return Forbid();
+
             var datos =
-                await _context
-                .RegistrosEmocionales
-                .Where(x =>
-                    x.UsuarioId ==
-                    usuarioId)
-                .OrderByDescending(x =>
-                    x.Fecha)
+                await _context.RegistrosEmocionales
+                .Where(x => x.UsuarioId == usuarioId)
+                .OrderByDescending(x => x.Fecha)
                 .ToListAsync();
 
             return Ok(datos);
         }
 
-        // ==========================================
-        // PROMEDIOS
-        // ==========================================
         [HttpGet("promedio/{usuarioId}")]
-        public async Task<IActionResult>
-            GetPromedio(int usuarioId)
+        public async Task<IActionResult> GetPromedio(int usuarioId)
         {
+            if (!await _patientAccess.CanReadAsync(User, usuarioId))
+                return Forbid();
+
             var registros =
-                await _context
-                .RegistrosEmocionales
-                .Where(x =>
-                    x.UsuarioId ==
-                    usuarioId)
+                await _context.RegistrosEmocionales
+                .Where(x => x.UsuarioId == usuarioId)
                 .ToListAsync();
 
             if (!registros.Any())
@@ -134,64 +107,14 @@ namespace AppTesisAPI.Controllers
                 });
             }
 
-            var promedioAnimo =
-                registros.Average(x =>
-                    x.NivelAnimo);
-
-            var promedioEstres =
-                registros.Average(x =>
-                    x.NivelEstres);
-
             return Ok(new
             {
-                promedioAnimo,
-                promedioEstres
+                promedioAnimo =
+                    registros.Average(x => x.NivelAnimo),
+                promedioEstres =
+                    registros.Average(x => x.NivelEstres)
             });
         }
 
-        // ==========================================
-        // MÉTODO HORA MÉXICO (Railway/Linux/Windows)
-        // ==========================================
-        private DateTime ObtenerHoraMexico()
-        {
-            try
-            {
-                // Linux Railway
-                var zona =
-                    TimeZoneInfo
-                    .FindSystemTimeZoneById(
-                        "America/Mexico_City"
-                    );
-
-                return TimeZoneInfo
-                    .ConvertTimeFromUtc(
-                        DateTime.UtcNow,
-                        zona
-                    );
-            }
-            catch
-            {
-                try
-                {
-                    // Windows local
-                    var zona =
-                        TimeZoneInfo
-                        .FindSystemTimeZoneById(
-                            "Central Standard Time (Mexico)"
-                        );
-
-                    return TimeZoneInfo
-                        .ConvertTimeFromUtc(
-                            DateTime.UtcNow,
-                            zona
-                        );
-                }
-                catch
-                {
-                    // Respaldo
-                    return DateTime.Now;
-                }
-            }
-        }
     }
 }

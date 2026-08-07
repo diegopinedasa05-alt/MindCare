@@ -10,17 +10,17 @@
         /// <summary>
         /// Correo electrónico.
         /// </summary>
-        public string Email { get; set; }
+        public string Email { get; set; } = "";
 
         /// <summary>
         /// Contraseña (en producción debe ir encriptada).
         /// </summary>
-        public string PasswordHash { get; set; }
+        public string PasswordHash { get; set; } = "";
 
         /// <summary>
         /// Rol del usuario.
         /// </summary>
-        public string Rol { get; set; }
+        public string Rol { get; set; } = "";
 
         /// <summary>
         /// Relación con usuario.

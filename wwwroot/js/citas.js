@@ -1,4 +1,4 @@
-﻿const API = "https://mindcare-production-d670.up.railway.app/api";
+﻿const API = window.MINDCARE_API_BASE;
 
 const psicologoId = localStorage.getItem("usuarioId");
 
@@ -19,7 +19,7 @@ function cargarPacientes() {
 
                 const option = document.createElement("option");
 
-                option.value = p.usuarioId;
+                option.value = p.id;
                 option.text = p.nombre;
 
                 select.appendChild(option);
@@ -46,9 +46,11 @@ function crearCita() {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            pacienteId: parseInt(pacienteId),
+            usuarioId: parseInt(pacienteId),
             psicologoId: parseInt(psicologoId),
-            fecha: fecha
+            fecha: fecha,
+            estado: "Pendiente",
+            observacion: ""
         })
     })
         .then(() => {
@@ -90,31 +92,3 @@ function volver() {
 // ===============================
 cargarPacientes();
 cargarCitas();
-
-#toast{
-    position: fixed;
-    top: 25px;
-    right: 25px;
-    background:#10b981;
-    color: white;
-    padding: 16px 22px;
-    border - radius: 16px;
-    font - weight: 800;
-    opacity: 0;
-    transform: translateY(-20px);
-    transition: .35s;
-    z - index: 9999;
-}
-
-#toast.show{
-    opacity: 1;
-    transform: translateY(0);
-}
-
-#toast.error{
-    background: #ef4444;
-}
-
-#toast.info{
-    background:#6366f1;
-}

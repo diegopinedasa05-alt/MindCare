@@ -8,14 +8,33 @@ namespace AppTesisAPI.Services
 {
     public class TokenService
     {
-        private string key = "CLAVE_SUPER_SECRETA_APP_TESIS_2026";
+        private readonly IConfiguration _configuration;
 
-        public string CrearToken(Usuario usuario)
+        public TokenService(IConfiguration configuration)
         {
+            _configuration = configuration;
+        }
+
+        public string CrearToken(Usuario usuario, string rol)
+        {
+            var key = Environment.GetEnvironmentVariable("JWT_KEY")
+                ?? _configuration["Jwt:Key"];
+
+            if (string.IsNullOrWhiteSpace(key) || key.Length < 32)
+            {
+                throw new InvalidOperationException(
+                    "JWT_KEY debe configurarse con al menos 32 caracteres.");
+            }
+
+            var issuer = _configuration["Jwt:Issuer"] ?? "MindCare.Api";
+            var audience = _configuration["Jwt:Audience"] ?? "MindCare.Client";
+
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
-                new Claim(ClaimTypes.Name, usuario.Nombre)
+                new Claim(ClaimTypes.Name, usuario.Nombre),
+                new Claim(ClaimTypes.Role, rol),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
             var keyBytes = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
@@ -23,6 +42,8 @@ namespace AppTesisAPI.Services
             var creds = new SigningCredentials(keyBytes, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
+                issuer: issuer,
+                audience: audience,
                 claims: claims,
                 expires: DateTime.UtcNow.AddHours(2),
                 signingCredentials: creds

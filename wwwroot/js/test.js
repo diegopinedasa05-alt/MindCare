@@ -1,5 +1,4 @@
-﻿const API =
-    "https://mindcare-production-d670.up.railway.app/api";
+﻿const API = window.MINDCARE_API_BASE;
 
 /* =======================================================
 MODOS
@@ -241,23 +240,26 @@ async function guardarGeneral(url, body) {
                     JSON.stringify(body)
             });
 
-        const data =
-            await res.json();
+        const texto =
+            await res.text();
 
         if (!res.ok)
-            throw new Error();
+            throw new Error(extraerMensaje(texto));
+
+        const data =
+            JSON.parse(texto);
 
         finalizar(data);
 
-    } catch {
+    } catch (error) {
 
         colocarTexto(
             "mensaje",
-            "Error al guardar."
+            error.message || "Error al guardar."
         );
 
         mostrarToast(
-            "Error",
+            error.message || "Error",
             "error"
         );
     }
@@ -317,6 +319,18 @@ function colocarTexto(id, texto) {
 
     if (el)
         el.innerText = texto;
+}
+
+function extraerMensaje(texto) {
+
+    try {
+        const data = JSON.parse(texto);
+        return data.mensaje || data.title || texto;
+    } catch {
+        return String(texto || "Error al guardar.")
+            .replaceAll('"', '')
+            .trim();
+    }
 }
 
 /* =======================================================

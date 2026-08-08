@@ -1609,3 +1609,104 @@ body:not(.mindcare-dashboard) {
         line-height: 1.45 !important;
     }
 }
+
+/* Mobile v6 overrides: prevents desktop dashboard grids from returning on phones. */
+@media (max-width: 640px) {
+    .mindcare-dashboard .layout {
+        display: block !important;
+        min-height: 100dvh;
+    }
+
+    .mindcare-dashboard .sidebar {
+        width: 100% !important;
+        min-height: 0 !important;
+    }
+
+    .mindcare-dashboard .brand p,
+    .mindcare-dashboard .trust-strip {
+        display: none !important;
+    }
+
+    .mindcare-dashboard .menu {
+        display: flex !important;
+        grid-template-columns: none !important;
+        align-items: center;
+        flex-wrap: nowrap !important;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto !important;
+        scroll-snap-type: x proximity;
+    }
+
+    .mindcare-dashboard .menu button {
+        display: inline-flex !important;
+        grid-column: auto !important;
+        grid-row: auto !important;
+        min-width: max-content !important;
+        scroll-snap-align: start;
+    }
+
+    .mindcare-dashboard .main {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .mindcare-dashboard .top {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        align-items: stretch !important;
+        min-height: 0 !important;
+    }
+
+    .mindcare-dashboard .top p {
+        display: none !important;
+    }
+
+    .mindcare-dashboard .top .pdf-btn,
+    .mindcare-dashboard .top .nuevo-btn {
+        width: 100% !important;
+        justify-content: center;
+        margin-top: 2px;
+    }
+
+    .mindcare-dashboard .quick-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+    }
+
+    .mindcare-dashboard .quick-actions button {
+        min-height: 76px !important;
+        padding: 11px !important;
+        align-items: flex-start !important;
+    }
+
+    .mindcare-dashboard .quick-actions button small {
+        display: none !important;
+    }
+
+    .mindcare-dashboard .patient-command,
+    .mindcare-dashboard .institution-command,
+    .mindcare-dashboard .clinical-workbench,
+    .mindcare-dashboard .admin-workbench {
+        padding: 16px !important;
+    }
+
+    .mindcare-dashboard .plan-metrics,
+    .mindcare-dashboard .ia-audit,
+    .mindcare-dashboard .cards,
+    .mindcare-dashboard .analytics-grid,
+    .mindcare-dashboard .clinical-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .mindcare-dashboard .command-score {
+        width: 94px !important;
+        height: 94px !important;
+        margin: 4px auto 0 !important;
+    }
+
+    .mindcare-dashboard .chart-metrics,
+    .mindcare-dashboard .clinical-levels {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}

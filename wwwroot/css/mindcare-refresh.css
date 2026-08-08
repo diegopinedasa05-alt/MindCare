@@ -1710,3 +1710,138 @@ body:not(.mindcare-dashboard) {
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     }
 }
+
+/* Mobile v7: light command bar so the navigation does not dominate the page. */
+@media (max-width: 640px) {
+    .mindcare-dashboard {
+        background: #f2f6fa !important;
+    }
+
+    .mindcare-dashboard .sidebar {
+        position: relative !important;
+        padding: 11px 14px 12px !important;
+        color: #17283d !important;
+        background: #ffffff !important;
+        border-bottom: 1px solid #dbe5ee !important;
+        box-shadow: 0 7px 18px rgba(27, 48, 72, .07) !important;
+        overflow: hidden;
+    }
+
+    .mindcare-dashboard .brand {
+        display: flex !important;
+        align-items: center;
+        min-height: 42px;
+        margin: 0 !important;
+        padding: 0 48px 10px 0 !important;
+        border: 0 !important;
+    }
+
+    .mindcare-dashboard .brain-icon {
+        width: 38px !important;
+        height: 38px !important;
+        flex: 0 0 38px;
+        margin: 0 10px 0 0 !important;
+        color: #ffffff !important;
+        background: #0b8178 !important;
+        border-radius: 11px !important;
+    }
+
+    .mindcare-dashboard .brand h2 {
+        margin: 0 !important;
+        color: #17283d !important;
+        font-size: 1.28rem !important;
+    }
+
+    .mindcare-dashboard .menu {
+        gap: 7px !important;
+        padding: 2px 0 0 !important;
+        background: transparent !important;
+    }
+
+    .mindcare-dashboard .menu button {
+        min-height: 36px !important;
+        padding: 8px 10px !important;
+        color: #42526a !important;
+        background: #eef3f8 !important;
+        border: 1px solid #dce6ef !important;
+        border-radius: 9px !important;
+        font-size: .74rem !important;
+    }
+
+    .mindcare-dashboard .menu button i {
+        margin-right: 6px !important;
+        color: #0b8178 !important;
+    }
+
+    .mindcare-dashboard .logout {
+        position: absolute;
+        top: 12px;
+        right: 14px;
+        display: grid !important;
+        width: 36px !important;
+        min-height: 36px !important;
+        place-items: center;
+        margin: 0 !important;
+        padding: 0 !important;
+        color: transparent !important;
+        background: #fff1f2 !important;
+        border: 1px solid #fecdd3 !important;
+        border-radius: 9px !important;
+        font-size: 0 !important;
+    }
+
+    .mindcare-dashboard .logout i {
+        margin: 0 !important;
+        color: #e11d48 !important;
+        font-size: 15px !important;
+    }
+
+    .mindcare-dashboard .main {
+        padding: 14px 14px 42px !important;
+    }
+
+    .mindcare-dashboard .top {
+        gap: 12px !important;
+        padding: 16px !important;
+        border-left: 4px solid #0b8178 !important;
+        box-shadow: 0 10px 22px rgba(27, 48, 72, .07) !important;
+    }
+
+    .mindcare-dashboard .dashboard-tabs {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        gap: 7px !important;
+        padding: 5px !important;
+        overflow-x: auto !important;
+        scrollbar-width: none;
+    }
+
+    .mindcare-dashboard .dashboard-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .mindcare-dashboard .dashboard-tabs button {
+        min-width: max-content !important;
+        min-height: 38px !important;
+        padding: 8px 11px !important;
+        font-size: .76rem !important;
+    }
+
+    .mindcare-dashboard .view-intro {
+        display: none !important;
+    }
+
+    .mindcare-dashboard .quick-actions {
+        margin-top: 2px !important;
+    }
+
+    .mindcare-dashboard .quick-actions button {
+        min-height: 72px !important;
+        border-radius: 10px !important;
+    }
+
+    .mindcare-dashboard .patient-command,
+    .mindcare-dashboard .institution-command {
+        border-top: 3px solid #0b8178 !important;
+    }
+}

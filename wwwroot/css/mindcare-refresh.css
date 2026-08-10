@@ -2157,3 +2157,87 @@ body:not(.mindcare-dashboard) {
         box-shadow: 0 8px 18px rgba(27, 48, 72, .045) !important;
     }
 }
+
+/* Mobile v10: final user-header guard against legacy full-width actions. */
+@media (max-width: 640px) {
+    .mindcare-dashboard.user-dashboard .top {
+        position: relative !important;
+        display: block !important;
+        min-height: 102px !important;
+        margin: 0 0 12px !important;
+        padding: 18px 72px 16px 17px !important;
+        overflow: hidden !important;
+    }
+
+    .mindcare-dashboard.user-dashboard .top h1 {
+        position: relative;
+        z-index: 1;
+        margin: 0 !important;
+        font-size: 1.5rem !important;
+        line-height: 1.12 !important;
+    }
+
+    .mindcare-dashboard.user-dashboard .top p {
+        position: relative;
+        z-index: 1;
+        display: block !important;
+        margin: 6px 0 0 !important;
+        color: #64748b !important;
+        font-size: .78rem !important;
+        line-height: 1.25 !important;
+    }
+
+    .mindcare-dashboard.user-dashboard .top .pdf-btn {
+        position: absolute !important;
+        top: 17px !important;
+        right: 15px !important;
+        z-index: 2;
+        display: grid !important;
+        width: 42px !important;
+        min-width: 42px !important;
+        max-width: 42px !important;
+        height: 42px !important;
+        min-height: 42px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        place-items: center !important;
+        overflow: hidden !important;
+        border-radius: 11px !important;
+        font-size: 0 !important;
+        line-height: 0 !important;
+        white-space: nowrap !important;
+        box-shadow: 0 7px 15px rgba(37, 99, 235, .2) !important;
+    }
+
+    .mindcare-dashboard.user-dashboard .top .pdf-btn i {
+        display: block !important;
+        margin: 0 !important;
+        color: #ffffff !important;
+        font-size: 1rem !important;
+        line-height: 1 !important;
+    }
+
+    .mindcare-dashboard.user-dashboard .dashboard-tabs {
+        gap: 6px !important;
+        margin: 0 0 12px !important;
+        padding: 5px !important;
+        scroll-padding-inline: 5px;
+        scroll-snap-type: x proximity;
+    }
+
+    .mindcare-dashboard.user-dashboard .dashboard-tabs button {
+        flex: 0 0 auto !important;
+        min-height: 38px !important;
+        padding: 8px 11px !important;
+        scroll-snap-align: start;
+    }
+
+    .mindcare-dashboard.user-dashboard .quick-actions {
+        gap: 10px !important;
+    }
+
+    .mindcare-dashboard.user-dashboard .quick-actions button {
+        min-height: 82px !important;
+        padding: 12px 10px !important;
+    }
+}

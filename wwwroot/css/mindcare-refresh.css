@@ -23,6 +23,121 @@
     --mc-radius: 12px;
 }
 
+/* Mobile v9: the user navigation opens on demand instead of occupying the screen. */
+@media (max-width: 640px) {
+    .mindcare-dashboard.user-dashboard .sidebar {
+        min-height: 62px !important;
+        padding: 11px 12px !important;
+    }
+
+    .mindcare-dashboard.user-dashboard .brand {
+        min-height: 40px !important;
+        padding: 0 88px 0 0 !important;
+    }
+
+    .mindcare-dashboard.user-dashboard .brand p {
+        display: none !important;
+    }
+
+    .mindcare-dashboard.user-dashboard .mobile-menu-toggle {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        display: inline-flex;
+        min-height: 36px;
+        align-items: center;
+        gap: 6px;
+        padding: 0 10px;
+        color: #ffffff;
+        background: #0b8178;
+        border: 0;
+        border-radius: 10px;
+        box-shadow: 0 5px 12px rgba(11, 129, 120, .22);
+        font-family: inherit;
+        font-size: .74rem;
+        font-weight: 800;
+    }
+
+    .mindcare-dashboard.user-dashboard .mobile-menu-toggle:focus-visible {
+        outline: 3px solid #93c5fd;
+        outline-offset: 2px;
+    }
+
+    .mindcare-dashboard.user-dashboard .mobile-menu-toggle i {
+        font-size: .9rem;
+    }
+
+    .mindcare-dashboard.user-dashboard .menu {
+        display: none !important;
+        margin: 10px 0 0 !important;
+        padding: 10px !important;
+        border: 1px solid #dce6ef !important;
+        border-radius: 12px !important;
+        background: #f7fafc !important;
+        overflow: visible !important;
+    }
+
+    .mindcare-dashboard.user-dashboard .sidebar.is-menu-open .menu {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px !important;
+    }
+
+    .mindcare-dashboard.user-dashboard .menu button {
+        display: flex !important;
+        width: 100% !important;
+        min-height: 44px !important;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 9px 10px !important;
+        color: #334155 !important;
+        background: #ffffff !important;
+        border-color: #dbe5ee !important;
+        border-radius: 9px !important;
+        font-size: .72rem !important;
+        line-height: 1.15;
+        white-space: normal;
+        text-align: left;
+    }
+
+    .mindcare-dashboard.user-dashboard .menu button i {
+        width: 16px;
+        margin-right: 7px !important;
+    }
+
+    .mindcare-dashboard.user-dashboard .logout {
+        display: none !important;
+    }
+
+    .mindcare-dashboard.user-dashboard .sidebar.is-menu-open .logout {
+        position: static !important;
+        display: flex !important;
+        width: 100% !important;
+        min-height: 40px !important;
+        align-items: center;
+        justify-content: center;
+        margin: 8px 0 0 !important;
+        padding: 8px 12px !important;
+        color: #be123c !important;
+        background: #fff1f2 !important;
+        border: 1px solid #fecdd3 !important;
+        border-radius: 9px !important;
+        font-size: .75rem !important;
+        font-weight: 800;
+    }
+
+    .mindcare-dashboard.user-dashboard .sidebar.is-menu-open .logout i {
+        margin-right: 7px !important;
+        color: #e11d48 !important;
+    }
+
+    .mindcare-dashboard.user-dashboard .sidebar.is-menu-open .mobile-menu-toggle {
+        color: #0b8178;
+        background: #dff7f4;
+        box-shadow: none;
+    }
+}
+
 html {
     background: var(--mc-canvas);
 }

@@ -17,7 +17,7 @@
           href="css/dashboard.css?v=10">
     <link rel="stylesheet"
           href="css/mindcare-dashboard-pro.css?v=10">
-    <link rel="stylesheet" href="css/mindcare-refresh.css?v=8">
+    <link rel="stylesheet" href="css/mindcare-refresh.css?v=9">
 </head>
 
 <body class="mindcare-dashboard user-dashboard"
@@ -39,7 +39,17 @@
 
             </div>
 
-            <nav class="menu">
+            <button type="button"
+                    class="mobile-menu-toggle"
+                    aria-label="Abrir menú de navegación"
+                    aria-controls="menu-principal"
+                    aria-expanded="false">
+                <i class="fa-solid fa-bars"></i>
+                <span>Menú</span>
+            </button>
+
+            <nav id="menu-principal"
+                 class="menu">
 
                 <button onclick="inicio()">
                     <i class="fa-solid fa-house"></i>
@@ -751,7 +761,7 @@
             <!-- JS -->
             <script src="js/config.js"></script>
             <script src="js/mindcare-dashboard-shell.js?v=3"></script>
-            <script src="js/dashboard.js?v=17"></script>
+            <script src="js/dashboard.js?v=18"></script>
 
             <div id="toast"></div>
 

@@ -40,6 +40,52 @@ const estadoDashboard = {
 window.addEventListener("load", iniciarDashboard);
 window.addEventListener("pageshow", iniciarDashboard);
 
+document.addEventListener("DOMContentLoaded", configurarMenuMovil);
+
+function configurarMenuMovil() {
+
+    const sidebar = document.querySelector(".user-dashboard .sidebar");
+    const toggle = document.querySelector(".mobile-menu-toggle");
+    const menu = document.querySelector(".user-dashboard .menu");
+
+    if (!sidebar || !toggle || !menu) {
+        return;
+    }
+
+    const cerrarMenu = () => {
+        sidebar.classList.remove("is-menu-open");
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.setAttribute("aria-label", "Abrir menú de navegación");
+        toggle.innerHTML = '<i class="fa-solid fa-bars"></i><span>Menú</span>';
+    };
+
+    toggle.addEventListener("click", () => {
+        const abierto = sidebar.classList.toggle("is-menu-open");
+        toggle.setAttribute("aria-expanded", String(abierto));
+        toggle.setAttribute(
+            "aria-label",
+            abierto ? "Cerrar menú de navegación" : "Abrir menú de navegación"
+        );
+        toggle.innerHTML = abierto
+            ? '<i class="fa-solid fa-xmark"></i><span>Cerrar</span>'
+            : '<i class="fa-solid fa-bars"></i><span>Menú</span>';
+    });
+
+    menu.querySelectorAll("button").forEach(button => {
+        button.addEventListener("click", () => {
+            if (window.matchMedia("(max-width: 640px)").matches) {
+                cerrarMenu();
+            }
+        });
+    });
+
+    window.addEventListener("resize", () => {
+        if (!window.matchMedia("(max-width: 640px)").matches) {
+            cerrarMenu();
+        }
+    });
+}
+
 /* ===================================================== */
 async function iniciarDashboard() {
 

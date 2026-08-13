@@ -2158,28 +2158,31 @@ body:not(.mindcare-dashboard) {
     }
 }
 
-/* Mobile v10: final user-header guard against legacy full-width actions. */
+/* Mobile v11: keep the report action inside the user header card. */
 @media (max-width: 640px) {
     .mindcare-dashboard.user-dashboard .top {
-        position: relative !important;
-        display: block !important;
-        min-height: 102px !important;
+        position: static !important;
+        display: flex !important;
+        min-height: 0 !important;
         margin: 0 0 12px !important;
-        padding: 18px 72px 16px 17px !important;
-        overflow: hidden !important;
+        padding: 18px 17px 16px !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+        overflow: visible !important;
+    }
+
+    .mindcare-dashboard.user-dashboard .top-copy {
+        min-width: 0;
     }
 
     .mindcare-dashboard.user-dashboard .top h1 {
-        position: relative;
-        z-index: 1;
         margin: 0 !important;
         font-size: 1.5rem !important;
         line-height: 1.12 !important;
     }
 
     .mindcare-dashboard.user-dashboard .top p {
-        position: relative;
-        z-index: 1;
         display: block !important;
         margin: 6px 0 0 !important;
         color: #64748b !important;
@@ -2188,23 +2191,22 @@ body:not(.mindcare-dashboard) {
     }
 
     .mindcare-dashboard.user-dashboard .top .pdf-btn {
-        position: absolute !important;
-        top: 17px !important;
-        right: 15px !important;
-        z-index: 2;
-        display: grid !important;
-        width: 42px !important;
-        min-width: 42px !important;
-        max-width: 42px !important;
-        height: 42px !important;
-        min-height: 42px !important;
+        position: static !important;
+        display: inline-flex !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        height: 44px !important;
+        min-height: 44px !important;
         margin: 0 !important;
-        padding: 0 !important;
-        place-items: center !important;
-        overflow: hidden !important;
-        border-radius: 11px !important;
-        font-size: 0 !important;
-        line-height: 0 !important;
+        padding: 0 14px !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        overflow: visible !important;
+        border-radius: 10px !important;
+        font-size: .88rem !important;
+        line-height: 1 !important;
         white-space: nowrap !important;
         box-shadow: 0 7px 15px rgba(37, 99, 235, .2) !important;
     }

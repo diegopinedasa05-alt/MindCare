@@ -193,7 +193,6 @@ namespace AppTesisAPI.Services
                 indiceBienestar,
                 decisionClinica,
                 matrizIntervencion,
-                defensaTesis = DefensaTesis(),
                 preguntasSeguimiento = PreguntasSeguimiento(
                     perfilClinico,
                     trayectoriaRiesgo,
@@ -360,7 +359,6 @@ namespace AppTesisAPI.Services
                     criterioEscalamiento =
                         "Escalar si aparecen senales criticas o alto malestar."
                 },
-                defensaTesis = DefensaTesis(),
                 preguntasSeguimiento = new[]
                 {
                     "¿Como te has sentido emocionalmente hoy?",
@@ -1564,42 +1562,6 @@ namespace AppTesisAPI.Services
                 accion,
                 "Registro 3 veces por semana y evaluaciones periodicas.",
                 "Cambio brusco de animo, estres o tendencia ascendente.");
-        }
-
-        private static object DefensaTesis()
-        {
-            return new
-            {
-                tipoModelo = "Sistema experto basado en reglas ponderadas",
-                enfoque =
-                    "IA explicable aplicada a monitoreo emocional y priorizacion de seguimiento.",
-                porQueNoMachineLearning =
-                    "Para una tesis academica con pocos datos, reglas clinicas transparentes reducen opacidad, costo y riesgo de sobreajuste.",
-                variables =
-                    new[]
-                    {
-                        "PHQ-9",
-                        "Pregunta 9 de seguridad",
-                        "Estres laboral",
-                        "Animo diario",
-                        "Estres diario",
-                        "Tendencia de 14 dias",
-                        "Volatilidad emocional",
-                        "Adherencia",
-                        "Factores protectores"
-                    },
-                ventajas =
-                    new[]
-                    {
-                        "Gratis y local",
-                        "Auditable",
-                        "Explicable para usuarios y sinodales",
-                        "No depende de APIs externas",
-                        "Permite evolucion futura a Machine Learning"
-                    },
-                limitacion =
-                    "No diagnostica; orienta seguimiento y prioriza senales para revision humana."
-            };
         }
 
         private static object Matriz(

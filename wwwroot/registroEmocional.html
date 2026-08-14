@@ -11,7 +11,7 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <link rel="stylesheet"
-          href="css/registroEmocional.css?v=3">
+          href="css/registroEmocional.css?v=4">
     <link rel="stylesheet"
           href="css/mindcare-pages-pro.css?v=1">
     <link rel="stylesheet" href="css/mindcare-refresh.css?v=1">
@@ -59,8 +59,8 @@
                     <span>Seguimiento diario</span>
                     <h2>Tu registro alimenta la IA explicable</h2>
                     <p>
-                        MindCare usa ánimo, estrés, categoría y notas para detectar tendencia,
-                        volatilidad emocional y señales de seguimiento.
+                        El ánimo, el estrés y el tema seleccionado ayudan a construir tu historial.
+                        Puedes añadir una nota solo cuando quieras dar más contexto.
                     </p>
                 </div>
 
@@ -96,15 +96,17 @@
 
                         <select id="animo">
                             <option value="">Selecciona</option>
-                            <option value="10">Muy Bien</option>
+                            <option value="10">Muy bien</option>
                             <option value="8">Bien</option>
+                            <option value="7">Tranquilo</option>
+                            <option value="6">Con esperanza</option>
                             <option value="5">Neutral</option>
+                            <option value="4">Cansado</option>
                             <option value="3">Triste</option>
-                            <option value="1">Muy triste</option>
-                            <option value="1">Molesto</option>
-                            <option value="1">Muy molesto</option>
-                            <option value="1">Ansioso</option>
-                            <option value="1">Muy ansioso</option>
+                            <option value="3">Molesto</option>
+                            <option value="3">Ansioso</option>
+                            <option value="2">Preocupado</option>
+                            <option value="1">Muy triste o sin ánimo</option>
                         </select>
 
                     </div>
@@ -134,23 +136,47 @@
 
                         <select id="categoria">
                             <option value="">Selecciona</option>
-                            <option value="Trabajo">Trabajo</option>
-                            <option value="Familia">Familia</option>
-                            <option value="Escuela">Escuela</option>
-                            <option value="Relación">Relación</option>
-                            <option value="Salud">Salud</option>
                             <option value="General">General</option>
+                            <option value="Trabajo">Trabajo</option>
+                            <option value="Escuela">Escuela</option>
+                            <option value="Familia">Familia</option>
+                            <option value="Relación">Relación</option>
+                            <option value="Relaciones">Relaciones</option>
+                            <option value="Amistades">Amistades</option>
+                            <option value="Salud">Salud</option>
+                            <option value="Ansiedad">Ansiedad</option>
+                            <option value="Estrés">Estrés</option>
+                            <option value="Sueño y descanso">Sueño y descanso</option>
+                            <option value="Autoestima">Autoestima</option>
+                            <option value="Economía">Economía</option>
+                            <option value="Cambio personal">Cambio personal</option>
+                            <option value="Otro">Otro tema</option>
                         </select>
+
+                    </div>
+
+                    <div class="field custom-category" id="categoriaLibreCampo" hidden>
+
+                        <label for="categoriaLibre">Describe el tema</label>
+
+                        <input id="categoriaLibre"
+                               type="text"
+                               maxlength="80"
+                               autocomplete="off"
+                               placeholder="Ejemplo: mudanza, mascota, trámite...">
 
                     </div>
 
                     <!-- NOTA -->
                     <div class="field">
 
-                        <label>Nota personal</label>
+                        <label for="nota">Nota personal <span class="optional-label">Opcional</span></label>
 
-<textarea id="nota"
-          placeholder="Escribe cómo te sentiste hoy..."></textarea>
+                        <textarea id="nota"
+                                  maxlength="1000"
+                                  placeholder="Escribe cómo te sentiste hoy, si deseas..."></textarea>
+
+                        <small class="field-help">Puedes guardar tu registro sin escribir una nota.</small>
 
                     </div>
 
@@ -191,7 +217,7 @@
     </div>
 
     <script src="js/config.js"></script>
-    <script src="js/registroEmocional.js"></script>
+    <script src="js/registroEmocional.js?v=2"></script>
     <div id="toast"></div>
 </body>
 </html>

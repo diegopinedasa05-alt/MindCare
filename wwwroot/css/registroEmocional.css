@@ -215,7 +215,8 @@ body {
 
 /* Selectores y áreas de texto */
 select,
-textarea {
+textarea,
+.custom-category input {
     width: 100%;
     border: 1px solid #dbe3f0;
     background: #f3f6fb;
@@ -233,6 +234,25 @@ select {
 textarea {
     height: 160px;
     resize: none;
+}
+
+.custom-category[hidden] {
+    display: none;
+}
+
+.optional-label {
+    margin-left: 6px;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.field-help {
+    display: block;
+    margin-top: 8px;
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.45;
 }
 
     /* Estado activo */

@@ -16,8 +16,28 @@ const API = window.MINDCARE_API_BASE;
 LOAD
 ========================================== */
 window.onload = function () {
+    configurarCategoriaLibre();
     mostrarHistorial();
 };
+
+function configurarCategoriaLibre() {
+    const categoria = document.getElementById("categoria");
+    const campoLibre = document.getElementById("categoriaLibreCampo");
+    const entradaLibre = document.getElementById("categoriaLibre");
+
+    if (!categoria || !campoLibre || !entradaLibre) return;
+
+    const actualizarVisibilidad = () => {
+        const esOtro = categoria.value === "Otro";
+        campoLibre.hidden = !esOtro;
+        entradaLibre.required = esOtro;
+
+        if (!esOtro) entradaLibre.value = "";
+    };
+
+    categoria.addEventListener("change", actualizarVisibilidad);
+    actualizarVisibilidad();
+}
 
 /* ==========================================
 GUARDAR REGISTRO
@@ -33,8 +53,16 @@ async function guardarRegistro() {
     const estres =
         document.getElementById("estres").value;
 
-    const categoria =
+    const categoriaSeleccionada =
         document.getElementById("categoria").value;
+
+    const categoriaLibre =
+        document.getElementById("categoriaLibre").value.trim();
+
+    const categoria =
+        categoriaSeleccionada === "Otro"
+            ? categoriaLibre
+            : categoriaSeleccionada;
 
     const nota =
         document.getElementById("nota").value.trim();
@@ -45,11 +73,10 @@ async function guardarRegistro() {
     if (
         !usuarioId ||
         animo === "" ||
-        categoria === "" ||
-        nota === ""
+        categoria === ""
     ) {
         mensaje.innerText =
-            "Completa todos los campos.";
+            "Selecciona tu ánimo y un tema para guardar el registro.";
 
         mensaje.style.color =
             "#ef4444";
@@ -120,6 +147,9 @@ async function guardarRegistro() {
         document.getElementById("estres").value = 5;
         document.getElementById("valor").innerText = 5;
         document.getElementById("categoria").value = "";
+        document.getElementById("categoriaLibre").value = "";
+        document.getElementById("categoriaLibre").required = false;
+        document.getElementById("categoriaLibreCampo").hidden = true;
         document.getElementById("nota").value = "";
 
         mostrarHistorial();
@@ -212,9 +242,9 @@ async function mostrarHistorial() {
                 😰 Estrés:
                 ${reg.nivelEstres}/10<br>
 
-                📂 ${reg.categoria}<br><br>
+                📂 ${escapeHtml(reg.categoria || "General")}<br><br>
 
-                📝 ${reg.nota}
+                📝 ${reg.nota ? escapeHtml(reg.nota) : "Sin nota personal"}
 
             </div>
             `;
@@ -230,4 +260,13 @@ async function mostrarHistorial() {
         </div>
         `;
     }
+}
+
+function escapeHtml(valor) {
+    return String(valor ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
 }

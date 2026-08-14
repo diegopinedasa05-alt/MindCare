@@ -9,6 +9,8 @@ services:
         value: Production
       - key: MINDCARE_MIGRATE_ON_STARTUP
         value: "true"
+      - key: DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE
+        value: "false"
       - key: DATABASE_URL
         sync: false
       - key: JWT_KEY

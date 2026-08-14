@@ -13,6 +13,9 @@ WORKDIR /app
 COPY --from=build /app/publish .
 
 ENV ASPNETCORE_URLS=http://+:8080
+# La configuracion de produccion cambia mediante un nuevo despliegue. Evita
+# consumir instancias inotify intentando vigilar appsettings dentro del contenedor.
+ENV DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE=false
 EXPOSE 8080
 
 ENTRYPOINT ["dotnet", "AppTesisAPI.dll"]

@@ -18,7 +18,8 @@ public sealed class SmtpEmailSender : IEmailSender
         _logger = logger;
     }
 
-    public bool IsConfigured => _settings.IsValid;
+    public bool IsConfigured =>
+        !_settings.UsesResend && _settings.IsSmtpConfigured;
 
     public async Task<EmailSendResult> SendPasswordRecoveryCodeAsync(
         string recipient,

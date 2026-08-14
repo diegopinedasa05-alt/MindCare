@@ -145,7 +145,23 @@ builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<IAService>();
 builder.Services.Configure<EmailSettings>(
     builder.Configuration.GetSection(EmailSettings.SectionName));
-builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
+builder.Services.AddScoped<SmtpEmailSender>();
+builder.Services.AddHttpClient<ResendEmailSender>(client =>
+{
+    client.BaseAddress = new Uri("https://api.resend.com/");
+    client.Timeout = TimeSpan.FromSeconds(20);
+    client.DefaultRequestHeaders.UserAgent.ParseAdd("MindCare/1.0");
+});
+builder.Services.AddScoped<IEmailSender>(serviceProvider =>
+{
+    var emailSettings = serviceProvider
+        .GetRequiredService<Microsoft.Extensions.Options.IOptions<EmailSettings>>()
+        .Value;
+
+    return emailSettings.UsesResend
+        ? serviceProvider.GetRequiredService<ResendEmailSender>()
+        : serviceProvider.GetRequiredService<SmtpEmailSender>();
+});
 builder.Services.AddScoped<IPatientAccessService, PatientAccessService>();
 builder.Services.AddScoped<
     IPsychologistVerificationService,

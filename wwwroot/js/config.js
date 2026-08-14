@@ -2,6 +2,20 @@ window.MINDCARE_API_BASE =
     window.MINDCARE_API_BASE ||
     `${window.location.origin}/api`;
 
+(function configurarPwa() {
+    const manifest = document.createElement("link");
+    manifest.rel = "manifest";
+    manifest.href = "/manifest.webmanifest";
+    document.head.appendChild(manifest);
+
+    if ("serviceWorker" in navigator && location.protocol === "https:") {
+        window.addEventListener("load", () => {
+            navigator.serviceWorker.register("/service-worker.js")
+                .catch(() => { /* La aplicacion sigue funcionando sin modo instalable. */ });
+        });
+    }
+})();
+
 (function () {
 
     const originalFetch =

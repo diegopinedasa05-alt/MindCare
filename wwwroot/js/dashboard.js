@@ -2371,6 +2371,22 @@ function generarPDF() {
         });
     }
 
+    function agregarPaginacion() {
+        const total = doc.getNumberOfPages();
+        for (let pagina = 1; pagina <= total; pagina++) {
+            doc.setPage(pagina);
+            doc.setTextColor(...colors.muted);
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(7.5);
+            doc.text(
+                `Uso personal y confidencial | Página ${pagina} de ${total}`,
+                pageWidth / 2,
+                291,
+                { align: "center" }
+            );
+        }
+    }
+
     function panel(title, value, x, y, width, accent, minHeight = 27) {
         const safeValue = String(value || "-");
         const lines = doc.splitTextToSize(safeValue, width - 18);
@@ -2506,7 +2522,20 @@ function generarPDF() {
     );
     footer();
 
-    doc.save("MindCare Reporte.pdf");
+    agregarPaginacion();
+    doc.setProperties({
+        title: "MindCare | Reporte de seguimiento emocional",
+        subject: "Resumen personal de seguimiento emocional",
+        author: "MindCare"
+    });
+
+    const archivoNombre = (nombre || "Usuario")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-zA-Z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "");
+    const sello = new Date().toISOString().slice(0, 10);
+    doc.save(`MindCare_Reporte_${archivoNombre}_${sello}.pdf`);
 }
 
 /* =====================================================

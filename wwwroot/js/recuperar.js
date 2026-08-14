@@ -4,27 +4,47 @@ recuperar.js LIMPIO FINAL
 
 var API = window.MINDCARE_API_BASE;
 
+function mostrarMensaje(texto, tipo = "info") {
+    const mensaje = document.getElementById("mensaje");
+    mensaje.style.color = tipo === "error" ? "#dc2626" : "#0f766e";
+    mensaje.innerText = texto;
+}
+
+function extraerMensaje(texto) {
+    try {
+        const data = JSON.parse(texto);
+        return data?.mensaje || data?.title || "No se pudo completar la solicitud.";
+    } catch {
+        return texto || "No se pudo completar la solicitud.";
+    }
+}
+
+function cambiarEstadoBoton(id, ocupado, texto) {
+    const boton = document.getElementById(id);
+    if (!boton) return;
+    boton.disabled = ocupado;
+    if (texto) boton.innerHTML = texto;
+}
+
 /* =====================================
 ENVIAR CODIGO
 ===================================== */
 async function enviarCodigo() {
-
     const email =
         document.getElementById("email").value.trim();
 
-    const mensaje =
-        document.getElementById("mensaje");
-
-    mensaje.innerText = "";
-
     if (!email) {
-        mensaje.innerText =
-            "Ingresa tu correo.";
+        mostrarMensaje("Ingresa tu correo.", "error");
         return;
     }
 
-    try {
+    cambiarEstadoBoton(
+        "enviarCodigoBtn",
+        true,
+        '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...'
+    );
 
+    try {
         const res =
             await fetch(
                 `${API}/Auth/enviar-codigo`,
@@ -40,25 +60,11 @@ async function enviarCodigo() {
             await res.text();
 
         if (!res.ok)
-            throw new Error(txt);
+            throw new Error(extraerMensaje(txt));
 
-        let data = null;
-
-        try {
-            data = JSON.parse(txt);
-        } catch {
-            data = null;
-        }
-
-        mensaje.style.color =
-            "#16a34a";
-
-        mensaje.innerText =
-            data
-                ? data.codigoDemo
-                    ? `${data.mensaje} Código demo: ${data.codigoDemo}`
-                    : data.mensaje
-                : txt;
+        mostrarMensaje(
+            "Revisa tu correo. El codigo vence en 15 minutos."
+        );
 
         document.getElementById("paso1").style.display =
             "none";
@@ -67,19 +73,19 @@ async function enviarCodigo() {
             "block";
 
     } catch (error) {
-
-        mensaje.style.color =
-            "#ef4444";
-
-        mensaje.innerText =
-            error.message;
+        mostrarMensaje(error.message, "error");
+    } finally {
+        cambiarEstadoBoton(
+            "enviarCodigoBtn",
+            false,
+            '<i class="fa-solid fa-paper-plane"></i> Enviar codigo'
+        );
     }
 }
 /* =====================================
 CAMBIAR PASSWORD
 ===================================== */
 async function cambiarPassword() {
-
     const email =
         document.getElementById("email").value.trim();
 
@@ -89,11 +95,31 @@ async function cambiarPassword() {
     const password =
         document.getElementById("password").value.trim();
 
-    const mensaje =
-        document.getElementById("mensaje");
+    const confirmacion =
+        document.getElementById("confirmarPassword").value;
+
+    if (!/^\d{6}$/.test(codigo)) {
+        mostrarMensaje("Ingresa el codigo de seis digitos.", "error");
+        return;
+    }
+
+    if (password.length < 10) {
+        mostrarMensaje("La contrasena debe tener al menos 10 caracteres.", "error");
+        return;
+    }
+
+    if (password !== confirmacion) {
+        mostrarMensaje("Las contrasenas no coinciden.", "error");
+        return;
+    }
+
+    cambiarEstadoBoton(
+        "cambiarPasswordBtn",
+        true,
+        '<i class="fa-solid fa-spinner fa-spin"></i> Actualizando...'
+    );
 
     try {
-
         const res =
             await fetch(
                 `${API}/Auth/recuperar`,
@@ -113,24 +139,21 @@ async function cambiarPassword() {
             await res.text();
 
         if (!res.ok)
-            throw new Error(txt);
+            throw new Error(extraerMensaje(txt));
 
-        mensaje.style.color =
-            "#16a34a";
-
-        mensaje.innerText =
-            txt;
+        mostrarMensaje("Contrasena actualizada. Redirigiendo al inicio de sesion.");
 
         setTimeout(() => {
             location.href = "login.html";
         }, 1500);
 
     } catch (error) {
-
-        mensaje.style.color =
-            "#ef4444";
-
-        mensaje.innerText =
-            error.message;
+        mostrarMensaje(error.message, "error");
+    } finally {
+        cambiarEstadoBoton(
+            "cambiarPasswordBtn",
+            false,
+            '<i class="fa-solid fa-rotate"></i> Actualizar contrasena'
+        );
     }
 }

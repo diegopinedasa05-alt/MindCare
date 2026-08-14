@@ -109,11 +109,20 @@ builder.Services.AddRateLimiter(options =>
         limiter.Window = TimeSpan.FromMinutes(1);
         limiter.QueueLimit = 0;
     });
-    options.AddFixedWindowLimiter("auth-recovery", limiter =>
+    options.AddPolicy("auth-recovery", context =>
     {
-        limiter.PermitLimit = 3;
-        limiter.Window = TimeSpan.FromMinutes(5);
-        limiter.QueueLimit = 0;
+        var remoteAddress =
+            context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+
+        return RateLimitPartition.GetFixedWindowLimiter(
+            remoteAddress,
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 3,
+                Window = TimeSpan.FromMinutes(5),
+                QueueLimit = 0,
+                AutoReplenishment = true
+            });
     });
     options.AddFixedWindowLimiter("auth-register", limiter =>
     {
@@ -134,6 +143,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<IAService>();
+builder.Services.Configure<EmailSettings>(
+    builder.Configuration.GetSection(EmailSettings.SectionName));
+builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
 builder.Services.AddScoped<IPatientAccessService, PatientAccessService>();
 builder.Services.AddScoped<
     IPsychologistVerificationService,

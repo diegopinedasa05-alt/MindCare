@@ -476,10 +476,25 @@ async function generarPDFClinico() {
         doc.setFontSize(8);
         doc.setTextColor(...gris);
         doc.text(
-            "MindCare - Reporte de apoyo clinico. No sustituye diagnostico ni atencion profesional.",
+            "MindCare - Expediente de seguimiento. Uso clinico y confidencial.",
             page.left,
             292
         );
+    }
+
+    function agregarPaginacion() {
+        const total = doc.getNumberOfPages();
+        for (let pagina = 1; pagina <= total; pagina++) {
+            doc.setPage(pagina);
+            doc.setTextColor(...gris);
+            doc.setFontSize(7.5);
+            doc.text(
+                `No sustituye diagnostico profesional | Pagina ${pagina} de ${total}`,
+                page.right,
+                292,
+                { align: "right" }
+            );
+        }
     }
 
     function text(value) {
@@ -572,9 +587,10 @@ async function generarPDFClinico() {
     doc.text("MindCare", page.left, 16);
     doc.setFontSize(11);
     doc.setFont(undefined, "normal");
-    doc.text("Expediente clinico emocional", page.left, 25);
+    doc.text("Expediente de seguimiento psicologico", page.left, 25);
     doc.setFontSize(8);
     doc.text(text(new Date().toLocaleString("es-MX")), page.left, 32);
+    doc.text("CONFIDENCIAL", page.right, 16, { align: "right" });
 
     y = 50;
     title("Datos del paciente");
@@ -665,6 +681,12 @@ async function generarPDFClinico() {
     );
 
     footer();
+    agregarPaginacion();
+    doc.setProperties({
+        title: "MindCare | Expediente de seguimiento psicologico",
+        subject: "Reporte clinico de seguimiento",
+        author: "MindCare"
+    });
 
     const nombreArchivo =
         `MindCare_Expediente_${(usuario.nombre || "Paciente")

@@ -17,16 +17,22 @@ namespace AppTesisAPI.Controllers
         private readonly AppDbContext _context;
         private readonly TokenService _tokenService;
         private readonly IWebHostEnvironment _environment;
+        private readonly IEmailSender _emailSender;
+        private readonly ILogger<AuthController> _logger;
         private readonly PasswordHasher<Credenciales> _passwordHasher = new();
 
         public AuthController(
             AppDbContext context,
             TokenService tokenService,
-            IWebHostEnvironment environment)
+            IWebHostEnvironment environment,
+            IEmailSender emailSender,
+            ILogger<AuthController> logger)
         {
             _context = context;
             _tokenService = tokenService;
             _environment = environment;
+            _emailSender = emailSender;
+            _logger = logger;
         }
 
         [HttpPost("login")]
@@ -243,14 +249,25 @@ namespace AppTesisAPI.Controllers
 
                 var correo = email.Trim().ToLowerInvariant();
 
-                var existe =
+                if (!_environment.IsDevelopment() &&
+                    !_emailSender.IsConfigured)
+                {
+                    return StatusCode(StatusCodes.Status503ServiceUnavailable,
+                        new
+                        {
+                            codigo = "SERVICIO_CORREO_NO_CONFIGURADO",
+                            mensaje = "El servicio de recuperacion no esta disponible temporalmente."
+                        });
+                }
+
+                var credencial =
                     await _context.Credenciales
-                    .AnyAsync(x =>
+                    .FirstOrDefaultAsync(x =>
                         x.Email.ToLower() == correo);
 
                 string? codigo = null;
 
-                if (existe)
+                if (credencial != null)
                 {
                     var anteriores =
                         await _context.RecuperacionPasswords
@@ -272,6 +289,66 @@ namespace AppTesisAPI.Controllers
                         });
 
                     await _context.SaveChangesAsync();
+
+                    if (_emailSender.IsConfigured)
+                    {
+                        var envio = await _emailSender
+                            .SendPasswordRecoveryCodeAsync(
+                                correo,
+                                codigo,
+                                DateTime.UtcNow.AddMinutes(15),
+                                HttpContext.RequestAborted);
+
+                        if (!envio.Sent)
+                        {
+                            var pendientes = await _context.RecuperacionPasswords
+                                .Where(x => x.Email.ToLower() == correo)
+                                .ToListAsync();
+
+                            _context.RecuperacionPasswords.RemoveRange(pendientes);
+                            RegistrarAuditoria(
+                                credencial.UsuarioId,
+                                "SolicitudRecuperacion",
+                                "Credenciales",
+                                credencial.UsuarioId.ToString(),
+                                "Fallido");
+                            await _context.SaveChangesAsync();
+
+                            _logger.LogWarning(
+                                "No se envio el codigo de recuperacion. UsuarioId: {UsuarioId}",
+                                credencial.UsuarioId);
+
+                            return StatusCode(StatusCodes.Status503ServiceUnavailable,
+                                new
+                                {
+                                    codigo = "SERVICIO_CORREO_NO_DISPONIBLE",
+                                    mensaje = "El servicio de recuperacion no esta disponible temporalmente. Intenta mas tarde."
+                                });
+                        }
+
+                        RegistrarAuditoria(
+                            credencial.UsuarioId,
+                            "SolicitudRecuperacion",
+                            "Credenciales",
+                            credencial.UsuarioId.ToString(),
+                            "Enviado");
+                        await _context.SaveChangesAsync();
+                    }
+                    else if (!_environment.IsDevelopment())
+                    {
+                        _context.RecuperacionPasswords.RemoveRange(
+                            await _context.RecuperacionPasswords
+                                .Where(x => x.Email.ToLower() == correo)
+                                .ToListAsync());
+                        await _context.SaveChangesAsync();
+
+                        return StatusCode(StatusCodes.Status503ServiceUnavailable,
+                            new
+                            {
+                                codigo = "SERVICIO_CORREO_NO_CONFIGURADO",
+                                mensaje = "El servicio de recuperacion no esta disponible temporalmente."
+                            });
+                    }
                 }
 
                 var respuesta = new
@@ -279,7 +356,9 @@ namespace AppTesisAPI.Controllers
                     mensaje =
                         "Si el correo está registrado, se generó un código de recuperación con vigencia de 15 minutos.",
                     codigoDemo =
-                        _environment.IsDevelopment() && codigo != null
+                        _environment.IsDevelopment() &&
+                        !_emailSender.IsConfigured &&
+                        codigo != null
                             ? codigo
                             : null
                 };
@@ -307,6 +386,11 @@ namespace AppTesisAPI.Controllers
                     string.IsNullOrWhiteSpace(request.NuevaPassword))
                     return BadRequest(
                         "Completa correo, código y nueva contraseña.");
+
+                if (!EsCorreoValido(request.Email) ||
+                    request.Codigo.Trim().Length != 6 ||
+                    !request.Codigo.Trim().All(char.IsDigit))
+                    return BadRequest("Codigo invalido o expirado.");
 
                 if (request.NuevaPassword.Length < 10)
                     return BadRequest(
@@ -336,7 +420,7 @@ namespace AppTesisAPI.Controllers
                         x.Email.ToLower() == correo);
 
                 if (credencial == null)
-                    return BadRequest("Usuario no existe.");
+                    return BadRequest("Codigo invalido o expirado.");
 
                 credencial.PasswordHash =
                     _passwordHasher.HashPassword(

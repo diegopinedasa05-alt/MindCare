@@ -1,0 +1,18 @@
+{
+  "name": "MindCare | Apoyo psicológico",
+  "short_name": "MindCare",
+  "start_url": "/login.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f4f7fb",
+  "theme_color": "#17283d",
+  "description": "Plataforma de seguimiento emocional y apoyo psicológico.",
+  "icons": [
+    {
+      "src": "/icons/mindcare-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

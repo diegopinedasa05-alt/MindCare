@@ -274,21 +274,11 @@ namespace AppTesisAPI.Controllers
                         .Where(x => x.Email.ToLower() == correo)
                         .ToListAsync();
 
-                    _context.RecuperacionPasswords.RemoveRange(anteriores);
-
                     codigo = RandomNumberGenerator
                         .GetInt32(100000, 1000000)
                         .ToString();
 
-                    _context.RecuperacionPasswords.Add(
-                        new RecuperacionPassword
-                        {
-                            Email = correo,
-                            Codigo = HashRecoveryCode(codigo),
-                            FechaExpiracion = DateTime.UtcNow.AddMinutes(15)
-                        });
-
-                    await _context.SaveChangesAsync();
+                    var fechaExpiracion = DateTime.UtcNow.AddMinutes(15);
 
                     if (_emailSender.IsConfigured)
                     {
@@ -296,16 +286,11 @@ namespace AppTesisAPI.Controllers
                             .SendPasswordRecoveryCodeAsync(
                                 correo,
                                 codigo,
-                                DateTime.UtcNow.AddMinutes(15),
+                                fechaExpiracion,
                                 HttpContext.RequestAborted);
 
                         if (!envio.Sent)
                         {
-                            var pendientes = await _context.RecuperacionPasswords
-                                .Where(x => x.Email.ToLower() == correo)
-                                .ToListAsync();
-
-                            _context.RecuperacionPasswords.RemoveRange(pendientes);
                             RegistrarAuditoria(
                                 credencial.UsuarioId,
                                 "SolicitudRecuperacion",
@@ -325,23 +310,9 @@ namespace AppTesisAPI.Controllers
                                     mensaje = "El servicio de recuperacion no esta disponible temporalmente. Intenta mas tarde."
                                 });
                         }
-
-                        RegistrarAuditoria(
-                            credencial.UsuarioId,
-                            "SolicitudRecuperacion",
-                            "Credenciales",
-                            credencial.UsuarioId.ToString(),
-                            "Enviado");
-                        await _context.SaveChangesAsync();
                     }
                     else if (!_environment.IsDevelopment())
                     {
-                        _context.RecuperacionPasswords.RemoveRange(
-                            await _context.RecuperacionPasswords
-                                .Where(x => x.Email.ToLower() == correo)
-                                .ToListAsync());
-                        await _context.SaveChangesAsync();
-
                         return StatusCode(StatusCodes.Status503ServiceUnavailable,
                             new
                             {
@@ -349,6 +320,23 @@ namespace AppTesisAPI.Controllers
                                 mensaje = "El servicio de recuperacion no esta disponible temporalmente."
                             });
                     }
+
+                    _context.RecuperacionPasswords.RemoveRange(anteriores);
+                    _context.RecuperacionPasswords.Add(
+                        new RecuperacionPassword
+                        {
+                            Email = correo,
+                            Codigo = HashRecoveryCode(codigo),
+                            FechaExpiracion = fechaExpiracion
+                        });
+
+                    RegistrarAuditoria(
+                        credencial.UsuarioId,
+                        "SolicitudRecuperacion",
+                        "Credenciales",
+                        credencial.UsuarioId.ToString(),
+                        _emailSender.IsConfigured ? "Enviado" : "GeneradoDesarrollo");
+                    await _context.SaveChangesAsync();
                 }
 
                 var respuesta = new

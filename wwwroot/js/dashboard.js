@@ -1240,7 +1240,7 @@ function estadoPasoAutocuidado(score, tendencia) {
 function senalDominante(ia, registro) {
 
     if (ia.senalDominante?.fuente &&
-        ia.senalDominante.fuente !== "Sin senal dominante") {
+        ia.senalDominante.fuente !== "Sin señal dominante") {
         return `${ia.senalDominante.fuente} | peso ${ia.senalDominante.peso ?? 0}`;
     }
 

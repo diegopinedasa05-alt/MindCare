@@ -241,7 +241,7 @@ namespace AppTesisAPI.Services
                         nivel == "Alto" ||
                         nivel == "Medio",
                     aclaracion =
-                        "MindCare no diagnostica ni sustituye atencion psicologica profesional; prioriza senales para seguimiento."
+                        "MindCare no diagnostica ni sustituye atencion psicologica profesional; prioriza señales para seguimiento."
                 },
                 alertaSeguridad = AlertaSeguridad(phq9, nivel),
                 planSeguimiento = PlanSeguimiento(
@@ -357,7 +357,7 @@ namespace AppTesisAPI.Services
                     intervencion = "Capturar datos iniciales",
                     seguimiento = "Registro emocional y evaluaciones",
                     criterioEscalamiento =
-                        "Escalar si aparecen senales criticas o alto malestar."
+                        "Escalar si aparecen señales criticas o alto malestar."
                 },
                 preguntasSeguimiento = new[]
                 {
@@ -411,14 +411,14 @@ namespace AppTesisAPI.Services
                     requiereContactoProfesional = false,
                     requiereRevisionPsicologo = false,
                     aclaracion =
-                        "MindCare no diagnostica ni sustituye atencion psicologica profesional; prioriza senales para seguimiento."
+                        "MindCare no diagnostica ni sustituye atencion psicologica profesional; prioriza señales para seguimiento."
                 },
                 alertaSeguridad = new
                 {
                     activa = false,
                     nivel = "Sin datos",
                     mensaje =
-                        "Sin senales evaluables por falta de informacion.",
+                        "Sin señales evaluables por falta de informacion.",
                     accion =
                         "Completar evaluaciones iniciales."
                 },
@@ -691,7 +691,7 @@ namespace AppTesisAPI.Services
             {
                 score += 16;
                 factores.Add(Factor(
-                    "Comorbilidad de senales",
+                    "Comorbilidad de señales",
                     "PHQ-9 y estres laboral se encuentran simultaneamente elevados.",
                     16,
                     "Medio"));
@@ -1080,7 +1080,7 @@ namespace AppTesisAPI.Services
             return nivel switch
             {
                 "Critico" =>
-                    "Alerta critica por senales de riesgo. Se recomienda contacto profesional inmediato.",
+                    "Alerta critica por señales de riesgo. Se recomienda contacto profesional inmediato.",
                 "Alto" =>
                     "Riesgo alto. Se recomienda atencion profesional prioritaria.",
                 "Medio" =>
@@ -1231,7 +1231,7 @@ namespace AppTesisAPI.Services
             if (estresLaboral >= 49 || estresDiario >= 8)
                 return Perfil(
                     "Sobrecarga de estres",
-                    "Predominan senales de estres laboral o estres diario alto.",
+                    "Predominan señales de estres laboral o estres diario alto.",
                     "Identificar detonantes, descanso y apoyo profesional si escala.");
 
             if (tendencia.Estado == "Deterioro")
@@ -1244,7 +1244,7 @@ namespace AppTesisAPI.Services
                 return Perfil(
                     "Variabilidad emocional alta",
                     "Los registros muestran cambios emocionales bruscos.",
-                    "Observar patrones, suenos, carga academica/laboral y detonantes.");
+                    "Observar patrones, sueños, carga academica/laboral y detonantes.");
 
             if (tendencia.Estado == "Mejora")
                 return Perfil(
@@ -1254,7 +1254,7 @@ namespace AppTesisAPI.Services
 
             return Perfil(
                 "Monitoreo preventivo",
-                "No predominan senales altas con los datos disponibles.",
+                "No predominan señales altas con los datos disponibles.",
                 "Mantener registros y completar evaluaciones periodicas.");
         }
 
@@ -1333,7 +1333,7 @@ namespace AppTesisAPI.Services
 
             if (confianza < 55)
                 return AccionPrioritaria(
-                    "Mejorar calidad de senal",
+                    "Mejorar calidad de señal",
                     "Completar PHQ-9, estres laboral y registros emocionales recientes.",
                     "Hoy",
                     "Usuario");
@@ -1449,7 +1449,7 @@ namespace AppTesisAPI.Services
                 nivel == "Favorable"
                     ? "Indicadores actuales sugieren estabilidad con monitoreo preventivo."
                     : nivel == "Vigilancia preventiva"
-                        ? "Hay senales que conviene observar para evitar deterioro."
+                        ? "Hay señales que conviene observar para evitar deterioro."
                         : nivel == "Comprometido"
                             ? "Se recomienda seguimiento cercano y completar contexto."
                             : "Se recomienda priorizar apoyo humano y revision profesional.";
@@ -1551,7 +1551,7 @@ namespace AppTesisAPI.Services
             if (confianza < 55)
                 return Matriz(
                     "Datos insuficientes",
-                    "Mejorar calidad de senal antes de priorizar.",
+                    "Mejorar calidad de señal antes de priorizar.",
                     "Completar evaluaciones y registros recientes.",
                     "Revisar despues de completar linea base.",
                     "Persistencia de datos incompletos con malestar alto.");
@@ -1630,7 +1630,7 @@ namespace AppTesisAPI.Services
                 preguntas.Add("¿Puedes completar hoy el registro emocional y evaluaciones pendientes?");
             }
 
-            preguntas.Add("¿Que accion pequena y realista puedes realizar antes de terminar el dia?");
+            preguntas.Add("¿Que accion pequeña y realista puedes realizar antes de terminar el dia?");
 
             return preguntas
                 .Distinct()
@@ -1643,7 +1643,7 @@ namespace AppTesisAPI.Services
             if (!factores.Any())
                 return new
                 {
-                    fuente = "Sin senal dominante",
+                    fuente = "Sin señal dominante",
                     peso = 0,
                     severidad = "Bajo"
                 };

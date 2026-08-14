@@ -26,6 +26,30 @@ function cambiarEstadoBoton(id, ocupado, texto) {
     if (texto) boton.innerHTML = texto;
 }
 
+async function solicitarConTiempo(url, opciones, milisegundos = 25_000) {
+    const controlador = new AbortController();
+    const temporizador = setTimeout(
+        () => controlador.abort(),
+        milisegundos
+    );
+
+    try {
+        return await fetch(url, {
+            ...opciones,
+            signal: controlador.signal
+        });
+    } catch (error) {
+        if (error?.name === "AbortError") {
+            throw new Error(
+                "El servicio de correo tardo demasiado. Intenta nuevamente en unos minutos."
+            );
+        }
+        throw error;
+    } finally {
+        clearTimeout(temporizador);
+    }
+}
+
 /* =====================================
 ENVIAR CODIGO
 ===================================== */
@@ -45,16 +69,16 @@ async function enviarCodigo() {
     );
 
     try {
-        const res =
-            await fetch(
-                `${API}/Auth/enviar-codigo`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(email)
-                });
+        const res = await solicitarConTiempo(
+            `${API}/Auth/enviar-codigo`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(email)
+            }
+        );
 
         const txt =
             await res.text();
@@ -120,20 +144,20 @@ async function cambiarPassword() {
     );
 
     try {
-        const res =
-            await fetch(
-                `${API}/Auth/recuperar`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        email: email,
-                        codigo: codigo,
-                        nuevaPassword: password
-                    })
-                });
+        const res = await solicitarConTiempo(
+            `${API}/Auth/recuperar`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: email,
+                    codigo: codigo,
+                    nuevaPassword: password
+                })
+            }
+        );
 
         const txt =
             await res.text();

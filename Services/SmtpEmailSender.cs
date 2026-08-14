@@ -74,7 +74,14 @@ public sealed class SmtpEmailSender : IEmailSender
                 new TextPart("html") { Text = html }
             };
 
-            using var client = new SmtpClient();
+            using var timeout = CancellationTokenSource
+                .CreateLinkedTokenSource(cancellationToken);
+            timeout.CancelAfter(TimeSpan.FromSeconds(15));
+
+            using var client = new SmtpClient
+            {
+                Timeout = 15_000
+            };
             var socketOptions = _settings.UseStartTls
                 ? SecureSocketOptions.StartTls
                 : SecureSocketOptions.SslOnConnect;
@@ -83,13 +90,13 @@ public sealed class SmtpEmailSender : IEmailSender
                 _settings.Host,
                 _settings.Port,
                 socketOptions,
-                cancellationToken);
+                timeout.Token);
             await client.AuthenticateAsync(
                 _settings.UserName,
                 _settings.Password,
-                cancellationToken);
-            await client.SendAsync(message, cancellationToken);
-            await client.DisconnectAsync(true, cancellationToken);
+                timeout.Token);
+            await client.SendAsync(message, timeout.Token);
+            await client.DisconnectAsync(true, CancellationToken.None);
 
             _logger.LogInformation(
                 "Correo de recuperacion enviado. Dominio destino: {Domain}",

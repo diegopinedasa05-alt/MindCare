@@ -47,16 +47,25 @@ async function cargarCitas() {
         citas.forEach(cita => {
             const item = document.createElement("article");
             item.className = "appointment-item";
+            const estadoVisible = etiquetaEstado(cita.estado);
+            const atencion = cita.fechaAtencionUtc
+                ? `<small>Atención realizada: ${escapeHtml(formatearFecha(cita.fechaAtencionUtc))}</small>`
+                : "";
+            const trazabilidad = cita.fechaEstadoUtc
+                ? `<small>Último cambio: ${escapeHtml(formatearFecha(cita.fechaEstadoUtc))}${cita.actualizadoPor ? ` por ${escapeHtml(cita.actualizadoPor)}` : ""}</small>`
+                : "";
             item.innerHTML = `
                 <div class="appointment-date">
                     <i class="fa-regular fa-calendar"></i>
                     <span>${escapeHtml(formatearFecha(cita.fecha))}</span>
+                    ${atencion}
                 </div>
                 <div class="appointment-details">
                     <strong>${escapeHtml(cita.nombrePsicologo || `Psicólogo #${cita.psicologoId}`)}</strong>
                     <span>${escapeHtml(cita.observacion || "Sin observaciones registradas")}</span>
+                    ${trazabilidad}
                 </div>
-                <span class="appointment-status ${normalizarEstado(cita.estado)}">${escapeHtml(cita.estado || "Pendiente")}</span>
+                <span class="appointment-status ${normalizarEstado(cita.estado)}">${escapeHtml(estadoVisible)}</span>
             `;
             lista.appendChild(item);
         });
@@ -83,10 +92,21 @@ function formatearFecha(valor) {
 }
 
 function normalizarEstado(estado) {
-    const valor = String(estado || "").toLowerCase();
+    const valor = String(estado || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
     if (valor.includes("cancel")) return "cancelada";
-    if (valor.includes("complet")) return "completada";
+    if (valor.includes("atendid") || valor.includes("complet")) return "atendida";
+    if (valor.includes("confirm")) return "confirmada";
+    if (valor.includes("no asist")) return "no-asistio";
     return "pendiente";
+}
+
+function etiquetaEstado(estado) {
+    const valor = normalizarEstado(estado);
+    if (valor === "no-asistio") return "No asistió";
+    return valor.charAt(0).toUpperCase() + valor.slice(1);
 }
 
 function escapeHtml(valor) {

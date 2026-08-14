@@ -248,6 +248,7 @@ namespace AppTesisAPI.Controllers
                 .Select(x => new
                 {
                     x.Id,
+                    x.CitaId,
                     x.Nota,
                     x.PlanAccion,
                     x.Fecha

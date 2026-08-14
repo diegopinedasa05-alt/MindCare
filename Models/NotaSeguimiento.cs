@@ -8,6 +8,8 @@ namespace AppTesisAPI.Models
 
         public int PsicologoId { get; set; }
 
+        public int? CitaId { get; set; }
+
         public string Nota { get; set; } = "";
 
         public string PlanAccion { get; set; } = "";

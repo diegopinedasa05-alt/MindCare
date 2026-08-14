@@ -453,6 +453,40 @@
 
         </section>
 
+        <section class="tabla-box appointment-operations">
+
+            <div class="appointment-section-head">
+                <div>
+                    <span class="eyebrow">CONTROL DE ATENCIONES</span>
+                    <h2>
+                        <i class="fa-solid fa-list-check"></i>
+                        Agenda operativa
+                    </h2>
+                </div>
+                <p>Confirma, finaliza o reprograma cada sesión con trazabilidad.</p>
+            </div>
+
+            <div class="appointment-table-wrap">
+                <table class="appointment-table">
+                    <thead>
+                        <tr>
+                            <th>Paciente</th>
+                            <th>Fecha programada</th>
+                            <th>Estado</th>
+                            <th>Último cambio</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaAgendaCitas">
+                        <tr>
+                            <td colspan="5">Cargando agenda...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
     </div>
 
     <div id="modalNota"
@@ -508,6 +542,71 @@
 
     </div>
 
+    <div id="modalFinalizarCita"
+         class="modal">
+
+        <div class="modal-box appointment-modal-box">
+
+            <span class="eyebrow">CIERRE CLÍNICO</span>
+            <h2>Finalizar atención</h2>
+            <p class="modal-support">La nota y el plan de acción quedarán vinculados a esta cita.</p>
+
+            <label for="notaAtencion">Nota de atención <strong>*</strong></label>
+            <textarea id="notaAtencion"
+                      placeholder="Resumen de la sesión, hallazgos y acuerdos"></textarea>
+
+            <label for="planAtencion">Plan de acción <strong>*</strong></label>
+            <textarea id="planAtencion"
+                      placeholder="Acciones acordadas, seguimiento y recomendaciones"></textarea>
+
+            <label class="next-appointment-toggle">
+                <input type="checkbox"
+                       id="programarSiguienteAlFinalizar"
+                       onchange="alternarSiguienteCita()">
+                <span>Programar siguiente cita al finalizar</span>
+            </label>
+
+            <div id="camposSiguienteCita"
+                 class="next-appointment-fields"
+                 hidden>
+                <label for="fechaSiguienteCita">Fecha y hora</label>
+                <input type="datetime-local"
+                       id="fechaSiguienteCita">
+                <label for="notaSiguienteCita">Observaciones</label>
+                <textarea id="notaSiguienteCita"
+                          placeholder="Objetivo o indicaciones para la siguiente sesión"></textarea>
+            </div>
+
+            <button onclick="finalizarAtencion()">
+                <i class="fa-solid fa-circle-check"></i>
+                Finalizar atención
+            </button>
+
+            <button onclick="cerrarFinalizarAtencion()"
+                    class="cancelar">
+                Volver
+            </button>
+
+        </div>
+
+    </div>
+
+    <div id="modalHistorialCita"
+         class="modal">
+
+        <div class="modal-box appointment-modal-box">
+            <span class="eyebrow">TRAZABILIDAD</span>
+            <h2>Historial de la cita</h2>
+            <div id="historialCitaContenido"
+                 class="appointment-history-list"></div>
+            <button onclick="cerrarHistorialCita()"
+                    class="cancelar">
+                Cerrar
+            </button>
+        </div>
+
+    </div>
+
     <div id="toast"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
@@ -515,7 +614,7 @@
 
     <script src="../js/config.js"></script>
     <script src="../js/mindcare-dashboard-shell.js?v=3"></script>
-    <script src="../js/dashboardPsicologo.js?v=12"></script>
+    <script src="../js/dashboardPsicologo.js?v=13"></script>
 
 </body>
 </html>

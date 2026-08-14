@@ -29,6 +29,7 @@ namespace AppTesisAPI.Data
         public DbSet<DocumentoProfesional> DocumentosProfesionales { get; set; }
         public DbSet<VerificacionProfesional> VerificacionesProfesionales { get; set; }
         public DbSet<AuditoriaEvento> AuditoriaEventos { get; set; }
+        public DbSet<CitaHistorialEstado> CitaHistorialEstados { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -56,6 +57,12 @@ namespace AppTesisAPI.Data
             modelBuilder.Entity<Cita>()
                 .HasIndex(x => new { x.PsicologoId, x.Fecha });
 
+            modelBuilder.Entity<Cita>()
+                .HasOne<Usuario>()
+                .WithMany()
+                .HasForeignKey(x => x.EstadoActualizadoPorUsuarioId)
+                .OnDelete(DeleteBehavior.SetNull);
+
             modelBuilder.Entity<ConsentimientoUsuario>()
                 .HasIndex(x => new { x.UsuarioId, x.FechaAceptacion });
 
@@ -65,6 +72,30 @@ namespace AppTesisAPI.Data
 
             modelBuilder.Entity<NotaSeguimiento>()
                 .HasIndex(x => new { x.PacienteId, x.PsicologoId, x.Fecha });
+
+            modelBuilder.Entity<NotaSeguimiento>()
+                .HasIndex(x => x.CitaId);
+
+            modelBuilder.Entity<NotaSeguimiento>()
+                .HasOne<Cita>()
+                .WithMany()
+                .HasForeignKey(x => x.CitaId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<CitaHistorialEstado>()
+                .HasIndex(x => new { x.CitaId, x.FechaUtc });
+
+            modelBuilder.Entity<CitaHistorialEstado>()
+                .HasOne<Cita>()
+                .WithMany()
+                .HasForeignKey(x => x.CitaId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CitaHistorialEstado>()
+                .HasOne<Usuario>()
+                .WithMany()
+                .HasForeignKey(x => x.CambiadoPorUsuarioId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<SeguimientoUsuario>()
                 .HasIndex(x => new { x.UsuarioId, x.Fecha })

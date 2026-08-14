@@ -92,6 +92,9 @@ namespace AppTesisAPI.Controllers
                     x.Fecha,
                     x.Estado,
                     x.Observacion,
+                    x.FechaAtencionUtc,
+                    x.FechaEstadoUtc,
+                    x.EstadoActualizadoPorUsuarioId,
                     x.PsicologoId,
                     psicologo =
                         _context.Usuarios
@@ -126,6 +129,7 @@ namespace AppTesisAPI.Controllers
                     .Select(x => (object)new
                     {
                         x.Id,
+                        x.CitaId,
                         x.Fecha,
                         x.Nota,
                         x.PlanAccion,

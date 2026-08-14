@@ -5,6 +5,8 @@ const psicologoId =
 
 let usuarioCita = 0;
 let usuarioNota = 0;
+let citaFinalizar = 0;
+let pacienteFinalizar = 0;
 let calendar;
 let chartRiesgoClinico;
 let chartTendenciaClinica;
@@ -1087,10 +1089,18 @@ async function cargarEventos() {
 
         calendar.removeAllEvents();
 
+        renderAgendaOperativa(lista);
+
         lista.forEach(x => {
             calendar.addEvent({
-                title: x.nombrePaciente || "Paciente",
-                start: x.fecha
+                title: `${x.nombrePaciente || "Paciente"} · ${etiquetaEstadoCita(x.estado)}`,
+                start: x.fecha,
+                color: colorEstadoCita(x.estado),
+                extendedProps: {
+                    citaId: x.id,
+                    usuarioId: x.usuarioId,
+                    estado: x.estado
+                }
             });
         });
 
@@ -1098,6 +1108,234 @@ async function cargarEventos() {
 
         toast("No se pudo cargar agenda", "error");
     }
+}
+
+function renderAgendaOperativa(lista) {
+
+    const tabla = document.getElementById("tablaAgendaCitas");
+    if (!tabla) return;
+
+    if (!lista.length) {
+        tabla.innerHTML = `<tr><td colspan="5">No hay citas registradas.</td></tr>`;
+        return;
+    }
+
+    tabla.innerHTML = lista.map(cita => {
+        const estado = normalizarEstadoCita(cita.estado);
+        const fechaCambio = cita.fechaEstadoUtc || cita.fecha;
+        const actualizadoPor = cita.actualizadoPor || "Sin registro";
+        const fechaAtencion = cita.fechaAtencionUtc
+            ? `<small>Atendida: ${formatoFechaHora(cita.fechaAtencionUtc)}</small>`
+            : "";
+
+        return `
+<tr id="cita-${cita.id}">
+<td>
+    <strong>${escapeHtml(cita.nombrePaciente || "Paciente")}</strong>
+    <small>${escapeHtml(cita.observacion || "Sin observaciones")}</small>
+</td>
+<td>
+    <strong>${formatoFechaHora(cita.fecha)}</strong>
+    ${fechaAtencion}
+</td>
+<td>
+    <span class="appointment-status appointment-status-${claseEstadoCita(estado)}">
+        ${etiquetaEstadoCita(estado)}
+    </span>
+</td>
+<td>
+    <strong>${escapeHtml(actualizadoPor)}</strong>
+    <small>${formatoFechaHora(fechaCambio)}</small>
+</td>
+<td>
+    <div class="appointment-actions">
+        ${accionesCita(cita, estado)}
+    </div>
+</td>
+</tr>`;
+    }).join("");
+}
+
+function accionesCita(cita, estado) {
+
+    const id = Number(cita.id);
+    const pacienteId = Number(cita.usuarioId);
+    const acciones = [];
+
+    if (estado === "pendiente") {
+        acciones.push(botonCita("Confirmar", "fa-check", "confirm", `actualizarEstadoCita(${id}, 'Confirmada')`));
+    }
+
+    if (estado === "pendiente" || estado === "confirmada") {
+        acciones.push(botonCita("Finalizar", "fa-clipboard-check", "finish", `abrirFinalizarAtencion(${id}, ${pacienteId})`));
+        acciones.push(botonCita("No asistió", "fa-user-xmark", "warning", `actualizarEstadoCita(${id}, 'No asistio')`));
+        acciones.push(botonCita("Cancelar", "fa-ban", "danger", `actualizarEstadoCita(${id}, 'Cancelada')`));
+    }
+
+    if (["atendida", "no asistio", "cancelada"].includes(estado)) {
+        acciones.push(botonCita("Siguiente cita", "fa-calendar-plus", "next", `agendarCita(${pacienteId})`));
+    }
+
+    acciones.push(botonCita("Historial", "fa-clock-rotate-left", "history", `verHistorialCita(${id})`));
+    return acciones.join("");
+}
+
+function botonCita(texto, icono, clase, accion) {
+    return `<button class="appointment-action appointment-action-${clase}" onclick="${accion}">
+        <i class="fa-solid ${icono}"></i><span>${texto}</span>
+    </button>`;
+}
+
+async function actualizarEstadoCita(id, estado) {
+
+    const etiqueta = etiquetaEstadoCita(estado);
+    if (!confirm(`¿Cambiar esta cita a ${etiqueta}?`)) return;
+
+    try {
+        const res = await fetch(`${API}/Citas/${id}/estado`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ estado, detalle: `Estado actualizado a ${etiqueta}` })
+        });
+
+        if (!res.ok) throw new Error(await res.text());
+
+        await cargarTodo();
+        toast(`Cita ${etiqueta.toLowerCase()}`);
+    } catch (error) {
+        toast(limpiarMensaje(error.message) || "No se pudo actualizar la cita", "error");
+    }
+}
+
+function abrirFinalizarAtencion(citaId, pacienteId) {
+    citaFinalizar = citaId;
+    pacienteFinalizar = pacienteId;
+    notaAtencion.value = "";
+    planAtencion.value = "";
+    programarSiguienteAlFinalizar.checked = false;
+    fechaSiguienteCita.value = "";
+    notaSiguienteCita.value = "";
+    alternarSiguienteCita();
+    modalFinalizarCita.style.display = "flex";
+}
+
+function cerrarFinalizarAtencion() {
+    modalFinalizarCita.style.display = "none";
+}
+
+function alternarSiguienteCita() {
+    camposSiguienteCita.hidden = !programarSiguienteAlFinalizar.checked;
+}
+
+async function finalizarAtencion() {
+
+    const nota = notaAtencion.value.trim();
+    const planAccion = planAtencion.value.trim();
+    const programaSiguiente = programarSiguienteAlFinalizar.checked;
+    const fechaLocal = fechaSiguienteCita.value;
+
+    if (!nota || !planAccion) {
+        toast("La nota y el plan de acción son obligatorios", "error");
+        return;
+    }
+
+    if (programaSiguiente && !fechaLocal) {
+        toast("Selecciona la fecha de la siguiente cita", "error");
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API}/Citas/${citaFinalizar}/finalizar`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                nota,
+                planAccion,
+                siguienteCitaFecha: programaSiguiente
+                    ? new Date(fechaLocal).toISOString()
+                    : null,
+                siguienteCitaObservacion: programaSiguiente
+                    ? notaSiguienteCita.value.trim()
+                    : ""
+            })
+        });
+
+        if (!res.ok) throw new Error(await res.text());
+
+        const resultado = await res.json();
+        cerrarFinalizarAtencion();
+        await cargarTodo();
+        toast(resultado.mensaje || "Atención finalizada");
+    } catch (error) {
+        toast(limpiarMensaje(error.message) || "No se pudo finalizar la atención", "error");
+    }
+}
+
+async function verHistorialCita(id) {
+
+    historialCitaContenido.innerHTML = `<p>Cargando historial...</p>`;
+    modalHistorialCita.style.display = "flex";
+
+    try {
+        const res = await fetch(`${API}/Citas/${id}/historial`);
+        if (!res.ok) throw new Error(await res.text());
+
+        const historial = await res.json();
+        historialCitaContenido.innerHTML = historial.length
+            ? historial.map(item => `
+                <article class="appointment-history-item">
+                    <span class="appointment-history-dot"></span>
+                    <div>
+                        <strong>${etiquetaEstadoCita(item.estadoNuevo)}</strong>
+                        <p>${escapeHtml(item.detalle || "Cambio de estado")}</p>
+                        <small>${escapeHtml(item.cambiadoPor || "Usuario")} · ${formatoFechaHora(item.fechaUtc)}</small>
+                    </div>
+                </article>`).join("")
+            : `<p>No hay cambios registrados para esta cita.</p>`;
+    } catch (error) {
+        historialCitaContenido.innerHTML = `<p>No se pudo cargar la trazabilidad.</p>`;
+    }
+}
+
+function cerrarHistorialCita() {
+    modalHistorialCita.style.display = "none";
+}
+
+function normalizarEstadoCita(value) {
+    return String(value || "Pendiente")
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+}
+
+function etiquetaEstadoCita(value) {
+    const estado = normalizarEstadoCita(value);
+    if (estado === "no asistio") return "No asistió";
+    return estado.charAt(0).toUpperCase() + estado.slice(1);
+}
+
+function claseEstadoCita(value) {
+    return normalizarEstadoCita(value).replace(/\s+/g, "-");
+}
+
+function colorEstadoCita(value) {
+    const estado = normalizarEstadoCita(value);
+    if (estado === "confirmada") return "#2563eb";
+    if (estado === "atendida") return "#0f766e";
+    if (estado === "no asistio") return "#d97706";
+    if (estado === "cancelada") return "#dc2626";
+    return "#64748b";
+}
+
+function formatoFechaHora(value) {
+    if (!value) return "Sin registro";
+    const fecha = new Date(value);
+    if (Number.isNaN(fecha.getTime())) return "Sin registro";
+    return fecha.toLocaleString("es-MX", {
+        dateStyle: "medium",
+        timeStyle: "short"
+    });
 }
 
 function verHistorial(id) {
@@ -1150,7 +1388,7 @@ async function guardarCita() {
                     body: JSON.stringify({
                         usuarioId: usuarioCita,
                         psicologoId: parseInt(psicologoId),
-                        fecha,
+                        fecha: new Date(fecha).toISOString(),
                         estado: "Pendiente",
                         observacion: nota
                     })

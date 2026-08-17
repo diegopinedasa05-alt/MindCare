@@ -51,7 +51,7 @@ async function solicitarConTiempo(url, opciones, milisegundos = 25_000) {
 }
 
 /* =====================================
-ENVIAR CODIGO
+ENVIAR CÓDIGO
 ===================================== */
 async function enviarCodigo() {
     const email =
@@ -87,7 +87,7 @@ async function enviarCodigo() {
             throw new Error(extraerMensaje(txt));
 
         mostrarMensaje(
-            "Revisa tu correo. El codigo vence en 15 minutos."
+            "Revisa tu correo. El código vence en 15 minutos."
         );
 
         document.getElementById("paso1").style.display =
@@ -102,7 +102,7 @@ async function enviarCodigo() {
         cambiarEstadoBoton(
             "enviarCodigoBtn",
             false,
-            '<i class="fa-solid fa-paper-plane"></i> Enviar codigo'
+            '<i class="fa-solid fa-paper-plane"></i> Enviar código'
         );
     }
 }
@@ -123,17 +123,17 @@ async function cambiarPassword() {
         document.getElementById("confirmarPassword").value;
 
     if (!/^\d{6}$/.test(codigo)) {
-        mostrarMensaje("Ingresa el codigo de seis digitos.", "error");
+        mostrarMensaje("Ingresa el código de seis dígitos.", "error");
         return;
     }
 
     if (password.length < 10) {
-        mostrarMensaje("La contrasena debe tener al menos 10 caracteres.", "error");
+        mostrarMensaje("La contraseña debe tener al menos 10 caracteres.", "error");
         return;
     }
 
     if (password !== confirmacion) {
-        mostrarMensaje("Las contrasenas no coinciden.", "error");
+        mostrarMensaje("Las contraseñas no coinciden.", "error");
         return;
     }
 
@@ -165,7 +165,7 @@ async function cambiarPassword() {
         if (!res.ok)
             throw new Error(extraerMensaje(txt));
 
-        mostrarMensaje("Contrasena actualizada. Redirigiendo al inicio de sesion.");
+        mostrarMensaje("Contraseña actualizada. Redirigiendo al inicio de sesión.");
 
         setTimeout(() => {
             location.href = "login.html";
@@ -177,7 +177,7 @@ async function cambiarPassword() {
         cambiarEstadoBoton(
             "cambiarPasswordBtn",
             false,
-            '<i class="fa-solid fa-rotate"></i> Actualizar contrasena'
+            '<i class="fa-solid fa-rotate"></i> Actualizar contraseña'
         );
     }
 }

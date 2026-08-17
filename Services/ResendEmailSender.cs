@@ -48,27 +48,27 @@ public sealed class ResendEmailSender : IEmailSender
             {
                 from = $"{_settings.FromName} <{_settings.FromEmail}>",
                 to = new[] { recipient },
-                subject = "MindCare | Codigo de recuperacion",
+                subject = "MindCare | Código de recuperación",
                 text = $"""
                     MindCare
 
-                    Tu codigo de recuperacion es: {code}
+                    Tu código de recuperación es: {code}
 
-                    El codigo vence a las {expiration}. Si no solicitaste este cambio, ignora este correo.
-                    MindCare no solicita tu contrasena por correo.
+                    El código vence a las {expiration}. Si no solicitaste este cambio, ignora este correo.
+                    MindCare no solicita tu contraseña por correo.
                     """,
                 html = $"""
                     <div style="font-family:Arial,sans-serif;background:#f4f7fb;padding:32px;color:#17283d">
                       <div style="max-width:560px;margin:auto;background:#ffffff;border:1px solid #dbe5f0;border-radius:16px;overflow:hidden">
                         <div style="background:#17283d;padding:26px 32px;color:#ffffff">
                           <div style="font-size:25px;font-weight:700">MindCare</div>
-                          <div style="margin-top:6px;color:#cbd5e1">Recuperacion segura de acceso</div>
+                          <div style="margin-top:6px;color:#cbd5e1">Recuperación segura de acceso</div>
                         </div>
                         <div style="padding:30px 32px">
-                          <p style="margin:0 0 18px">Usa el siguiente codigo para restablecer tu contrasena:</p>
+                          <p style="margin:0 0 18px">Usa el siguiente código para restablecer tu contraseña:</p>
                           <div style="letter-spacing:8px;font-size:30px;font-weight:700;color:#0f766e;background:#ecfdf5;border:1px solid #99f6e4;border-radius:12px;padding:18px;text-align:center">{code}</div>
-                          <p style="margin:22px 0 0;color:#475569">El codigo vence a las {expiration}. Si no solicitaste este cambio, puedes ignorar este correo.</p>
-                          <p style="margin:14px 0 0;color:#64748b;font-size:13px">MindCare nunca solicita tu contrasena por correo.</p>
+                          <p style="margin:22px 0 0;color:#475569">El código vence a las {expiration}. Si no solicitaste este cambio, puedes ignorar este correo.</p>
+                          <p style="margin:14px 0 0;color:#64748b;font-size:13px">MindCare nunca solicita tu contraseña por correo.</p>
                         </div>
                       </div>
                     </div>

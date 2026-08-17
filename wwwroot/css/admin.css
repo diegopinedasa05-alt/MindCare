@@ -806,6 +806,16 @@ tr:hover {
     background: #475569;
 }
 
+.user-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.user-actions button {
+    white-space: nowrap;
+}
+
 .score-mini {
     display: grid;
     gap: 6px;

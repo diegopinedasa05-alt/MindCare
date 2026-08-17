@@ -174,6 +174,54 @@ namespace AppTesisAPI.Controllers
             });
         }
 
+        [HttpPatch("usuarios/{usuarioId}/promover-administrador")]
+        public async Task<IActionResult> PromoverAdministrador(int usuarioId)
+        {
+            var adminId = User.GetUserId();
+
+            if (adminId == null)
+                return Forbid();
+
+            if (adminId == usuarioId)
+                return BadRequest(
+                    "No puedes modificar el rol de tu propia cuenta.");
+
+            var credencial = await _context.Credenciales
+                .FirstOrDefaultAsync(x => x.UsuarioId == usuarioId);
+
+            if (credencial == null)
+                return NotFound("Usuario no encontrado.");
+
+            if (!credencial.Activo)
+                return BadRequest(
+                    "La cuenta debe estar activa antes de asignarle permisos administrativos.");
+
+            if (string.Equals(credencial.Rol, "Admin", StringComparison.OrdinalIgnoreCase))
+                return BadRequest("La cuenta ya tiene permisos administrativos.");
+
+            if (!string.Equals(credencial.Rol, "Usuario", StringComparison.OrdinalIgnoreCase))
+                return BadRequest(
+                    "Solo se pueden promover cuentas de usuario. Los perfiles profesionales conservan su rol.");
+
+            credencial.Rol = "Admin";
+
+            RegistrarAuditoria(
+                adminId,
+                "PromoverAdministrador",
+                "Usuario",
+                usuarioId.ToString(),
+                "Correcto");
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                mensaje = "Permisos administrativos asignados correctamente.",
+                usuarioId,
+                rol = credencial.Rol
+            });
+        }
+
         [HttpGet("psicologos")]
         public async Task<IActionResult> Psicologos()
         {

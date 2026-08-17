@@ -106,10 +106,17 @@ ${Number(x.alertas || 0)} alertas
 </td>
 <td>${fecha(x.fechaRegistro)}</td>
 <td>
+<div class="user-actions">
+${x.activo && String(x.rol || "").toLowerCase() === "usuario" ? `
+<button class="btn-secondary"
+        onclick="promoverAdministrador(${x.id}, this)">
+Convertir en administrador
+</button>` : ""}
 <button class="${x.activo ? "btn-secondary" : "nuevo-btn"}"
         onclick="cambiarEstadoUsuario(${x.id}, ${!x.activo}, this)">
 ${x.activo ? "Desactivar" : "Activar"}
 </button>
+</div>
 </td>
 </tr>`).join("") ||
         `<tr><td colspan="7">Sin datos con los filtros actuales</td></tr>`
@@ -1299,6 +1306,53 @@ async function cambiarEstadoUsuario(id, activo, boton) {
     } catch (error) {
 
         toast(error.message || "No se pudo actualizar", "error");
+    } finally {
+
+        if (boton) {
+            boton.disabled = false;
+            boton.removeAttribute("aria-busy");
+            boton.innerHTML = etiquetaOriginal;
+        }
+    }
+}
+
+async function promoverAdministrador(id, boton) {
+
+    const usuario = usuariosCache.find(x => Number(x.id) === Number(id));
+    const nombre = usuario?.nombre || "esta cuenta";
+
+    if (!confirm(`¿Convertir a ${nombre} en administrador? Esta acción quedará registrada.`))
+        return;
+
+    if (boton?.disabled)
+        return;
+
+    const etiquetaOriginal = boton?.innerHTML || "";
+
+    if (boton) {
+        boton.disabled = true;
+        boton.setAttribute("aria-busy", "true");
+        boton.innerText = "Asignando...";
+    }
+
+    try {
+
+        const res = await fetch(
+            `${API}/Admin/usuarios/${id}/promover-administrador`,
+            { method: "PATCH" }
+        );
+
+        const txt = await res.text();
+
+        if (!res.ok)
+            throw new Error(extraerMensaje(txt));
+
+        toast(extraerMensaje(txt));
+        await iniciar();
+
+    } catch (error) {
+
+        toast(error.message || "No se pudieron asignar los permisos", "error");
     } finally {
 
         if (boton) {

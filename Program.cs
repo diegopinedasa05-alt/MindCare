@@ -254,6 +254,7 @@ app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapGet("/", () => Results.Redirect("/login.html"));
 app.MapControllers();
 app.MapHealthChecks("/health");
 

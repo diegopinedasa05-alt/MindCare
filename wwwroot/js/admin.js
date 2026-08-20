@@ -23,9 +23,40 @@ window.onload = async function () {
 
 function esSesionAdministrativa() {
 
-    return String(localStorage.getItem("rol") || "")
+    const rolGuardado = String(localStorage.getItem("rol") || "")
         .trim()
-        .toLowerCase() === "admin";
+        .toLowerCase();
+
+    const token = localStorage.getItem("token");
+    const rolToken = obtenerRolDelToken(token);
+
+    return rolGuardado === "admin" && rolToken === "admin";
+}
+
+function obtenerRolDelToken(token) {
+
+    try {
+
+        const payload = token.split(".")[1]
+            .replace(/-/g, "+")
+            .replace(/_/g, "/");
+
+        const datos = JSON.parse(atob(payload));
+        const claveRol = Object.keys(datos).find(clave =>
+            clave.toLowerCase() === "role" ||
+            clave.toLowerCase().endsWith("/role")
+        );
+
+        const rol = claveRol ? datos[claveRol] : "";
+
+        return String(Array.isArray(rol) ? rol[0] : rol || "")
+            .trim()
+            .toLowerCase();
+
+    } catch {
+
+        return "";
+    }
 }
 
 function redirigirPorPermisos() {

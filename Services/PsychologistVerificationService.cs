@@ -41,7 +41,7 @@ public sealed class PsychologistVerificationService
         return profile is null ||
                (profile.Activo &&
                 string.Equals(
-                    profile.EstadoVerificacion,
+                    profile.EstadoVerificacion?.Trim(),
                     "Verificado",
                     StringComparison.OrdinalIgnoreCase));
     }

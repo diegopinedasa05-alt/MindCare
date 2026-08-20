@@ -266,6 +266,51 @@ static string ResolvePostgresConnectionString(
 {
     var direct =
         configuration.GetConnectionString("DefaultConnection");
+    var databaseUrl =
+        Environment.GetEnvironmentVariable("DATABASE_URL");
+
+    if (string.IsNullOrWhiteSpace(databaseUrl) &&
+        environment.IsDevelopment())
+    {
+        databaseUrl =
+            ReadLocalPowerShellEnv(
+                environment.ContentRootPath,
+                "DATABASE_URL");
+    }
+
+    // En servicios administrados (Render/Neon), DATABASE_URL es la fuente
+    // operativa de la base de datos. Evita conservar por error una cadena
+    // directa antigua configurada en el entorno de despliegue.
+    if (!string.IsNullOrWhiteSpace(databaseUrl))
+    {
+        var uri = new Uri(databaseUrl);
+        var userInfo = uri.UserInfo.Split(':', 2);
+        var username = Uri.UnescapeDataString(userInfo[0]);
+        var password =
+            userInfo.Length > 1
+                ? Uri.UnescapeDataString(userInfo[1])
+                : "";
+
+        var database =
+            uri.AbsolutePath.TrimStart('/');
+
+        var port =
+            uri.Port > 0
+                ? uri.Port
+                : 5432;
+
+        return
+            $"Host={uri.Host};" +
+            $"Port={port};" +
+            $"Database={database};" +
+            $"Username={username};" +
+            $"Password={password};" +
+            "SSL Mode=Require;" +
+            "Pooling=true;" +
+            "Maximum Pool Size=20;" +
+            "Timeout=15;" +
+            "Command Timeout=30";
+    }
 
     if (!string.IsNullOrWhiteSpace(direct))
         return direct;
@@ -281,48 +326,7 @@ static string ResolvePostgresConnectionString(
             return localDirect;
     }
 
-    var databaseUrl =
-        Environment.GetEnvironmentVariable("DATABASE_URL");
-
-    if (string.IsNullOrWhiteSpace(databaseUrl) &&
-        environment.IsDevelopment())
-    {
-        databaseUrl =
-            ReadLocalPowerShellEnv(
-                environment.ContentRootPath,
-                "DATABASE_URL");
-    }
-
-    if (string.IsNullOrWhiteSpace(databaseUrl))
-        return "";
-
-    var uri = new Uri(databaseUrl);
-    var userInfo = uri.UserInfo.Split(':', 2);
-    var username = Uri.UnescapeDataString(userInfo[0]);
-    var password =
-        userInfo.Length > 1
-            ? Uri.UnescapeDataString(userInfo[1])
-            : "";
-
-    var database =
-        uri.AbsolutePath.TrimStart('/');
-
-    var port =
-        uri.Port > 0
-            ? uri.Port
-            : 5432;
-
-    return
-        $"Host={uri.Host};" +
-        $"Port={port};" +
-        $"Database={database};" +
-        $"Username={username};" +
-        $"Password={password};" +
-        "SSL Mode=Require;" +
-        "Pooling=true;" +
-        "Maximum Pool Size=20;" +
-        "Timeout=15;" +
-        "Command Timeout=30";
+    return "";
 }
 
 static string ReadLocalPowerShellEnv(

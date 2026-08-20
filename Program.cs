@@ -212,8 +212,12 @@ app.UseExceptionHandler(errorApp =>
             .GetRequiredService<ILoggerFactory>()
             .CreateLogger("GlobalException");
 
+        var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
         logger.LogError(
-            "Error no controlado. TraceId: {TraceId}",
+            exception,
+            "Error no controlado durante {Method} {Path}. TraceId: {TraceId}",
+            context.Request.Method,
+            context.Request.Path,
             context.TraceIdentifier);
 
         context.Response.StatusCode = StatusCodes.Status500InternalServerError;

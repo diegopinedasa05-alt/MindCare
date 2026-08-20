@@ -80,42 +80,48 @@ public class CitasController : ControllerBase
         cita.FechaEstadoUtc = ahora;
         cita.EstadoActualizadoPorUsuarioId = currentUserId;
 
-        await using var transaction = await _context.Database.BeginTransactionAsync();
-
-        _context.Citas.Add(cita);
-
-        var asignacion = await _context.PacientePsicologos.FirstOrDefaultAsync(x =>
-            x.PacienteId == cita.UsuarioId &&
-            x.PsicologoId == cita.PsicologoId);
-
-        if (asignacion is null)
+        // Neon uses connection retries, so explicit transactions must run
+        // through EF Core's execution strategy to preserve atomicity.
+        var executionStrategy = _context.Database.CreateExecutionStrategy();
+        await executionStrategy.ExecuteAsync(async () =>
         {
-            _context.PacientePsicologos.Add(new PacientePsicologo
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+
+            _context.Citas.Add(cita);
+
+            var asignacion = await _context.PacientePsicologos.FirstOrDefaultAsync(x =>
+                x.PacienteId == cita.UsuarioId &&
+                x.PsicologoId == cita.PsicologoId);
+
+            if (asignacion is null)
             {
-                PacienteId = cita.UsuarioId,
-                PsicologoId = cita.PsicologoId,
-                FechaAsignacion = ahora,
-                Activo = true
-            });
-        }
-        else if (!asignacion.Activo)
-        {
-            asignacion.Activo = true;
-            asignacion.FechaAsignacion = ahora;
-        }
+                _context.PacientePsicologos.Add(new PacientePsicologo
+                {
+                    PacienteId = cita.UsuarioId,
+                    PsicologoId = cita.PsicologoId,
+                    FechaAsignacion = ahora,
+                    Activo = true
+                });
+            }
+            else if (!asignacion.Activo)
+            {
+                asignacion.Activo = true;
+                asignacion.FechaAsignacion = ahora;
+            }
 
-        await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
-        RegistrarCambioEstado(
-            cita,
-            "",
-            CitaWorkflow.Pendiente,
-            currentUserId.Value,
-            "Cita programada",
-            ahora);
+            RegistrarCambioEstado(
+                cita,
+                "",
+                CitaWorkflow.Pendiente,
+                currentUserId.Value,
+                "Cita programada",
+                ahora);
 
-        await _context.SaveChangesAsync();
-        await transaction.CommitAsync();
+            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
+        });
 
         return Ok(new
         {
@@ -318,63 +324,67 @@ public class CitasController : ControllerBase
         }
 
         var ahora = DateTime.UtcNow;
-        await using var transaction = await _context.Database.BeginTransactionAsync();
-
-        AplicarEstado(cita, CitaWorkflow.Atendida, currentUserId.Value, ahora);
-        cita.FechaAtencionUtc = ahora;
-
-        _context.NotasSeguimiento.Add(new NotaSeguimiento
-        {
-            CitaId = cita.Id,
-            PacienteId = cita.UsuarioId,
-            PsicologoId = cita.PsicologoId,
-            Nota = nota,
-            PlanAccion = planAccion,
-            Fecha = ahora
-        });
-
-        RegistrarCambioEstado(
-            cita,
-            estadoAnterior,
-            CitaWorkflow.Atendida,
-            currentUserId.Value,
-            "Atencion finalizada con nota y plan de accion",
-            ahora);
-
         Cita? siguienteCita = null;
-        if (siguienteFecha.HasValue)
+        var executionStrategy = _context.Database.CreateExecutionStrategy();
+        await executionStrategy.ExecuteAsync(async () =>
         {
-            siguienteCita = new Cita
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+
+            AplicarEstado(cita, CitaWorkflow.Atendida, currentUserId.Value, ahora);
+            cita.FechaAtencionUtc = ahora;
+
+            _context.NotasSeguimiento.Add(new NotaSeguimiento
             {
-                UsuarioId = cita.UsuarioId,
+                CitaId = cita.Id,
+                PacienteId = cita.UsuarioId,
                 PsicologoId = cita.PsicologoId,
-                Fecha = siguienteFecha.Value,
-                Estado = CitaWorkflow.Pendiente,
-                Observacion = (request.SiguienteCitaObservacion ?? "").Trim(),
-                FechaCreacion = ahora,
-                FechaEstadoUtc = ahora,
-                EstadoActualizadoPorUsuarioId = currentUserId
-            };
+                Nota = nota,
+                PlanAccion = planAccion,
+                Fecha = ahora
+            });
 
-            _context.Citas.Add(siguienteCita);
-        }
-
-        await _context.SaveChangesAsync();
-
-        if (siguienteCita is not null)
-        {
             RegistrarCambioEstado(
-                siguienteCita,
-                "",
-                CitaWorkflow.Pendiente,
+                cita,
+                estadoAnterior,
+                CitaWorkflow.Atendida,
                 currentUserId.Value,
-                "Siguiente cita programada al finalizar la atencion",
+                "Atencion finalizada con nota y plan de accion",
                 ahora);
 
-            await _context.SaveChangesAsync();
-        }
+            if (siguienteFecha.HasValue)
+            {
+                siguienteCita = new Cita
+                {
+                    UsuarioId = cita.UsuarioId,
+                    PsicologoId = cita.PsicologoId,
+                    Fecha = siguienteFecha.Value,
+                    Estado = CitaWorkflow.Pendiente,
+                    Observacion = (request.SiguienteCitaObservacion ?? "").Trim(),
+                    FechaCreacion = ahora,
+                    FechaEstadoUtc = ahora,
+                    EstadoActualizadoPorUsuarioId = currentUserId
+                };
 
-        await transaction.CommitAsync();
+                _context.Citas.Add(siguienteCita);
+            }
+
+            await _context.SaveChangesAsync();
+
+            if (siguienteCita is not null)
+            {
+                RegistrarCambioEstado(
+                    siguienteCita,
+                    "",
+                    CitaWorkflow.Pendiente,
+                    currentUserId.Value,
+                    "Siguiente cita programada al finalizar la atencion",
+                    ahora);
+
+                await _context.SaveChangesAsync();
+            }
+
+            await transaction.CommitAsync();
+        });
 
         return Ok(new
         {

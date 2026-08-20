@@ -1402,7 +1402,12 @@ async function guardarCita() {
                 );
             }
 
-            throw new Error(await res.text());
+            throw new Error(
+                await mensajeErrorRespuesta(
+                    res,
+                    "No fue posible guardar la cita. Inténtalo de nuevo en unos momentos."
+                )
+            );
         }
 
         cerrarModal();
@@ -1591,6 +1596,22 @@ function limpiarMensaje(txt) {
         .replaceAll("{", "")
         .replaceAll("}", "")
         .trim();
+}
+
+async function mensajeErrorRespuesta(respuesta, mensajePredeterminado) {
+
+    const texto = await respuesta.text();
+
+    if (respuesta.status >= 500) {
+        return mensajePredeterminado;
+    }
+
+    try {
+        const problema = JSON.parse(texto);
+        return limpiarMensaje(problema.detail || problema.title) || mensajePredeterminado;
+    } catch {
+        return limpiarMensaje(texto) || mensajePredeterminado;
+    }
 }
 
 function normalizarTexto(txt) {

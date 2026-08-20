@@ -13,12 +13,42 @@ window.onload = async function () {
         return;
     }
 
+    if (!esSesionAdministrativa()) {
+        redirigirPorPermisos();
+        return;
+    }
+
     await iniciar();
 };
 
+function esSesionAdministrativa() {
+
+    return String(localStorage.getItem("rol") || "")
+        .trim()
+        .toLowerCase() === "admin";
+}
+
+function redirigirPorPermisos() {
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("usuarioId");
+    localStorage.removeItem("rol");
+
+    sessionStorage.setItem(
+        "mindcareSessionMessage",
+        "Esta cuenta no tiene acceso administrativo o sus permisos cambiaron. Inicia sesión con una cuenta administradora."
+    );
+
+    location.replace("login.html");
+}
+
 async function iniciar() {
 
-    await cargarResumen();
+    const accesoAutorizado = await cargarResumen();
+
+    if (!accesoAutorizado) {
+        return;
+    }
 
     await Promise.all([
         cargarUsuarios(),
@@ -39,6 +69,11 @@ async function cargarResumen() {
         const res =
             await fetch(`${API}/Admin/resumen?t=${Date.now()}`);
 
+        if (res.status === 403) {
+            redirigirPorPermisos();
+            return false;
+        }
+
         if (!res.ok) throw new Error();
 
         const data =
@@ -51,9 +86,12 @@ async function cargarResumen() {
         texto("tests", data.tests);
         texto("registros", data.registros);
 
+        return true;
+
     } catch {
 
         toast("Error cargando resumen", "error");
+        return true;
     }
 }
 
